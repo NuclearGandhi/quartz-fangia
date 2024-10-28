@@ -1,3 +1,235 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+/*
+Publish and Local
+=================
+ */
+
+/* All images */
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img[alt*="bwhite"] {
+  background-color: white;
+}
+
+img[alt*="invert"] {
+  filter: invert(1);
+}
+
+img[alt*="bscreen"] {
+  mix-blend-mode: screen;
+}
+
+img[alt*="bmult"] {
+  mix-blend-mode: multiply;
+}
+
+/* General */
+[saved-theme="dark"] {
+  --figure-background-color: var(--color-base-100);
+}
+
+[saved-theme="light"] {
+  --figure-background-color: var(--color-base-00);
+}
+
+/* transparent background, black themed */
+[saved-theme="dark"] img[alt*="book"] {
+  mix-blend-mode: screen;
+  filter: invert(1);
+}
+
+[saved-theme="light"] img[alt*="book"] {
+  mix-blend-mode: multiply;
+}
+
+/* transparent background, black themed, with hue filter */
+[saved-theme="dark"] img[alt*="bookhue"] {
+  mix-blend-mode: screen;
+  filter: hue-rotate(180deg) invert(1);
+}
+
+[saved-theme="light"] img[alt*="bookhue"] {
+  mix-blend-mode: multiply;
+}
+
+/* Vector art also need to have a transparent background */
+[saved-theme="light"] img[alt*="svg"] {
+  filter: invert(1);
+}
+
+[saved-theme="light"] img[alt*="ignore"] {
+  filter: unset !important;
+}
+
+/* Dark theme for GeoGebra applets */
+[saved-theme="dark"] .geo {
+  mix-blend-mode: screen;
+  filter: invert(1);
+}
+
+[saved-theme="light"] .geo {
+  mix-blend-mode: multiply;
+}
+
+/* Allow images in callouts to smoothly interact with the callout background */
+.callout {
+  mix-blend-mode: inherit;
+}
+
+.callout[data-callout="notes"] {
+  --callout-color: var(--callout-tip);
+  --callout-icon: message-square-plus;
+}
+
+.callout[data-callout="def"] {
+  --callout-color: var(--callout-default);
+  --callout-icon: book-open;
+}
+
+.callout[data-callout="theorem"] {
+  --callout-color: var(--callout-default);
+  --callout-icon: wand-2;
+}
+
+.callout[data-callout="formula"] .callout-content {
+  --callout-color: var(--callout-default);
+  --callout-icon: sigma;
+}
+
+.callout[data-callout="quote"] .callout-content {
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* block quotes (for image captioning) */
+.markdown-rendered blockquote {
+  border-left: 0;
+  border-right: 0;
+  font-size: var(--font-ui-medium);
+  color: var(--icon-color-hover);
+}
+
+.markdown-rendered blockquote p {
+  text-align: center !important;
+}
+
+/* Center iframes */
+iframe {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 
+Testimonials (Publish and local)
+============
+*/
+
+.testimonials {
+  display: flex;
+  justify-content: center;
+  flex-flow: wrap;
+  align-items: center;
+  direction: rtl;
+}
+
+figure.testi {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+  min-width: 220px;
+  max-width: 310px;
+  width: 100%;
+  text-align: right;
+  box-shadow: none !important;
+}
+
+figure.testi * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.35s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+  transition: all 0.35s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+}
+
+figure.testi img {
+  max-width: 100%;
+  height: 90px;
+  width: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 40px 0 0 10px;
+  bottom: 45px;
+}
+
+figure.testi blockquote {
+  display: block;
+  border-radius: 8px;
+  position: relative;
+  text-align: right;
+  background-color: var(--dark);
+  padding: 25px 50px 30px 50px;
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.6em;
+  color: var(--light);
+  font-style: italic;
+}
+
+figure.testi blockquote:before,
+figure.testi blockquote:after {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  content: "\201D";
+  position: absolute;
+  font-size: 50px;
+  opacity: 0.3;
+  font-style: normal;
+}
+
+figure.testi blockquote:before {
+  right: 20px;
+  top: 25px;
+}
+
+figure.testi blockquote:after {
+  bottom: 0;
+  left: 20px;
+  transform: scaleX(-1);
+  content: "\201D";
+}
+
+figure.testi .arrow {
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-right: 0 solid transparent;
+  border-left: 25px solid transparent;
+  border-top: 25px solid var(--dark);
+  margin: 0;
+  position: absolute;
+}
+
+figure.testi .author {
+  position: absolute;
+  bottom: 45px;
+  padding: 0 120px 0 10px;
+  margin-left: 0;
+  text-transform: uppercase;
+  -webkit-transform: translateY(50%);
+  transform: translateY(50%);
+}
+figure.testi .author h5 {
+  opacity: 0.8;
+  margin: 0;
+  font-weight: 700;
+}
+figure.testi .author h5 span {
+  font-weight: 400;
+  text-transform: none;
+  padding-left: 5px;
+}

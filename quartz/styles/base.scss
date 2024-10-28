@@ -2,6 +2,12 @@
 @use "./syntax.scss";
 @use "./callouts.scss";
 
+html[lang^="he"] *,
+html[lang^="fa"] *,
+html[lang^="ar"] * {
+  direction: rtl;
+}
+
 html {
   scroll-behavior: smooth;
   text-size-adjust: none;
@@ -578,6 +584,17 @@ ol.overflow {
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.MathJax_Display, .MJXc-display, .MathJax_SVG_Display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+// Center display math
+.MathJax[display="true"] {
+  display: block;
+  text-align: center;
 }
 
 .external-embed.youtube,

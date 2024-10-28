@@ -20,6 +20,7 @@ import hu from "./locales/hu-HU"
 import fa from "./locales/fa-IR"
 import pl from "./locales/pl-PL"
 import cs from "./locales/cs-CZ"
+import he from "./locales/he-IL"
 
 export const TRANSLATIONS = {
   "en-US": enUs,
@@ -64,6 +65,7 @@ export const TRANSLATIONS = {
   "fa-IR": fa,
   "pl-PL": pl,
   "cs-CZ": cs,
+  "he-IL": he,
 } as const
 
 export const defaultTranslation = "en-US"

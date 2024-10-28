@@ -10,11 +10,11 @@
 
 .breadcrumb-element {
   p {
-    margin: 0;
-    margin-left: 0.5rem;
+    margin: 0 .5rem 0 0;
     padding: 0;
     line-height: normal;
   }
+
   display: flex;
   flex-direction: row;
   align-items: center;

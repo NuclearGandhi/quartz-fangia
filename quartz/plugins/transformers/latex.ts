@@ -18,7 +18,7 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
   return {
     name: "Latex",
     markdownPlugins() {
-      return [remarkMath]
+      return [[remarkMath, { singleDollarTextMath: true }]]
     },
     htmlPlugins() {
       if (engine === "katex") {
