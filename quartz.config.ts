@@ -17,8 +17,8 @@ const config: QuartzConfig = {
     },
     locale: "he-IL",
     baseUrl: "idofangbentov.xyz",
-    ignorePatterns: ["private", "templates", ".obsidian"],
-    unlistedPatterns: ["secret"],
+    ignorePatterns: ["private", "templates", ".obsidian", "Excalidraw", "**/**/**"],
+    unlistedPatterns: ["*.excalidraw.md", "*.excalidraw.html", "*.excalidraw"],
     defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",

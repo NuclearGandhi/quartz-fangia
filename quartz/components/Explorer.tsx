@@ -59,7 +59,7 @@ export default ((userOpts?: Partial<Options>) => {
           if (slug.startsWith(ignorePattern)) ignore = true
         if (ignore) continue
 
-        fileTree.add(file, 1)
+        fileTree.add(file)
       }
 
       /**
@@ -94,21 +94,10 @@ export default ((userOpts?: Partial<Options>) => {
     const folders = fileTree.getFolderPaths(opts.folderDefaultState === "collapsed")
     jsonTree = JSON.stringify(folders)
   }
+}
 
   function Explorer({ allFiles, displayClass, fileData, cfg }: QuartzComponentProps) {
     constructFileTree(cfg, allFiles)
-  const Explorer: QuartzComponent = ({
-    ctx,
-    cfg,
-    allFiles,
-    displayClass,
-    fileData,
-  }: QuartzComponentProps) => {
-    if (ctx.buildId !== lastBuildId) {
-      lastBuildId = ctx.buildId
-      constructFileTree(allFiles)
-    }
-
     return (
       <div class={classNames(displayClass, "explorer")}>
         <button
