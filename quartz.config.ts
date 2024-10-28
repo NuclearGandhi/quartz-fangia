@@ -18,6 +18,7 @@ const config: QuartzConfig = {
     locale: "he-IL",
     baseUrl: "idofangbentov.xyz",
     ignorePatterns: ["private", "templates", ".obsidian"],
+    unlistedPatterns: ["secret"],
     defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",

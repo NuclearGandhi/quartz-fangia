@@ -1,4 +1,5 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { GlobalConfiguration } from "../cfg"
 import explorerStyle from "./styles/explorer.scss"
 
 // @ts-ignore
@@ -46,10 +47,32 @@ export default ((userOpts?: Partial<Options>) => {
   let jsonTree: string
   let lastBuildId: string = ""
 
-  function constructFileTree(allFiles: QuartzPluginData[]) {
-    // Construct tree from allFiles
-    fileTree = new FileNode("")
-    allFiles.forEach((file) => fileTree.add(file))
+  function constructFileTree(cfg: GlobalConfiguration, allFiles: QuartzPluginData[]) {
+    if (!fileTree) {
+      // Construct tree from allFiles
+      fileTree = new FileNode("")
+      for (const file of allFiles) {
+        const slug = file.slug!
+
+        let ignore = false
+        for (const ignorePattern of cfg.unlistedPatterns)
+          if (slug.startsWith(ignorePattern)) ignore = true
+        if (ignore) continue
+
+        fileTree.add(file, 1)
+      }
+
+      /**
+       * Keys of this object must match corresponding function name of `FileNode`,
+       * while values must be the argument that will be passed to the function.
+       *
+       * e.g. entry for FileNode.sort: `sort: opts.sortFn` (value is sort function from options)
+       */
+      const functions = {
+        map: opts.mapFn,
+        sort: opts.sortFn,
+        filter: opts.filterFn,
+      }
 
     // Execute all functions (sort, filter, map) that were provided (if none were provided, only default "sort" is applied)
     if (opts.order) {
@@ -72,6 +95,8 @@ export default ((userOpts?: Partial<Options>) => {
     jsonTree = JSON.stringify(folders)
   }
 
+  function Explorer({ allFiles, displayClass, fileData, cfg }: QuartzComponentProps) {
+    constructFileTree(cfg, allFiles)
   const Explorer: QuartzComponent = ({
     ctx,
     cfg,
