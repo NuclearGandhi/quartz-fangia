@@ -13,6 +13,7 @@ html {
   text-size-adjust: none;
   overflow-x: hidden;
   width: 100vw;
+  font-size: 16px;
 }
 
 body,
@@ -359,7 +360,7 @@ h6 {
 
 // typography improvements
 h1 {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   margin-top: 2.25rem;
   margin-bottom: 1rem;
 }
@@ -478,7 +479,7 @@ code {
 tbody,
 li,
 p {
-  line-height: 1.6rem;
+  line-height: 1.4rem;
 }
 
 .table-container {
@@ -597,6 +598,7 @@ ol.overflow {
 // Center display math
 .MathJax[display="true"] {
   display: block;
+  margin: 8px 0 16px 0;
   text-align: center;
 }
 
