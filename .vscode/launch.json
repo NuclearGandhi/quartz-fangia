@@ -1,0 +1,12 @@
+{
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Launch Quartz",
+        "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
+        "args": ["build", "--serve"],
+        "cwd": "${workspaceFolder}"
+      }
+    ]
+  }
