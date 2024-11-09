@@ -1,5 +1,2 @@
-# פנגייה
-לינק ל[רשימת סיכומים](https://publish.obsidian.md/idofangbentov).
-
-האתר סיכומים לפעמים משנה את הכתובת שלו כי זה עולה פי 10000 יותר כסף לחדש את הרישיון לכתובת מאשר לקנות אחד חדש. סתדרו.
-דרך אגב, כדאי שתשימו את הכתובת `https://publish.obsidian.md/idofangbentov` במועדפים כי היא כנראה לא תשתנה.
+# Fangia - Lecture Notes
+This is the [Quartz](https://quartz.jzhao.xyz/) of the [Fangia](https://nucleargandhi.github.io/quartz-fangia/) lecture notes.
