@@ -64,6 +64,10 @@ ul,
   /* tr and td removed from list of selectors for overflow-wrap, allowing them to use default 'normal' property value */
 }
 
+li:not(:last-child) { 
+  margin-bottom: 0.2rem;  
+}
+
 .math {
   &.math-display {
     text-align: center;

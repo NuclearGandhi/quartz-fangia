@@ -336,20 +336,35 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     return itemTile
   }
 
+  function filterResults(results: Item[], filterCriteria: (item: Item) => boolean): Item[] {
+    return results.filter(filterCriteria)
+  }
+
   async function displayResults(finalResults: Item[]) {
     if (!results) return
-
+  
+    // Define your filter criteria here
+    const filterCriteria = (item: Item) => {
+        // Filter out titles that have 'excalidraw' in them
+        if (item.slug.includes("excalidra")) return false
+    
+        return true
+    }
+  
+    // Apply the filter to the results
+    const filteredResults = filterResults(finalResults, filterCriteria)
+  
     removeAllChildren(results)
-    if (finalResults.length === 0) {
+    if (filteredResults.length === 0) {
       results.innerHTML = `<a class="result-card no-match">
           <h3>No results.</h3>
           <p>Try another search term?</p>
       </a>`
     } else {
-      results.append(...finalResults.map(resultToHTML))
+      results.append(...filteredResults.map(resultToHTML))
     }
-
-    if (finalResults.length === 0 && preview) {
+  
+    if (filteredResults.length === 0 && preview) {
       // no results, clear previous preview
       removeAllChildren(preview)
     } else {
