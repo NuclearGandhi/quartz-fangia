@@ -1,6 +1,6 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import breadcrumbsStyle from "./styles/breadcrumbs.scss"
-import { FullSlug, SimpleSlug, joinSegments, resolveRelative } from "../util/path"
+import { FullSlug, SimpleSlug, joinSegments, resolveRelative, RelativeURL } from "../util/path"
 import { QuartzPluginData } from "../plugins/vfile"
 import { classNames } from "../util/lang"
 
@@ -40,10 +40,26 @@ const defaultOptions: BreadcrumbOptions = {
   showCurrentPage: true,
 }
 
-function formatCrumb(displayName: string, baseSlug: FullSlug, currentSlug: SimpleSlug): CrumbData {
+function formatCrumb(displayName: string, baseSlug: FullSlug, currentSlug: SimpleSlug, allFiles: QuartzPluginData[]): CrumbData {
+  let path = resolveRelative(baseSlug, currentSlug)
+
+  if (displayName === "Technion") {
+    path = "/" as RelativeURL
+  } else {
+    const matchingLink = allFiles.find(file => {
+      const slugParts = file.slug?.split("/")
+      return slugParts?.some(part => part.startsWith(`${displayName}_000`))
+    })
+    if (matchingLink) {
+      if (matchingLink.slug) {
+        path = resolveRelative(baseSlug, matchingLink.slug as unknown as SimpleSlug)
+      }
+    }
+  }
+
   return {
     displayName: displayName.replaceAll("-", " "),
-    path: resolveRelative(baseSlug, currentSlug),
+    path,
   }
 }
 
@@ -65,7 +81,7 @@ export default ((opts?: Partial<BreadcrumbOptions>) => {
     }
 
     // Format entry for root element
-    const firstEntry = formatCrumb(options.rootName, fileData.slug!, "/" as SimpleSlug)
+    const firstEntry = formatCrumb(options.rootName, fileData.slug!, "/" as SimpleSlug, allFiles)
     const crumbs: CrumbData[] = [firstEntry]
 
     if (!folderIndex && options.resolveFrontmatterTitle) {
@@ -109,6 +125,7 @@ export default ((opts?: Partial<BreadcrumbOptions>) => {
           curPathSegment,
           fileData.slug!,
           (currentPath + (includeTrailingSlash ? "/" : "")) as SimpleSlug,
+          allFiles
         )
         crumbs.push(crumb)
       }
