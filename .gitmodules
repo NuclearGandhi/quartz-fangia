@@ -1,0 +1,3 @@
+[submodule "content"]
+	path = content
+	url = https://github.com/NuclearGandhi/technion_second_brain.git
