@@ -16,7 +16,7 @@ const config: QuartzConfig = {
       provider: "plausible",
     },
     locale: "he-IL",
-    baseUrl: "idofangbentov.xyz",
+    baseUrl: "nucleargandhi.github.io/quartz-fangia",
     ignorePatterns: ["private", "templates", ".obsidian", "Excalidraw"],
     unlistedPatterns: ["*.excalidraw.md", "*.excalidraw.html", "*.excalidraw"],
     defaultDateType: "created",
