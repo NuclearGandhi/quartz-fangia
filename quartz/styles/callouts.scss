@@ -5,7 +5,10 @@
   border: 1px solid var(--border);
   background-color: var(--bg);
   border-radius: 5px;
-  padding: 0 1rem 0.7rem 0;
+  padding-block-start: 0;
+  padding-inline-start: 1rem;
+  padding-block-end: 0.7rem;
+  padding-inline-end: 1rem;
   margin-bottom: 0.5rem !important;
   overflow-y: hidden;
   transition: max-height 0.3s ease;
