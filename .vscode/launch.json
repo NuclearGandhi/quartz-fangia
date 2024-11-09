@@ -6,7 +6,8 @@
         "name": "Launch Quartz",
         "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
         "args": ["build", "--serve"],
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
       }
     ]
   }

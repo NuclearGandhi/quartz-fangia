@@ -91,6 +91,11 @@ def fix_math_blocks(file_path):
             inside_tab_in_callout = True
         elif line.strip() == '' or line.strip().startswith('#'):
             inside_tab_in_callout = False
+
+        if inside_tab_in_callout and re.match(r'^\>\s?\t\s?', line):
+            lines[i] = re.sub(r'^\>\s?\t\s?', '>\t', line)
+            continue
+
         if inside_tab_in_callout and not re.match(r'^\>\s?\t', line.strip()) and not re.match(r'^\>\s?\t', line) and not re.match(r'^\>\s?\d+\.', line.strip()) and not line.strip().startswith('-'):
             if re.match(r'\d+\.', line.strip()):
                 lines[i] = '>' + line
