@@ -13,7 +13,7 @@ const config: QuartzConfig = {
     enableSPA: true,
     enablePopovers: true,
     analytics: {
-      provider: "plausible",
+      provider: "google", tagId: "G-166H3PJKRX"
     },
     locale: "he-IL",
     baseUrl: "nucleargandhi.github.io/quartz-fangia",
