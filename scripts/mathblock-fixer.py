@@ -30,6 +30,7 @@ def fix_math_blocks(file_path):
 
     # Replace all 4 spaces with tabs
     content = content.replace('    ', '\t')
+    content = content.replace(' \t', '\t')
 
     # Split content into lines and process each line for callouts and tabs
     lines = content.split('\n')
@@ -44,9 +45,9 @@ def fix_math_blocks(file_path):
         # Handle double tabs inside callout
         if line.startswith('>\t\t'):
             inside_double_tab_block_in_callout = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_double_tab_block_in_callout = False
-        if inside_double_tab_block_in_callout and not line.startswith('>\t\t') and not re.match(r'^>\t\d+\.', line.strip()) and not line.strip().startswith('>\t-'):
+        if inside_double_tab_block_in_callout and not line.startswith('>\t\t') and not re.match(r'^>\t\d+\.', line.strip()) and not re.match(r'^>\t\- ', line.strip()):
             if line.strip().startswith('>\t'):
                 lines[i] = '>\t\t' + line.strip().lstrip('>\t')
             elif line.strip().startswith('>'):
@@ -58,9 +59,9 @@ def fix_math_blocks(file_path):
         # Handle double tabs
         if line.startswith('\t\t'):
             inside_double_tab_block = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_double_tab_block = False
-        if inside_double_tab_block and not line.startswith('\t\t') and not re.match(r'^\d+\.', line.strip()) and not line.strip().startswith('\t-'):
+        if inside_double_tab_block and not line.startswith('\t\t') and not re.match(r'^\d+\.', line.strip()) and not re.match(r'^\t\- ', line.strip()):
             if line.startswith('\t'):
                 lines[i] = '\t' + line
             else:
@@ -69,11 +70,11 @@ def fix_math_blocks(file_path):
             
 
         # Handle tabbed callouts
-        if re.match(r'^\t\s?\>', line):
+        if re.match(r'^\t ?\>', line):
             inside_tabbed_callout = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_tabbed_callout = False
-        if not inside_tabbed_callout and re.match(r'^\t\s?\>', line.strip()):
+        if not inside_tabbed_callout and re.match(r'^\t ?\>', line.strip()):
             lines[i] = line.strip().lstrip('\t>')
         elif inside_tabbed_callout and not line.startswith('\t>'):
             if line.strip().startswith('\t'):
@@ -87,16 +88,16 @@ def fix_math_blocks(file_path):
             
 
         # Handle tabs in callouts
-        if re.match(r'^\>\s?\t', line) or re.match(r'^\>\s?\d+\.', line.strip()):
+        if re.match(r'^\> ?\t', line) or re.match(r'^\> ?\d+\.', line.strip()):
             inside_tab_in_callout = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_tab_in_callout = False
 
-        if inside_tab_in_callout and re.match(r'^\>\s?\t\s?', line):
-            lines[i] = re.sub(r'^\>\s?\t\s?', '>\t', line)
+        if inside_tab_in_callout and re.match(r'^\> ?\t ?', line):
+            lines[i] = re.sub(r'^\> ?\t ?', '>\t', line)
             continue
 
-        if inside_tab_in_callout and not re.match(r'^\>\s?\t', line.strip()) and not re.match(r'^\>\s?\t', line) and not re.match(r'^\>\s?\d+\.', line.strip()) and not line.strip().startswith('-'):
+        if inside_tab_in_callout and not re.match(r'^\> ?\t', line.strip()) and not re.match(r'^\> ?\t', line) and not re.match(r'^\> ?\d+\.', line.strip()) and not re.match(r'^\- ', line):
             if re.match(r'\d+\.', line.strip()):
                 lines[i] = '>' + line
             elif line.strip().startswith('>'):
@@ -110,7 +111,7 @@ def fix_math_blocks(file_path):
         # Handle callouts
         if line.strip().startswith('>'):
             inside_callout = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_callout = False
         if inside_callout and not line.strip().startswith('>'):
             lines[i] = '> ' + line
@@ -118,13 +119,13 @@ def fix_math_blocks(file_path):
 
 
         # Handle tabs
-        if re.match(r'^\d+\.', line.strip()) or re.match(r'^\-\s', line.strip()):
+        if re.match(r'^\d+\.', line.strip()) or re.match(r'^\- ', line.strip()):
             inside_tab_block = True
-        elif line.strip() == '' or line.strip().startswith('#'):
+        elif line.strip() == '' or line.strip().startswith('#') or line.strip().startswith('---'):
             inside_tab_block = False
-        if not inside_tab_block and re.match(r'^\s?\t', line):
+        if not inside_tab_block and re.match(r'^ ?\t', line):
             lines[i] = line.strip().lstrip('\t')
-        elif inside_tab_block and not re.match(r'^\s?\t', line) and not re.match(r'^\d+\.', line.strip()) and not re.match(r'\-', line.strip()):
+        elif inside_tab_block and not re.match(r'^ ?\t', line) and not re.match(r'^\d+\.', line.strip()) and not re.match(r'^\- ', line.strip()):
             lines[i] = '\t' + line
             continue
 
