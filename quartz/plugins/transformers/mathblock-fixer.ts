@@ -56,7 +56,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle double tabs inside callout
       if (line.startsWith('>\t\t')) {
         insideDoubleTabBlockInCallout = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideDoubleTabBlockInCallout = false
       }
       if (insideDoubleTabBlockInCallout && !line.startsWith('>\t\t') && !/^\>\t\d+\./.test(line.trim()) && !/^\>\t\- /.test(line.trim())) {
@@ -73,7 +73,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle double tabs
       if (line.startsWith('\t\t')) {
         insideDoubleTabBlock = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideDoubleTabBlock = false
       }
       if (insideDoubleTabBlock && !line.startsWith('\t\t') && !/^\d+\./.test(line.trim()) && !/^\t\- /.test(line.trim())) {
@@ -88,7 +88,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle tabbed callouts
       if (/^\t ?\>/.test(line)) {
         insideTabbedCallout = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideTabbedCallout = false
       }
       if (!insideTabbedCallout && /^\t ?\>/.test(line.trim())) {
@@ -107,7 +107,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle tabs in callouts
       if (/^\> ?\t/.test(line) || /^\> ?\d+\./.test(line.trim())) {
         insideTabInCallout = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideTabInCallout = false
       }
 
@@ -130,7 +130,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle callouts
       if (line.trim().startsWith('>')) {
         insideCallout = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideCallout = false
       }
       if (insideCallout && !line.trim().startsWith('>')) {
@@ -141,7 +141,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       // Handle tabs
       if (/^\d+\./.test(line.trim()) || /^\- /.test(line.trim())) {
         insideTabBlock = true
-      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---')) {
+      } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideTabBlock = false
       }
       if (!insideTabBlock && /^ ?\t/.test(line)) {
@@ -167,6 +167,10 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
   return {
     name: "MathBlockFixer",
     textTransform(_ctx, src) {
+      if (src.includes('[[#סמסטר א’|קפוץ לחומר]].')) {
+        return src
+      }
+
       const content = fixMathBlocks(src.toString())
       if (opts.debug) {
         // TODO: Find a way to get the file path, currently generating random file names
