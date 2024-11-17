@@ -138,8 +138,12 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
         continue
       }
 
+      if (!insideTabBlock && /^ ?\t/.test(line)) {
+        console.log('line' + i + ": ", line)
+      }
+
       // Handle tabs
-      if (/^\d+\./.test(line.trim()) || /^\- /.test(line.trim())) {
+      if (/^ ?\t/.test(line) || /^\d+\./.test(line.trim()) || /^\- /.test(line.trim())) {
         insideTabBlock = true
       } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideTabBlock = false
