@@ -13,28 +13,22 @@ const defaultOptions: Options = {
 export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
   const opts = { ...defaultOptions, ...userOpts }
 
-  const fixMathBlocks = (content: string): string => {
+  const fixMathBlocks = (content: string, filePath: string): string => {
     const mathBlockPattern = /\$\$.*?\$\$/gs
-    const endDollarPattern = /^\s*>\s*\$\$$|^\s*\$\$$/g
+    const endDollarPattern = /^\>?\s*\>?\s*\$\$$/;
 
-    content = content.replace(/(\d+\.)\s?\$\$/g, '$1\n$$')
+    content = content.replace(/(\d+\.)\s?\$\$/g, '$1\n$$$$')
 
-    const fixBlock = (block: string) => {
-      let lines = block.split('\n')
-      // Ensure the first line is just '$$'
-      if (lines[0].trim() !== '$$') {
-        lines[0] = '$$'
-        if (lines[1]) {
-          lines.splice(1, 0, lines[1].trim().slice(2))
-        }
+    function fixBlock(block: string): string {
+      // Ensure $$ are on separate lines if not already
+      let lines = block.split('\n');
+      if (lines[0].trim() !== '\$\$') {
+        lines[0] = '\$\$\n' + lines[0].trim().slice(2).trim();
       }
-      // Ensure the last line is just '$$'
-      const lastLine = lines[lines.length - 1].trim()
-      if (lastLine !== '$$') {
-        lines[lines.length - 1] = lines[lines.length - 1].trim().slice(0, -2)
-        lines.push('$$')
+      if (!endDollarPattern.test(lines[lines.length - 1].trim())) {
+        lines[lines.length - 1] = lines[lines.length - 1].trim().slice(0, -2).trim() + '\n\$\$';
       }
-      return lines.join('\n')
+      return lines.join('\n');
     }
 
     content = content.replace(mathBlockPattern, (match) => fixBlock(match))
@@ -49,9 +43,19 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
     let insideTabbedCallout = false
     let insideTabInCallout = false
     let insideDoubleTabBlockInCallout = false
-
+    let insideCodeBlock = false
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i]
+
+      // Toggle insideCodeBlock flag when encountering ```
+      if (line.trim().startsWith('```')) {
+        insideCodeBlock = !insideCodeBlock
+      }
+
+      // Skip lines inside code blocks
+      if (insideCodeBlock) {
+        continue
+      }
 
       // Handle double tabs inside callout
       if (line.startsWith('>\t\t')) {
@@ -76,7 +80,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideDoubleTabBlock = false
       }
-      if (insideDoubleTabBlock && !line.startsWith('\t\t') && !/^\d+\./.test(line.trim()) && !/^\t\- /.test(line.trim())) {
+      if (insideDoubleTabBlock && !line.startsWith('\t\t') && !/^\d+\.(?!\d)/.test(line.trim()) && !/^\t\- /.test(line.trim())) {
         if (line.startsWith('\t')) {
           lines[i] = '\t' + line
         } else {
@@ -117,7 +121,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       }
 
       if (insideTabInCallout && !/^\> ?\t/.test(line.trim()) && !/^\> ?\t/.test(line) && !/^\> ?\d+\./.test(line.trim()) && !/^\- /.test(line.trim())) {
-        if (/^\d+\./.test(line.trim())) {
+        if (/^\d+\.(?!\d)/.test(line.trim())) {
           lines[i] = '>' + line
         } else if (line.trim().startsWith('>')) {
           lines[i] = '>\t' + line.trim().slice(1)
@@ -138,21 +142,21 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
         continue
       }
 
-      if (!insideTabBlock && /^ ?\t/.test(line)) {
-        console.log('line' + i + ": ", line)
-      }
-
       // Handle tabs
-      if (/^ ?\t/.test(line) || /^\d+\./.test(line.trim()) || /^\- /.test(line.trim())) {
+      if (/^ ?\t/.test(line) || /^\d+\.(?!\d)/.test(line.trim()) || /^\- /.test(line.trim())) {
         insideTabBlock = true
       } else if (line.trim() === '' || line.trim().startsWith('#') || line.trim().startsWith('---') || line.trim().startsWith('```')) {
         insideTabBlock = false
       }
       if (!insideTabBlock && /^ ?\t/.test(line)) {
         lines[i] = line.trim().slice(1)
-      } else if (insideTabBlock && !/^ ?\t/.test(line) && !/^\d+\./.test(line.trim()) && !/^\- /.test(line.trim())) {
+      } else if (insideTabBlock && !/^ ?\t/.test(line) && !/^\d+\.(?!\d)/.test(line.trim()) && !/^\- /.test(line.trim())) {
         lines[i] = '\t' + line
         continue
+      }
+
+      if (!insideTabBlock && /^ ?\t/.test(line)) {
+        console.log('Found an annoying tab in ' + filePath + ":" + i + " - ", line)
       }
     }
 
@@ -166,20 +170,21 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
     }
     const debugFilePath = path.join(debugDir, path.basename(filePath))
     fs.writeFileSync(debugFilePath, content, 'utf-8')
-  }
+  }  
 
   return {
     name: "MathBlockFixer",
     textTransform(_ctx, src) {
-      if (src.includes('[[#סמסטר א’|קפוץ לחומר]].')) {
+      // TODO: Find a way to get the file path, currently generating random file names
+      const random = Math.random().toString(36).substring(7)
+      const filePath = random + '.md'
+
+      if (src.includes('אפשר להתייחס לזה כמו מחברת אחת ענקית שמכילה תתי מחב')) {
         return src
       }
 
-      const content = fixMathBlocks(src.toString())
+      const content = fixMathBlocks(src.toString(), filePath)
       if (opts.debug) {
-        // TODO: Find a way to get the file path, currently generating random file names
-        const random = Math.random().toString(36).substring(7)
-        const filePath = random + '.md'
         writeDebugFile(content, filePath)
       }
       return content
