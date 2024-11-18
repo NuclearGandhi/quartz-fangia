@@ -6,8 +6,8 @@
  * assuming mobile < desktop
  */
 $breakpoints: (
-  mobile: 800px,
-  desktop: 1200px,
+  mobile: 1000px,
+  desktop: 1300px,
 );
 
 $mobile: "(max-width: #{map-get($breakpoints, mobile)})";
@@ -23,7 +23,7 @@ $normalWeight: 400;
 
 $mobileGrid: (
   templateRows: "auto auto auto auto auto",
-  templateColumns: "700px",
+  templateColumns: "auto",
   rowGap: "5px",
   columnGap: "5px",
   templateAreas:
