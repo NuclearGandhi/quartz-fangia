@@ -13,22 +13,18 @@ export const AutoRTL: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => 
   return {
     name: "AutoRTL",
     htmlPlugins() {
-        return [
-          () => {
-            return (tree) => {
-              tree.children.forEach((node: any) => {
-                if (node.type === "element" && node.children) {
-                  const textNodes = node.children.filter((child: any) => child.type === "text")
-                  const text = textNodes.map((child: any) => child.value).join(" ")
-                  const applicableTags = ["div", "p", "ul", "li", "a", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "thead", "tbody", "tfoot", "tr", "td", "th", "span"]
-                  if (text.length > 0 && applicableTags.includes(node.tagName)) {
-                    node.properties = { ...(node.properties ?? {}), dir: "auto" }
-                  }
-                }
-              })
-            }
-          },
-        ]
+      return [
+        () => {
+          return (tree) => {
+            tree.children.forEach((node: any) => {
+              const applicableTags = ["div", "p", "ul", "li", "a", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "span"]
+              if (applicableTags.includes(node.tagName)) {
+                node.properties = { ...(node.properties ?? {}), dir: "auto" }
+              }
+            })
+          }
+        },
+      ]
       return []
     },
   }
