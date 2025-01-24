@@ -95,7 +95,17 @@ function addGlobalPageResources(ctx: BuildCtx, componentResources: ComponentReso
           page_title: document.title,
           page_location: location.href,
         });
-      });`)
+      });
+      
+      const handleNavEvent = () => {
+        const script = document.createElement('script');
+        script.src = "https://tally.so/widgets/embed.js";
+        script.async = true;
+        document.head.appendChild(script);
+      };
+
+      document.addEventListener('nav', handleNavEvent);`
+    )
   } else if (cfg.analytics?.provider === "plausible") {
     const plausibleHost = cfg.analytics.host ?? "https://plausible.io"
     componentResources.afterDOMLoaded.push(`
