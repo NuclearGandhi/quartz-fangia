@@ -1,9 +1,19 @@
+import { joinSegments} from "../util/path"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 
-const DiscussionLink: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
+const DiscussionLink: QuartzComponent = ({ cfg, fileData, displayClass }: QuartzComponentProps) => {
+
+    const url = new URL(`https://${cfg.baseUrl ?? "example.com"}`)
+
+    // Url of current page
+    const socialUrl =
+        fileData.slug === "404" ? url.toString() : joinSegments(url.toString(), fileData.slug!)
+
     return (
-        <div class={displayClass} id="discussion-link">
-            מצאתם טעות? תפתחו <a href="https://github.com/NuclearGandhi/technion_second_brain/discussions">discussion</a>! (צריך לפתוח משתמש, די באסה).
+        <div className={displayClass} id="discussion-link">
+            {`מצאתם טעות? שלחו `}<a href={`#tally-open=wd8bAK&page=${socialUrl}&tally-auto-close=1000`}>הודעה קצרה</a>.
+            <br />
+            {`תודה לינאי וגיל ששיכנעו אותי להוסיף את זה...`}
         </div>
     )
 }

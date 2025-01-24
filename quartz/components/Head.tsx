@@ -183,6 +183,7 @@ export default (() => {
         {js
           .filter((resource) => resource.loadTime === "beforeDOMReady")
           .map((res) => JSResourceToScriptElement(res, true))}
+        <script async src="https://tally.so/widgets/embed.js"></script>
       </head>
     )
   }
