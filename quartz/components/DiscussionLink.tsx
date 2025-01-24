@@ -11,7 +11,7 @@ const DiscussionLink: QuartzComponent = ({ cfg, fileData, displayClass }: Quartz
 
     return (
         <div className={displayClass} id="discussion-link">
-            {`מצאתם טעות? שלחו `}<a href={`#tally-open=wd8bAK&page=${socialUrl}&tally-auto-close=1000`}>הודעה קצרה</a>.
+            {`מצאתם טעות? שלחו `}<a href={`#tally-open=wd8bAK&page=${socialUrl}&tally-auto-close=1000`}>הודעה קצרה</a>. גם אם זה רק שגיעת כתיב קטנה.
             <br />
             {`תודה לינאי וגיל ששיכנעו אותי להוסיף את זה...`}
         </div>
