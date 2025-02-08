@@ -1,42 +1,34 @@
-import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
-import "./styles/alertdialog.scss";
+import { QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { classNames } from "../util/lang"
+import alertDialogStyle from "./styles/alertdialog.scss"
 
-const AlertDialog = () => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
+// @ts-ignore
+import alertDialogScript from "./scripts/alertDialog.inline"
 
-  useEffect(() => {
-    const shouldShow = localStorage.getItem("dontShowAgain") !== "true";
-    if (shouldShow && dialogRef.current) {
-      dialogRef.current.showModal();
-    }
-  }, []);
-
-  const handleClose = () => {
-    if (dontShowAgain) {
-      localStorage.setItem("dontShowAgain", "true");
-    }
-    dialogRef.current?.close();
-  };
-
-  return (
-    <dialog ref={dialogRef} class="welcome-dialog">
-      <h2>Welcome to My Digital Garden!</h2>
-      <p>Here you'll find my collected notes and thoughts.</p>
-      <div class="dialog-footer">
-        <label class="checkbox-label">
-          <input
-            type="checkbox"
-            checked={dontShowAgain}
-            onChange={(e) => setDontShowAgain((e.target as HTMLInputElement).checked)}
-          />
-          <span>Don't show again</span>
-        </label>
-        <button onClick={handleClose}>Got it!</button>
-      </div>
-    </dialog>
-  );
-};
-
-export default AlertDialog;
+export default (() => {
+  function AlertDialog ({ displayClass }: QuartzComponentProps) {
+    return (
+      <dialog className={`welcome-dialog ${displayClass}`}>
+        <h2>הכתובת משתנה בקרוב</h2>
+        <p>שלום שלום אני הולך לשנות את הכתובת בקרוב ל- <a href="https://idofangbentov.uk">idofangbentov.uk</a> כי למה לא. אם שמרתם
+          את הכתובת <a href="https://nucleargandhi.github.io/quartz-fangia">nucleargandhi.github.io/quartz-fangia</a> אז הכל טוב זה גם יעבוד,
+          אבל אם שמרתם את <a href="https://idofangbentov.xyz">idofangbentov.xyz</a>, אז כדאי לשנות כי זה יפסיק לעבוד בקרוב.
+          <br /><br />
+          תודה רבה,
+          <br />
+          צוות הפנגייה
+        </p>
+        <div className="dialog-footer">
+          <label className="checkbox-label">
+            <input type="checkbox" />
+            <span>אל תציג שוב</span>
+          </label>
+          <button>בסדר בסדר הבנתי</button>
+        </div>
+      </dialog>
+    )
+  }
+  AlertDialog.afterDOMLoaded = alertDialogScript;
+  AlertDialog.css = alertDialogStyle;
+  return AlertDialog
+}) satisfies QuartzComponentConstructor;

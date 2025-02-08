@@ -12,7 +12,6 @@ import { i18n } from "../i18n"
 import mermaidScript from "./scripts/mermaid.inline"
 import mermaidStyle from "./styles/mermaid.inline.scss"
 import { QuartzPluginData } from "../plugins/vfile"
-import AlertDialog from "./AlertDialog"
 
 interface RenderComponents {
   head: QuartzComponent
@@ -242,7 +241,6 @@ export function renderPage(
     <html dir="rtl" lang={lang}> 
       <Head {...componentData} />
       <body data-slug={slug}>
-        <AlertDialog />
         <div id="quartz-root" class="page">
           <Body {...componentData}>
             {LeftComponent}
