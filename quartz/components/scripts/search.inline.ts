@@ -15,10 +15,8 @@ interface Item {
 type SearchType = "basic" | "tags"
 let searchType: SearchType = "basic"
 let currentSearchTerm: string = ""
-const encoder = (str: string) => str.toLowerCase().split(/([^a-z]|[^\x00-\x7F])/)
 let index = new FlexSearch.Document<Item>({
-  charset: "latin:extra",
-  encode: encoder,
+  charset: "arabic",
   document: {
     id: "id",
     tag: "tags",
