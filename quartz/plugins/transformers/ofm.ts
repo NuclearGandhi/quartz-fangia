@@ -239,7 +239,11 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
                   const url = slugifyFilePath(fp as FilePath)
                   if ([".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".webp"].includes(ext)) {
                     const match = wikilinkImageEmbedRegex.exec(alias ?? "")
-                    const alt = match?.groups?.alt ?? ""
+                    let alt = match?.groups?.alt ?? ""
+                    if (alt === "") {
+                      const parts = fp.split("/")
+                      alt = parts[parts.length - 1]
+                    }
                     const width = match?.groups?.width ?? "auto"
                     const height = match?.groups?.height ?? "auto"
                     return {
