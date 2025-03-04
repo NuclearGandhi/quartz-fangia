@@ -1,0 +1,209 @@
+import sourceMapSupport from "source-map-support"
+sourceMapSupport.install(options)
+import path from "path"
+import fs from "fs"
+import { PerfTimer } from "./util/perf"
+import { createMdProcessor, createFileParser } from "./processors/parse"
+import { FilePath } from "./util/path"
+import { Argv, BuildCtx } from "./util/ctx"
+import { options } from "./util/sourcemap"
+import chalk from "chalk"
+import { createRequire } from 'module'
+import { QuartzLogger } from "./util/log"
+
+// Create a require function for loading CommonJS modules
+const require = createRequire(import.meta.url)
+
+/**
+ * Function to safely convert MDAST to LaTeX using rebber
+ * This handles the ESM/CommonJS compatibility issues with rebber
+ */
+function mdastToLatex(ast: any, options: any = {}): string {
+  try {
+    // Get the Node.js module system
+    const Module = require('module')
+    
+    // Create our visit mock function
+    function visitMock(tree: any, test: any, visitor: any) {
+      // If only two arguments are provided, the second is the visitor
+      if (!visitor && typeof test === 'function') {
+        visitor = test
+        test = null
+      }
+      
+      // Helper to visit a node and its children
+      function visitNode(node: any, index: number | null, parent: any) {
+        // Skip non-objects
+        if (!node || typeof node !== 'object') return true
+        
+        // Check if this node matches the test
+        let matches = !test
+        if (typeof test === 'string') {
+          matches = node.type === test
+        } else if (typeof test === 'object' && test !== null) {
+          matches = node.type === test.type
+        } else if (typeof test === 'function') {
+          matches = test(node, index, parent)
+        }
+        
+        // Call visitor if we have a match
+        if (matches && visitor) {
+          const result = visitor(node, index, parent)
+          // If visitor returns false, stop traversal
+          if (result === false) return false
+        }
+        
+        // Visit children
+        if (Array.isArray(node.children)) {
+          for (let i = 0; i < node.children.length; i++) {
+            const childResult = visitNode(node.children[i], i, node)
+            if (childResult === false) return false
+          }
+        }
+        
+        return true
+      }
+      
+      visitNode(tree, null, null)
+    }
+    
+    // Find the path to unist-util-visit in the node_modules folder
+    const visitModulePath = require.resolve('unist-util-visit')
+    
+    // Inject our mock directly into the module cache
+    // This makes `require('unist-util-visit')` return our mock function
+    Module._cache[visitModulePath] = {
+      id: visitModulePath,
+      exports: visitMock, // Export the function directly, not as a property
+      loaded: true,
+      children: []
+    }
+    
+    // Now require rebber with our mock in place
+    const rebber = require('rebber')
+    
+    // Clean up by removing our mock from the cache
+    delete Module._cache[visitModulePath]
+    
+    // Convert to LaTeX
+    return rebber.toLaTeX(ast, options)
+  } catch (err: any) {
+    console.error(`Error in LaTeX conversion: ${err.message}`)
+    if (err.stack) {
+      console.error(err.stack)
+    }
+    throw err
+  }
+}
+
+/**
+ * Converting markdown to various formats
+ */
+export async function convertMarkdown(argv: Argv) {
+  const perf = new PerfTimer()
+  const log = new QuartzLogger(argv.verbose)
+  
+  // Get the file path
+  if (!argv.file) {
+    console.error(chalk.red(`File argument is missing`))
+    process.exit(1)
+  }
+  const filePath = path.resolve(argv.file) as FilePath
+  if (!fs.existsSync(filePath)) {
+    console.error(chalk.red(`File not found: ${filePath}`))
+    process.exit(1)
+  }
+  
+  console.log(`Processing file: ${filePath}`)
+  
+  // Create output directory
+  const outputDir = path.resolve(argv.output)
+  if (!fs.existsSync(outputDir)) {
+    await fs.promises.mkdir(outputDir, { recursive: true })
+  }
+  
+  // Set up build context
+  const ctx: BuildCtx = {
+    buildId: Math.random().toString(36).substring(2, 8),
+    argv,
+    cfg: (await import("../quartz.config.js")).default,
+    allSlugs: []
+  }
+  
+  try {
+    log.start("Parsing markdown file")
+    
+    // Use the existing file parser to parse the markdown file - just like parseMarkdown does internally
+    const mdProcessor = createMdProcessor(ctx)
+    const fileParser = createFileParser(ctx, [filePath])
+    const mdContent = await fileParser(mdProcessor)
+    
+    if (!mdContent || mdContent.length === 0) {
+      console.error(chalk.red(`Failed to parse file: ${filePath}`))
+      process.exit(1)
+    }
+    
+    // Get the first parsed file content
+    const [ast, vfile] = mdContent[0]
+    
+    log.end(`Parsed markdown file in ${perf.timeSince()}`)
+    
+    // Generate output file based on format
+    const fileName = path.basename(filePath, path.extname(filePath))
+    let outputFile: string, outputContent: string
+    
+    // Process according to format
+    if (argv.format === "latex") {
+      try {
+        log.start("Converting to LaTeX")
+        outputContent = mdastToLatex(ast, {
+          // Rebber options
+          footnoteBackRefLabel: '↩',
+          footnoteLabel: 'footnote',
+          footnoteBackLabel: 'back',
+          wrapInlineNodes: true,
+          overrides: {
+            yaml: () => '',
+            math: require('rebber-plugins/dist/type/math'),
+            inlineMath: require('rebber-plugins/dist/type/math'),
+          }
+        })
+        
+        outputFile = path.join(outputDir, `${fileName}.tex`)
+        log.end(`LaTeX conversion completed in ${perf.timeSince()}`)
+      } catch (error: any) {
+        console.error(chalk.red(`Failed to convert to LaTeX: ${error.message}`))
+        process.exit(1)
+      }
+    } else {
+      // Default to JSON output (just the MDAST)
+      outputFile = path.join(outputDir, `${fileName}.json`)
+      outputContent = JSON.stringify(ast, null, 2)
+    }
+    
+    // Save the output file
+    await fs.promises.writeFile(outputFile, outputContent)
+    
+    console.log(chalk.green(`Output saved to: ${outputFile}`))
+    return outputFile
+  } catch (error: any) {
+    console.error(chalk.red(`Error processing markdown: ${error.message}`))
+    if (argv.verbose) {
+      console.error(error)
+    }
+    process.exit(1)
+  }
+}
+
+// Default export for dynamic import in handlers.js
+export default async (argv: Argv) => {
+  try {
+    return await convertMarkdown(argv)
+  } catch (err: any) {
+    console.error(chalk.red(`Error during conversion: ${err.message}`))
+    if (argv.verbose) {
+      console.error(err)
+    }
+    process.exit(1)
+  }
+}

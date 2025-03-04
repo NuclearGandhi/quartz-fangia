@@ -4,13 +4,19 @@ import { FullSlug } from "./path"
 export interface Argv {
   directory: string
   verbose: boolean
+  // Build command arguments
   output: string
-  serve: boolean
-  fastRebuild: boolean
-  port: number
-  wsPort: number
+  serve?: boolean
+  baseDir?: string
+  port?: number
+  wsPort?: number
   remoteDevHost?: string
+  bundleInfo?: boolean
+  fastRebuild?: boolean
   concurrency?: number
+  // Convert command arguments
+  file?: string
+  format?: "json" | "latex"
 }
 
 export interface BuildCtx {
