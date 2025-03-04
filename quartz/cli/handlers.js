@@ -32,6 +32,10 @@ import {
   cacheFile,
   cwd,
 } from "./constants.js"
+import sourceMapSupport from "source-map-support"
+import { options } from "../util/sourcemap.js"
+
+sourceMapSupport.install(options)
 
 /**
  * Handles `npx quartz create`
@@ -573,4 +577,333 @@ export async function handleSync(argv) {
   }
 
   console.log(chalk.green("Done!"))
+}
+
+/**
+ * Handles `npx quartz parse`
+ * @param {*} argv arguments for `parse`
+ */
+export async function handleParse(argv) {
+  console.log(chalk.bgGreen.black(`\n Quartz v${version} \n`))
+  
+  // Get the file path
+  const filePath = path.resolve(argv.file)
+  if (!fs.existsSync(filePath)) {
+    console.error(chalk.red(`File not found: ${filePath}`))
+    process.exit(1)
+  }
+  
+  console.log(`Parsing file: ${filePath}`)
+  
+  // Set up the esbuild context
+  const result = await esbuild.context({
+    entryPoints: [fp],
+    outfile: cacheFile,
+    bundle: true,
+    keepNames: true,
+    minifyWhitespace: true,
+    minifySyntax: true,
+    platform: "node",
+    format: "esm",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+    packages: "external",
+    metafile: true,
+    sourcemap: true,
+    sourcesContent: false,
+    plugins: [
+      sassPlugin({
+        type: "css-text",
+        cssImports: true,
+      }),
+      sassPlugin({
+        filter: /\.inline\.scss$/,
+        type: "css",
+        cssImports: true,
+      }),
+      {
+        name: "inline-script-loader",
+        setup(build) {
+          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, async (args) => {
+            let text = await promises.readFile(args.path, "utf8")
+
+            // remove default exports that we manually inserted
+            text = text.replace("export default", "")
+            text = text.replace("export", "")
+
+            const sourcefile = path.relative(path.resolve("."), args.path)
+            const resolveDir = path.dirname(sourcefile)
+            const transpiled = await esbuild.build({
+              stdin: {
+                contents: text,
+                loader: "ts",
+                resolveDir,
+                sourcefile,
+              },
+              write: false,
+              bundle: true,
+              minify: true,
+              platform: "browser",
+              format: "esm",
+            })
+            const rawMod = transpiled.outputFiles[0].text
+            return {
+              contents: rawMod,
+              loader: "text",
+            }
+          })
+        },
+      },
+    ],
+  })
+  
+  // Import the build module - using the same approach as handleBuild
+  const { default: buildQuartz } = await import(`../../${cacheFile}?update=${randomUUID()}`)
+  
+  // Create a mock build context with minimal configuration
+  const buildCtx = {
+    buildId: randomUUID().substring(0, 8),
+    argv: {
+      ...argv,
+      verbose: true
+    },
+    allSlugs: []
+  }
+  
+  // Use the worker approach to actually parse the file
+  // Transpile worker script first
+  await esbuild.build({
+    entryPoints: ["./quartz/worker.ts"],
+    outfile: path.join(cwd, ".quartz-cache/transpiled-worker.mjs"),
+    bundle: true,
+    keepNames: true,
+    platform: "node",
+    format: "esm",
+    packages: "external",
+    sourcemap: true,
+    sourcesContent: false,
+    plugins: [
+      {
+        name: "css-and-scripts-as-text",
+        setup(build) {
+          build.onLoad({ filter: /\.scss$/ }, (_) => ({
+            contents: "",
+            loader: "text",
+          }))
+          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, (_) => ({
+            contents: "",
+            loader: "text",
+          }))
+        },
+      },
+    ],
+  })
+  
+  // Import dynamically after transpilation
+  const { parseMarkdown } = await import("../../.quartz-cache/transpiled-worker.mjs")
+  
+  // Parse the file using the worker's parseMarkdown function
+  const [parsedContentArray, _slugs] = await parseMarkdown(
+    buildCtx.buildId,
+    buildCtx.argv,
+    [filePath]
+  )
+  
+  if (!parsedContentArray || parsedContentArray.length === 0) {
+    console.error(chalk.red(`Failed to parse file: ${filePath}`))
+    process.exit(1)
+  }
+  
+  // Extract the MDAST from the first result
+  const [ast, vfile] = parsedContentArray[0]
+  
+  // Create output directory
+  const outputDir = path.resolve(argv.output)
+  if (!fs.existsSync(outputDir)) {
+    await fs.promises.mkdir(outputDir, { recursive: true })
+  }
+  
+  // Generate output file name based on input file
+  const fileName = path.basename(filePath, path.extname(filePath)) + '.json'
+  const outputFile = path.join(outputDir, fileName)
+  
+  // Save MDAST to file
+  await fs.promises.writeFile(
+    outputFile,
+    JSON.stringify(ast, null, 2)
+  )
+  
+  console.log(chalk.green(`MDAST saved to: ${outputFile}`))
+}
+
+/**
+ * Handles `npx quartz convert`
+ * @param {*} argv arguments for `convert`
+ */
+export async function handleConvert(argv) {
+  console.log(chalk.bgGreen.black(`\n Quartz v${version} \n`))
+  
+  // Get the file path
+  const filePath = path.resolve(argv.file)
+  if (!fs.existsSync(filePath)) {
+    console.error(chalk.red(`File not found: ${filePath}`))
+    process.exit(1)
+  }
+  
+  console.log(`Processing file: ${filePath}`)
+  
+  // Set up the esbuild context
+  const result = await esbuild.context({
+    entryPoints: [fp],
+    outfile: cacheFile,
+    bundle: true,
+    keepNames: true,
+    minifyWhitespace: true,
+    minifySyntax: true,
+    platform: "node",
+    format: "esm",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+    packages: "external",
+    metafile: true,
+    sourcemap: true,
+    sourcesContent: false,
+    plugins: [
+      sassPlugin({
+        type: "css-text",
+        cssImports: true,
+      }),
+      sassPlugin({
+        filter: /\.inline\.scss$/,
+        type: "css",
+        cssImports: true,
+      }),
+      {
+        name: "inline-script-loader",
+        setup(build) {
+          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, async (args) => {
+            let text = await promises.readFile(args.path, "utf8")
+
+            // remove default exports that we manually inserted
+            text = text.replace("export default", "")
+            text = text.replace("export", "")
+
+            const sourcefile = path.relative(path.resolve("."), args.path)
+            const resolveDir = path.dirname(sourcefile)
+            const transpiled = await esbuild.build({
+              stdin: {
+                contents: text,
+                loader: "ts",
+                resolveDir,
+                sourcefile,
+              },
+              write: false,
+              bundle: true,
+              minify: true,
+              platform: "browser",
+              format: "esm",
+            })
+            const rawMod = transpiled.outputFiles[0].text
+            return {
+              contents: rawMod,
+              loader: "text",
+            }
+          })
+        },
+      },
+    ],
+  })
+  
+  // Create a mock build context with minimal configuration
+  const buildCtx = {
+    buildId: randomUUID().substring(0, 8),
+    argv: {
+      ...argv,
+      verbose: true
+    },
+    allSlugs: []
+  }
+  
+  // Use the worker approach to actually parse the file
+  // Transpile worker script first
+  await esbuild.build({
+    entryPoints: ["./quartz/worker.ts"],
+    outfile: path.join(cwd, ".quartz-cache/transpiled-worker.mjs"),
+    bundle: true,
+    keepNames: true,
+    platform: "node",
+    format: "esm",
+    packages: "external",
+    sourcemap: true,
+    sourcesContent: false,
+    plugins: [
+      {
+        name: "css-and-scripts-as-text",
+        setup(build) {
+          build.onLoad({ filter: /\.scss$/ }, (_) => ({
+            contents: "",
+            loader: "text",
+          }))
+          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, (_) => ({
+            contents: "",
+            loader: "text",
+          }))
+        },
+      },
+    ],
+  })
+  
+  // Import dynamically after transpilation
+  const { parseMarkdown } = await import("../../.quartz-cache/transpiled-worker.mjs")
+  
+  // Parse the file using the worker's parseMarkdown function
+  const [parsedContentArray, _slugs] = await parseMarkdown(
+    buildCtx.buildId,
+    buildCtx.argv,
+    [filePath]
+  )
+  
+  if (!parsedContentArray || parsedContentArray.length === 0) {
+    console.error(chalk.red(`Failed to parse file: ${filePath}`))
+    process.exit(1)
+  }
+  
+  // Extract the MDAST from the first result
+  const [ast, vfile] = parsedContentArray[0]
+  
+  // Create output directory
+  const outputDir = path.resolve(argv.output)
+  if (!fs.existsSync(outputDir)) {
+    await fs.promises.mkdir(outputDir, { recursive: true })
+  }
+  
+  // Generate output file based on format
+  const fileName = path.basename(filePath, path.extname(filePath))
+  let outputFile, outputContent
+  
+  if (argv.format === "latex") {
+    // Import rebber for LaTeX conversion - use dynamic import since it's a new dependency
+    const rebber = (await import("rebber")).default
+    
+    try {
+      // Convert MDAST to LaTeX
+      const latexContent = rebber(ast)
+      outputFile = path.join(outputDir, `${fileName}.tex`)
+      outputContent = latexContent
+      
+      console.log(`Converting MDAST to LaTeX...`)
+    } catch (error) {
+      console.error(chalk.red(`Failed to convert to LaTeX: ${error.message}`))
+      process.exit(1)
+    }
+  } else {
+    // Default to JSON (MDAST) output
+    outputFile = path.join(outputDir, `${fileName}.json`)
+    outputContent = JSON.stringify(ast, null, 2)
+  }
+  
+  // Save the output file
+  await fs.promises.writeFile(outputFile, outputContent)
+  
+  console.log(chalk.green(`Output saved to: ${outputFile}`))
 }

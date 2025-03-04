@@ -7,8 +7,9 @@ import {
   handleUpdate,
   handleRestore,
   handleSync,
+  handleConvert,
 } from "./cli/handlers.js"
-import { CommonArgv, BuildArgv, CreateArgv, SyncArgv } from "./cli/args.js"
+import { CommonArgv, BuildArgv, CreateArgv, SyncArgv, ConvertArgv } from "./cli/args.js"
 import { version } from "./cli/constants.js"
 
 yargs(hideBin(process.argv))
@@ -34,6 +35,9 @@ yargs(hideBin(process.argv))
   })
   .command("build", "Build Quartz into a bundle of static HTML files", BuildArgv, async (argv) => {
     await handleBuild(argv)
+  })
+  .command("convert", "Convert a markdown file to MDAST or LaTeX", ConvertArgv, async (argv) => {
+    await handleConvert(argv)
   })
   .showHelpOnFail(false)
   .help()

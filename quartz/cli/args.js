@@ -106,3 +106,26 @@ export const BuildArgv = {
     describe: "how many threads to use to parse notes",
   },
 }
+
+export const ConvertArgv = {
+  ...CommonArgv,
+  file: {
+    string: true,
+    alias: ["f"],
+    describe: "markdown file to process",
+    demandOption: true
+  },
+  output: {
+    string: true,
+    alias: ["o"],
+    default: "convert-output",
+    describe: "output folder for processed file",
+  },
+  format: {
+    string: true,
+    alias: ["fmt"],
+    choices: ["json", "latex"],
+    default: "latex",
+    describe: "output format (json for MDAST, latex for LaTeX)"
+  }
+}

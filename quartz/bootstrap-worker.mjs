@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 import workerpool from "workerpool"
-const cacheFile = "./.quartz-cache/transpiled-worker.mjs"
-const { parseMarkdown, processHtml } = await import(cacheFile)
+
+// The worker script is transpiled by esbuild to .quartz-cache/transpiled-worker.mjs
+import { parseMarkdown, processHtml } from "./.quartz-cache/transpiled-worker.mjs"
+
+// Expose the methods to the worker pool
 workerpool.worker({
   parseMarkdown,
-  processHtml,
+  processHtml
 })
