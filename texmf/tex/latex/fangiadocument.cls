@@ -12,8 +12,25 @@
 \RequirePackage{scrlayer-scrpage}
 \RequirePackage{accsupp}
 \RequirePackage{amsmath,amssymb}
-\RequirePackage[english,bidi=basic]{babel}
+
+
+%%% LANGUAGE
+\RequirePackage[hebrew, bidi=basic, provide=*]{babel}
+
+%%% FONTS
+\babelfont[hebrew]{rm}{David}
+\babelfont[hebrew]{sf}{Times New Roman}
+\babelfont[hebrew]{tt}{Courier New}
+
+\babelfont{rm}{lmroman12-regular}
+\babelfont{sf}{lmsans12-regular}
+\babelfont{tt}{lmmono12-regular}
+
 \RequirePackage[final,nopatch=footnote,babel=true]{microtype}
+\DeclareMicrotypeAlias{David}{TU-basic}
+
+%%% PACKAGES -------------------------------------------------------------------
+
 \RequirePackage{caption}
 \RequirePackage{ulem}
 \RequirePackage{newfloat}
@@ -29,7 +46,6 @@
 \RequirePackage{xparse}
 
 \RequirePackage{multicol}
-\RequirePackage{pagecolor}
 
 %%% TABLE PACKAGES
 \RequirePackage{tabularray}
@@ -53,21 +69,9 @@
 \RequirePackage[amsmath,hyperref]{ntheorem}
 \RequirePackage[hyperrefcolorlinks]{menukeys}
 
-%%% ABBREVIATIONS PACKAGES
-\RequirePackage{glossaries}
-
-%%% LANGUAGE
-\babelprovide[import,main]{hebrew}
-\babelprovide{rl}
-\babelfont{rm}{FreeSerif}
-
-%%% FONTS
-\babelfont{rm}[Language=Default]{Times New Roman}
-\babelfont[hebrew]{rm}{David}
-\setmainfont{Times New Roman}
 
 %%% Lua scripts
-\directlua{require("zmdocument.lua")}
+\directlua{require("fangiadocument.lua")}
 
 %%%  NOCOLOR OPTION
 %%% Define if it's in nocolor mode
@@ -278,7 +282,7 @@
 
 
 \DeclareOption{middle}{
-   \newcommand{\levelOneTitle}[1]{\displaySpoilers \chapter{#1}}
+   \newcommand{\levelOneTitle}[1]{\chapter{#1}}
    \let\levelTwoTitle\section
    \let\levelThreeTitle\subsection
    \let\levelFourTitle\subsubsection
@@ -292,8 +296,8 @@
 }
 
 \DeclareOption{big}{
-   \newcommand\levelOneTitle[1]{\displaySpoilers \part{#1}}
-   \newcommand\levelTwoTitle[1]{\displaySpoilers \chapter{#1}}
+   \newcommand\levelOneTitle[1]{\part{#1}}
+   \newcommand\levelTwoTitle[1]{\chapter{#1}}
    \let\levelThreeTitle\section
    \let\levelFourTitle\subsection
    \let\levelFiveTitle\subsubsection
@@ -404,14 +408,6 @@
    IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
 }
 
-%%% SPOILER
-\newtcolorbox{SpoilerBox}{
-   colback=ZdSBoxBackgroundSpoiler,
-   coltext=ZdSBoxForegroundSpoiler,
-   colframe=ZdSBoxBorderSpoiler,
-   borderline south={2pt}{-2pt}{ZdSBoxBorderSpoiler}
-}
-
 %%% CODE MANAGEMENT
 \tcbsetforeverylayer{} % Reset style
 
@@ -465,138 +461,6 @@
    \end{Iframe}
 }
 
-%%% SPOILER MANAGEMENT
-\let\levelSpoilerTitle\addsec
-\let\levelSpoiler\subsection
-
-\newcounter{@spoilerCounter}
-\setcounter{@spoilerCounter}{1}
-\newcounter{@spoilerCounterStart}
-\setcounter{@spoilerCounterStart}{1}
-
-\def\@spoilerList{}
-
-\newcommand{\spoilerFileName}[1]{\jobname-spoiler-#1.splr}
-
-
-\NewDocumentCommand{\FetchoptionalArgAndCallVerbatim}{o}{%
-   \hypertarget{show:\thepart\thechapter\the@spoilerCounter}{}
-   \label{show:\the@spoilerCounter}
-   \begin{SpoilerBox}
-   \hyperlink{secret:\thepart\thechapter\the@spoilerCounter}{%
-      \color{ZdSBoxForegroundSpoiler}\spoilerIcon~
-      \IfNoValueTF{#1}{Contenu masqué~n°\the@spoilerCounter}{#1}
-      \iftoggle{print}{%
-         ~(disponible à la page~\pageref{secret:\the@spoilerCounter})}{}
-      \color{defaultColor}
-   }
-   \end{SpoilerBox}%
-   \listgadd{\@spoilerList}{\IfNoValueTF{#1}{}{#1}}%
-   \begingroup\tcbverbatimwrite{\spoilerFileName{\the@spoilerCounter}}
-}%
-
-\newenvironment{Spoiler}{%
-  \begingroup
-  \let\do\@makeother
-  \dospecials
-  \@vobeyspaces
-  \obeylines
-  \kernel@ifnextchar[%
-                    {\endgroup\FetchoptionalArgAndCallVerbatim}%
-                    {\endgroup\FetchoptionalArgAndCallVerbatim \relax}%
-}{%
-   \endtcbverbatimwrite\endgroup
-   \addtocounter{@spoilerCounter}{1}
-}
-
-\newcommand{\displaySpoilers}{%
-   \setcounter{@spoilerCounter}{\the@spoilerCounterStart}
-   \ifdefvoid{\@spoilerList}{}{\levelSpoilerTitle{Contenu masqué}}
-   \def\do{}
-   \renewcommand{\do}[1]{%
-      \levelSpoiler*{Contenu masqué~n°\the@spoilerCounter\if##1\empty\else~:\\##1\fi}%
-      \label{secret:\the@spoilerCounter}%
-      \hypertarget{secret:\thepart\thechapter\the@spoilerCounter}{}
-      \input{\spoilerFileName{\the@spoilerCounter}}
-      \hfill \hyperlink{show:\thepart\thechapter\the@spoilerCounter}{
-         \iftoggle{print}{%
-            Référencé page~\pageref{show:\the@spoilerCounter}%
-         }{%
-            Retourner au texte.%
-         }
-      }
-
-      \addtocounter{@spoilerCounter}{1}
-   }
-   \expandafter\dolistloop{\@spoilerList}
-   \def\@spoilerList{}
-   \setcounter{@spoilerCounterStart}{\the@spoilerCounter}
-}
-
-
-%%% FOOTNOTES APPENDIX
-\let\levelAppendixTitle\addsec
-\let\levelAppendix\subsection
-
-\newcounter{@appendixCounter}
-\setcounter{@appendixCounter}{1}
-\newcounter{@appendixCounterStart}
-\setcounter{@appendixCounterStart}{1}
-
-\def\@appendixList{}
-
-\newcommand{\appendixFileName}[1]{\jobname-appendix-#1.splr}
-
-\NewDocumentEnvironment{Appendix}{}{%
-   \hypertarget{show-annexe:\the@appendixCounter}{}
-   \label{show-annexe:\the@appendixCounter}
-   \hyperlink{annexe:\the@appendixCounter}{%
-      (Voir contenu en annexe~n°\the@appendixCounter%
-      \iftoggle{print}{%
-         ~(disponible à la page~\pageref{annexe:\the@appendixCounter})}{}%
-      )
-   }
-   \begingroup\tcbverbatimwrite{\appendixFileName{\the@appendixCounter}}\%
-   }{
-   \endtcbverbatimwrite\endgroup
-   \listgadd{\@appendixList}{{1}}%
-   \addtocounter{@appendixCounter}{1}
-}
-
-\newcommand{\displayAppendices}{%
-   \setcounter{@appendixCounter}{\the@appendixCounterStart}
-   \ifdefvoid{\@appendixList}{}{\levelAppendixTitle{Annexes}}
-   \appendix
-   \def\do{}
-   \renewcommand{\do}[1]{%
-      \levelAppendix*{Annexe~n°\the@appendixCounter}%
-      \label{annexe:\the@appendixCounter}%
-      \hypertarget{annexe:\the@appendixCounter}{}
-      \input{\appendixFileName{\the@appendixCounter}}
-      \hfill \hyperlink{show-annexe:\the@appendixCounter}{
-         \iftoggle{print}{%
-            Référencé page~\pageref{show-annexe:\the@appendixCounter}%
-         }{%
-            Retourner au texte.%
-         }
-      }
-      \addtocounter{@appendixCounter}{1}
-   }
-   \expandafter\dolistloop{\@appendixList}
-   \def\@appendixList{}
-   \setcounter{@appendixCounterStart}{\the@appendixCounter}
-}
-
-
-\VerbatimFootnotes
-
-
-\AtEndDocument{%
-   \displaySpoilers
-   \displayAppendices
-   \printglossary[title=Liste des abréviations]
-}
-
 %%% TABLES
 % Remove default caption
 \DefTblrTemplate{contfoot-text}{default}{}
@@ -610,100 +474,13 @@
 \SetTblrOuter[zdstblr]{long}
 
 %%% TITLE PAGE
-
 \def\@imagesPath{./img}
 \newcommand{\imagesPath}[1]{\def\@imagesPath{#1}}
 \newcommand{\tutoLink}[1]{\def\@tutoLink{#1}}
 
-\newcommand{\licence}[3][]{%
-   \ifthenelse{\isempty{#1}}%
-   {\def\@licence{\color{alternativeTextColor}Licence~:~\@titlePageLink{#2}{#3}}}
-   {\def\@licence{\@titlePageLink{\includegraphics[width=0.5\textwidth]{#1}}{#3}}}
-}
-
 \newcommand{\website}[1]{\def\@website{#1}}
-\newcommand{\editor}[1]{\def\@editor{#1}}
-\newcommand{\editorLogo}[2][]{
-\def\@editorLogo{#2}
-\ifthenelse{\isempty{#1}}
-{}
-{\def\@editorLogoSentence{#1}}
-}
 \newcommand{\authorlink}[1]{\def\@authorlink{#1}}
 
-\newcounter{@listSize}
-\newcommand{\getListSize}[1]{%
-   \setcounter{@listSize}{0}
-   \renewcommand*{\do}[1]{\addtocounter{@listSize}{1}}
-   \expandafter\docsvlist\expandafter{#1}
-}
-
-\renewcommand{\maketitle}{%
-   \setcounter{page}{0}
-   \ifcsdef{@authorlink}{}{\authorlink{https://zestedesavoir.com/@}}
-   \ifcsdef{@website}{}{\website{https://zestedesavoir.com}}
-   \ifcsdef{@editor}{}{\editor{https://zestedesavoir.com}}
-   \ifcsdef{@tutoLink}{}{\tutoLink{\@website}}
-   \pagecolor{titlePageBackgroundColor}
-   \color{titlePageTextColor}
-   \clearpage
-   \newgeometry{top=1cm, bottom=1cm, right=1.5cm,left=1.5cm}
-
-   \begin{table}[h!]
-      \begin{center}
-         \begin{tabular}{ p{0.7\textwidth} p{0.3\textwidth}  }
-            \vspace{0pt}
-            \begin{minipage}{0.7\textwidth}
-               \directlua{formatAuthors(\luastringO{\@author}, \luastringO{\@authorlink})}
-            \end{minipage}
-               &
-            \vspace{0pt}
-            \ifcsdef{@licence}{
-               \begin{minipage}[t]{0.3\textwidth}
-                  \hspace{\fill}\@licence
-               \end{minipage}
-            }{}
-         \end{tabular}
-      \end{center}
-   \end{table}
-
-   \begin{center}
-      \vspace{4cm}
-      \huge\textbf{\@title}\\
-      \color{chapterColor}\rule{\textwidth}{1 mm} \\
-      \ifthenelse{\isempty{\@date}}
-      {}
-      {\LARGE {\color{coverDateColor} \textbf{\@date}}}
-      \normalcolor
-      \vspace*{\fill}
-   \end{center}
-   \vspace*{2.1cm}
-   \begin{center}
-      \@titlePageLink{%
-         \begin{minipage}{0.5\textwidth}
-            \ifcsdef{@editorLogo}{%
-            \begin{center}
-               \includegraphics[max width=8cm, max height=2cm, keepaspectratio]{\@editorLogo} \\
-               \ifcsdef{@editorLogoSentence}{\color{alternativeTextColor} \@editorLogoSentence}{}
-            \end{center}
-            }{}
-            \normalcolor
-         \end{minipage}
-      }{https://zestedesavoir.com} \\
-   \end{center}
-   \restoregeometry
-   \newpage
-   \newpagecolor{white}
-   \color{defaultColor}
-   % flyleaf
-   \strut
-   \thispagestyle{empty}
-   \newpage
-   \setcounter{page}{1}
-   % Author page (if necessary)
-   \directlua{makeAuthorsPage()}
-   \newpage
-}
 
 \hypersetup{pdftitle={\@title}}
 \hypersetup{pdfauthor={\@author}}
@@ -711,26 +488,15 @@
 %%% IMAGES
 \NewDocumentCommand{\image}{mo}{%
    \begin{center}
-      \includegraphics[max size={\linewidth}{0.9\textheight}, keepaspectratio]{#1}
+      \includegraphics[max size={\linewidth}{0.9\textheight}, keepaspectratio]{\@imagesPath\ #1}
       \IfValueT{#2}{\captionof{figure}{#2}}
    \end{center}
 }
 
 \DeclareRobustCommand*{\inlineImage}[1]{\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
 
-%%% SMILEYS
-\def\@smileysPath{./smileys}
-\newcommand{\smileysPath}[1]{\def\@smileysPath{#1}}
-\DeclareRobustCommand*{\smiley}[1]{\raisebox{-3pt}{\includegraphics[height=15pt]{\@smileysPath/#1}} }
-
 %%% HORIZONTAL LINE
 \newcommand{\horizontalLine}{{\color{horizontalLineColor}\rule{\linewidth}{1.0pt}}}
-
-%%% ABBREVIATIONS
-\NewDocumentCommand{\abbr}{mom}{%
-   \newglossaryentry{\IfNoValueTF{#2}{\directlua{cleanAbbrvLabel(\luastringO{#1})}}{#2}}{name=#1, description={#3}}%
-   \gls{\IfNoValueTF{#2}{\directlua{cleanAbbrvLabel(\luastringO{#1})}}{#2}}%
-}
 
 %%% Hyperref -------------------------------------------------------------------
 
@@ -741,7 +507,6 @@
 
 \pdfstringdefDisableCommands{
    \def\sout#1{}%
-   \def\smiley#1{}%
    \def\externalLink#1#2{#1}%
    \def\inlineImage#1{}%
 }
@@ -750,10 +515,3 @@
 %%% MathJax and KaTeX
 \newcommand{\gt}{>}
 \newcommand{\lt}{<}
-
-
-%%% Ping
-
-\def\@profileLink{https://zestedesavoir.com/membres/voir/}
-\newcommand{\profileLink}[1]{\def\@profileLink{#1}}
-\newcommand{\ping}[1]{\href{\@profileLink#1}{\textbf{@#1}}}

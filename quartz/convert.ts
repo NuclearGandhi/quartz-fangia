@@ -149,26 +149,105 @@ export async function convertMarkdown(argv: Argv) {
     log.end(`Parsed markdown file in ${perf.timeSince()}`)
     
     // Generate output file based on format
-    const fileName = path.basename(filePath, path.extname(filePath))
+    const title = path.basename(filePath, path.extname(filePath))
+    const authors = ["Ido Fang Bentov"]
+
+    const fileName = title.replace(/[^a-zA-Z0-9]/g, '')
     let outputFile: string, outputContent: string
     
     // Process according to format
     if (argv.format === "latex") {
       try {
         log.start("Converting to LaTeX")
-        outputContent = mdastToLatex(ast, {
-          // Rebber options
-          footnoteBackRefLabel: '↩',
-          footnoteLabel: 'footnote',
-          footnoteBackLabel: 'back',
-          wrapInlineNodes: true,
+
+
+        const rebberConfig = {
           overrides: {
-            yaml: () => '',
-            math: require('rebber-plugins/dist/type/math'),
+            yaml: () => '', // Ignore YAML frontmatter
+
+            abbr: require('rebber-plugins/dist/type/abbr'),
+            comments: require('rebber-plugins/dist/type/comments'),
+            conclusion: require('rebber-plugins/dist/type/conclusion'),
+            emoticon: require('rebber-plugins/dist/type/emoticon'),
+            figure: require('rebber-plugins/dist/type/figure'),
+            gridTable: require('rebber-plugins/dist/type/gridTable'),
             inlineMath: require('rebber-plugins/dist/type/math'),
-          }
-        })
+            introduction: require('rebber-plugins/dist/type/introduction'),
+            kbd: require('rebber-plugins/dist/type/kbd'),
+            math: require('rebber-plugins/dist/type/math'),
+            ping: require('rebber-plugins/dist/type/ping'),
+            sub: require('rebber-plugins/dist/type/sub'),
+            sup: require('rebber-plugins/dist/type/sup'),
+            tableHeader: require('rebber-plugins/dist/type/tableHeader'),
         
+            footnote: require('rebber-plugins/dist/type/footnote'),
+            footnoteDefinition: require('rebber-plugins/dist/type/footnoteDefinition'),
+            footnoteReference: require('rebber-plugins/dist/type/footnoteReference'),
+        
+            centerAligned: require('rebber-plugins/dist/type/align'),
+            leftAligned: require('rebber-plugins/dist/type/align'),
+            rightAligned: require('rebber-plugins/dist/type/align'),
+        
+            errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+            informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+            neutralCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+            questionCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+            secretCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+            warningCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
+        
+            iframe: (ctx: any, node: any) => {
+              const alternative = node.data.hProperties.src.includes('jsfiddle') ? 'Code' : 'Video'
+              const caption = node.caption || ''
+              return `\\iframe{${node.data.hProperties.src}}[${alternative}][${caption}]`
+            }
+          },
+          codeAppendiceTitle: 'Annexes',
+          customBlocks: {
+            map: {
+              error: 'Error',
+              information: 'Information',
+              question: 'Question',
+              secret: 'Spoiler',
+              warning: 'Warning',
+              neutre: 'Neutral'
+            }
+          },
+          image: {
+            inlineImage: (node: any) => `\\inlineImage{${node.url}}`,
+            image: (node: any) => `\\image${node.url}}`
+          },
+          firstLineRowFont: '\\rowfont[l]{\\bfseries}',
+          tableEnvName: 'zdstblr',
+          figure: {
+            image: (_1: any, _2: any, caption: any, extra:any) => `\\image{${extra.url}}${caption ? `[${caption}]` : ''}\n`
+          },
+          headings: [
+            (val: any) => `\\levelOneTitle{${val}}\n`,
+            (val: any) => `\\levelTwoTitle{${val}}\n`,
+            (val: any) => `\\levelThreeTitle{${val}}\n`,
+            (val: any) => `\\levelFourTitle{${val}}\n`,
+            (val: any) => `\\levelFiveTitle{${val}}\n`,
+            (val: any) => `\\levelSixTitle{${val}}\n`,
+            (val: any) => `\\levelSevenTitle{${val}}\n`
+          ]
+        }
+
+        const latexBody = mdastToLatex(ast, rebberConfig)
+
+        const contentType = "small"
+        const disableToc = false
+        outputContent = `\\documentclass[${contentType}]{fangiadocument}
+          \\usepackage{blindtext}
+          \\title{${title}}
+          \\author{${authors.join(', ')}}
+
+          \\begin{document}
+          \\maketitle
+          ${disableToc ? '' : '\\tableofcontents'}
+
+          ${latexBody}
+          \\end{document}`
+
         outputFile = path.join(outputDir, `${fileName}.tex`)
         log.end(`LaTeX conversion completed in ${perf.timeSince()}`)
       } catch (error: any) {
