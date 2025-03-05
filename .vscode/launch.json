@@ -8,6 +8,24 @@
         "args": ["build", "--serve"],
         "cwd": "${workspaceFolder}",
         "console": "integratedTerminal",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Convert to TEX",
+        "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
+        "args": ["convert", "-f", "${file}"],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Convert to MDAST",
+        "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
+        "args": ["convert", "-f", "${file}", "--format", "json"],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
       }
     ]
   }

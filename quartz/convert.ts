@@ -10,6 +10,7 @@ import { options } from "./util/sourcemap"
 import chalk from "chalk"
 import { createRequire } from 'module'
 import { QuartzLogger } from "./util/log"
+import { ConvertResources } from "./plugins/transformers/convertResources"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -130,6 +131,14 @@ export async function convertMarkdown(argv: Argv) {
     allSlugs: []
   }
   
+  // Add the ConvertResources plugin specifically for the convert command
+  ctx.cfg.plugins.transformers.push(ConvertResources({
+    outputDir: outputDir,
+    copyResources: true,
+    resourcesDir: "resources",
+    logLevel: argv.verbose ? "verbose" : "normal"
+  }))
+  
   try {
     log.start("Parsing markdown file")
     
@@ -159,7 +168,7 @@ export async function convertMarkdown(argv: Argv) {
     if (argv.format === "latex") {
       try {
         log.start("Converting to LaTeX")
-
+        const escapeImageUrl = (url: string) => url
 
         const rebberConfig = {
           overrides: {
@@ -213,8 +222,8 @@ export async function convertMarkdown(argv: Argv) {
             }
           },
           image: {
-            inlineImage: (node: any) => `\\inlineImage{${node.url}}`,
-            image: (node: any) => `\\image${node.url}}`
+            inlineImage: (node: any) => `\\inlineImage{${escapeImageUrl(node.url)}}`,
+            image: (node: any) => `\\image{${escapeImageUrl(node.url)}}`
           },
           firstLineRowFont: '\\rowfont[l]{\\bfseries}',
           tableEnvName: 'zdstblr',
@@ -240,10 +249,10 @@ export async function convertMarkdown(argv: Argv) {
           \\usepackage{blindtext}
           \\title{${title}}
           \\author{${authors.join(', ')}}
+          \\graphicspath{ {resources/} }
 
           \\begin{document}
           \\maketitle
-          ${disableToc ? '' : '\\tableofcontents'}
 
           ${latexBody}
           \\end{document}`

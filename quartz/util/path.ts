@@ -245,6 +245,7 @@ export function transformLink(src: FullSlug, target: string, opts: TransformOpti
     }
 
     // if it's not unique, then it's the absolute path from the vault root
+    const paaa = pathToRoot(src)
     return (joinSegments(pathToRoot(src), canonicalSlug) + folderTail) as RelativeURL
   }
 }

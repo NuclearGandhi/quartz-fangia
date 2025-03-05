@@ -1,7 +1,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{fangiadocument}
 
-\LoadClass[a4paper,fontsize=12pt,twoside=false,numbers=enddot,parskip=half,toc=indentunnumbered]{scrbook}
+\LoadClass[a4paper,fontsize=12pt,twoside=true,numbers=enddot,parskip=half,toc=indentunnumbered]{scrbook}
 
 %%% PACKAGES -------------------------------------------------------------------
 
@@ -11,7 +11,7 @@
 \RequirePackage[dvipsnames,table]{xcolor}
 \RequirePackage{scrlayer-scrpage}
 \RequirePackage{accsupp}
-\RequirePackage{amsmath,amssymb}
+\RequirePackage{amsmath,amssymb, cancel}
 
 
 %%% LANGUAGE
@@ -22,12 +22,7 @@
 \babelfont[hebrew]{sf}{Times New Roman}
 \babelfont[hebrew]{tt}{Courier New}
 
-\babelfont{rm}{lmroman12-regular}
-\babelfont{sf}{lmsans12-regular}
-\babelfont{tt}{lmmono12-regular}
-
 \RequirePackage[final,nopatch=footnote,babel=true]{microtype}
-\DeclareMicrotypeAlias{David}{TU-basic}
 
 %%% PACKAGES -------------------------------------------------------------------
 
@@ -474,10 +469,6 @@
 \SetTblrOuter[zdstblr]{long}
 
 %%% TITLE PAGE
-\def\@imagesPath{./img}
-\newcommand{\imagesPath}[1]{\def\@imagesPath{#1}}
-\newcommand{\tutoLink}[1]{\def\@tutoLink{#1}}
-
 \newcommand{\website}[1]{\def\@website{#1}}
 \newcommand{\authorlink}[1]{\def\@authorlink{#1}}
 
@@ -488,7 +479,7 @@
 %%% IMAGES
 \NewDocumentCommand{\image}{mo}{%
    \begin{center}
-      \includegraphics[max size={\linewidth}{0.9\textheight}, keepaspectratio]{\@imagesPath\ #1}
+      \includegraphics[max size={\linewidth}{0.9\textheight}, keepaspectratio]{#1}
       \IfValueT{#2}{\captionof{figure}{#2}}
    \end{center}
 }
