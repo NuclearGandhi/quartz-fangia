@@ -6,12 +6,13 @@
 %%% PACKAGES -------------------------------------------------------------------
 
 \RequirePackage{luatex85}
-\RequirePackage{fontspec}
 \RequirePackage{scrhack}
 \RequirePackage[dvipsnames,table]{xcolor}
 \RequirePackage{scrlayer-scrpage}
 \RequirePackage{accsupp}
 \RequirePackage{amsmath,amssymb, cancel}
+\RequirePackage{siunitx}
+\RequirePackage{svg}
 
 
 %%% LANGUAGE
@@ -19,8 +20,13 @@
 
 %%% FONTS
 \babelfont[hebrew]{rm}{David}
-\babelfont[hebrew]{sf}{Times New Roman}
+\babelfont[hebrew]{sf}{Arial}
 \babelfont[hebrew]{tt}{Courier New}
+
+\RequirePackage{fontspec}
+\setmainfont{David}
+\setsansfont{Arial}
+\setmonofont{Courier New}
 
 \RequirePackage[final,nopatch=footnote,babel=true]{microtype}
 
@@ -53,11 +59,6 @@
 \RequirePackage{grffile}
 \let\quote@name\unquote@name % Fix grffile
 
-\epstopdfDeclareGraphicsRule{.gif}{png}{.png}{convert gif:#1 png:\OutputFile}
-\AppendGraphicsExtensions{.gif}
-
-\epstopdfDeclareGraphicsRule{.svg}{pdf}{.pdf}{rsvg-convert -f pdf #1 -o \OutputFile}
-\AppendGraphicsExtensions{.svg}
 
 \RequirePackage{hyperref}
 \hypersetup{luatex,unicode,bookmarks=true,hyperindex=true,bookmarksopen=true,bookmarksnumbered=true}
@@ -196,28 +197,28 @@
 \def\boxIcon{[draw=none] circle (0.4cm)}
 
 \DeclareRobustCommand{\linkIcon}{\tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{%
-\begin{scope}[x=1ex, y=1ex]
-   \clip (-0.1,-0.1)
-   --++ (-0, 1.2)
-   --++ (0.6, 0)
-   --++ (0, -0.6)
-   --++ (0.6, 0)
-   --++ (0, -1);
-   \path[draw,
-   line width = 0.5,
-   rounded corners=0.5]
-   (0,0) rectangle (1,1);
-\end{scope}
-\path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
-\path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
+      \begin{scope}[x=1ex, y=1ex]
+         \clip (-0.1,-0.1)
+         --++ (-0, 1.2)
+         --++ (0.6, 0)
+         --++ (0, -0.6)
+         --++ (0.6, 0)
+         --++ (0, -1);
+         \path[draw,
+            line width = 0.5,
+            rounded corners=0.5]
+         (0,0) rectangle (1,1);
+      \end{scope}
+      \path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
+      \path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
 }
 
 \def\spoilerIcon{%
-\begin{tikzpicture}[scale=0.05]
-   \draw[semithick](-3,0) .. controls (-2,2.5) and (2,2.5) .. (3,0) .. controls (2,-2.5) and (-2,-2.5) .. (-3,0)--cycle;
-   \draw[thin](0,0.6) arc (90:180:0.6cm);
-   \draw (0,0) circle [radius=1.2];
-\end{tikzpicture}}
+   \begin{tikzpicture}[scale=0.05]
+      \draw[semithick](-3,0) .. controls (-2,2.5) and (2,2.5) .. (3,0) .. controls (2,-2.5) and (-2,-2.5) .. (-3,0)--cycle;
+      \draw[thin](0,0.6) arc (90:180:0.6cm);
+      \draw (0,0) circle [radius=1.2];
+   \end{tikzpicture}}
 
 %%% CLASS OPTIONS --------------------------------------------------------------
 
@@ -335,26 +336,26 @@
 
 %%% ZDS BOX
 \newcommand{\newZdSBox}[3]{{%
-   \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
-   \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
-   \theoremindent=2em
-   \theoremheaderfont{\scshape\hspace{-2em}}
-   \theoremseparator{ ---}
-   \theoremstyle{break}
-   \theorembodyfont{\normalfont}
-   \newtheorem*{#1}{\textcolor{#3}{#2}}
-}}
+         \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
+         \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
+         \theoremindent=2em
+         \theoremheaderfont{\scshape\hspace{-2em}}
+         \theoremseparator{ ---}
+         \theoremstyle{break}
+         \theorembodyfont{\normalfont}
+         \newtheorem*{#1}{\textcolor{#3}{#2}}
+      }}
 
 \newcommand{\newZdSBoxEnvironment}[2]{%
    \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
-                      {\end{#2}\end{minipage}}
+   {\end{#2}\end{minipage}}
 }
 
 % Create box icon
 \newcommand{\createBoxIcon}[2]{
    \begin{tikzpicture} %
-   \fill (0, 0.5) [color=#1] \boxIcon; %
-   \draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
+      \fill (0, 0.5) [color=#1] \boxIcon; %
+      \draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
    \end{tikzpicture} %
 }
 
@@ -377,10 +378,10 @@
       titlerule=0mm,
       IfValueTF={##1}{title=##1}{},
       overlay={
-         \IfValueTF{#6}
-         {\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
-         {}
-      }
+            \IfValueTF{#6}
+            {\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
+            {}
+         }
    }%
 }
 
@@ -418,32 +419,32 @@
 
 \renewcommand\theFancyVerbLine{%
    \BeginAccSupp{ActualText={}}%
-      \small\textcolor{lineNumberCodeColor}{\arabic{FancyVerbLine}}%
-   \EndAccSupp{}%
+\small\textcolor{lineNumberCodeColor}{\arabic{FancyVerbLine}}%
+\EndAccSupp{}%
 }
 
 \DeclareTCBListing{CodeBlock}{O{}O{}O{1}m}{%
-   enlarge top initially by=5mm,
-   enlarge bottom finally by=1mm,
-   boxrule=0.5pt,
-   breakable,
-   colback=codeBackgroundColor,
-   coltext=defaultColor,
-   colframe=ZdSBoxBorderSpoiler,
-   arc=0.0pt,
-   listing engine=minted,
-   listing only,
-   minted style=colorful,
-   minted language=#4,
-   minted options={highlightlines={#2}, firstnumber=#3,numbersep=3mm},
-   enhanced,
-   overlay={\begin{tcbclipinterior}\fill[lineNumberSeparatorCodeColor] ([xshift=8mm-0.5pt]frame.south west)
-   rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
-   left=8mm,
-   title=#1,
-   attach boxed title to bottom center,
-   boxed title style={empty,boxrule=0.5mm},
-   coltitle=defaultColor
+enlarge top initially by=5mm,
+enlarge bottom finally by=1mm,
+boxrule=0.5pt,
+breakable,
+colback=codeBackgroundColor,
+coltext=defaultColor,
+colframe=ZdSBoxBorderSpoiler,
+arc=0.0pt,
+listing engine=minted,
+listing only,
+minted style=colorful,
+minted language=#4,
+minted options={highlightlines={#2}, firstnumber=#3,numbersep=3mm},
+enhanced,
+overlay={\begin{tcbclipinterior}\fill[lineNumberSeparatorCodeColor] ([xshift=8mm-0.5pt]frame.south west)
+         rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
+left=8mm,
+title=#1,
+attach boxed title to bottom center,
+boxed title style={empty,boxrule=0.5mm},
+coltitle=defaultColor
 }
 
 \sethlcolor{codeBackgroundColor}
@@ -469,22 +470,22 @@
 \SetTblrOuter[zdstblr]{long}
 
 %%% TITLE PAGE
-\newcommand{\website}[1]{\def\@website{#1}}
-\newcommand{\authorlink}[1]{\def\@authorlink{#1}}
-
-
-\hypersetup{pdftitle={\@title}}
-\hypersetup{pdfauthor={\@author}}
-
 %%% IMAGES
 \NewDocumentCommand{\image}{mo}{%
    \begin{center}
-      \includegraphics[max size={\linewidth}{0.9\textheight}, keepaspectratio]{#1}
+      % If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
+      \IfEndWith{#1}{.svg}
+      {\includesvg[width=\linewidth, height=0.9\textheight]{#1}}
+      {\includegraphics[max width=\linewidth, max height=0.9\textheight]{#1}}
       \IfValueT{#2}{\captionof{figure}{#2}}
    \end{center}
 }
 
-\DeclareRobustCommand*{\inlineImage}[1]{\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
+\DeclareRobustCommand*{\inlineImage}[1]{
+   \IfEndWith{#1}{.svg}
+   {\includesvg[width=\linewidth, height=\textheight]{#1}}
+   {\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
+}
 
 %%% HORIZONTAL LINE
 \newcommand{\horizontalLine}{{\color{horizontalLineColor}\rule{\linewidth}{1.0pt}}}

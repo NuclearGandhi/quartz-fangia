@@ -3,7 +3,7 @@ import { visit } from "unist-util-visit"
 import isAbsoluteUrl from "is-absolute-url"
 import path from "path"
 import fs from "fs"
-import { FilePath, FullSlug, RelativeURL } from "../../util/path"
+import { FilePath, FullSlug, RelativeURL, sluggify } from "../../util/path"
 import chalk from "chalk"
 
 export interface Options {
@@ -92,12 +92,14 @@ export const ConvertResources: QuartzTransformerPlugin<Partial<Options>> = (user
                                 const entries = fs.readdirSync(dir, { withFileTypes: true })
                                 for (const entry of entries) {
                                     const entryPath = path.join(dir, entry.name)
+                                    const entryName = sluggify(entry.name)
+
                                     if (entry.isDirectory()) {
                                         const result = findFileRecursively(entryPath, url)
                                         if (result) {
                                             return result
                                         }
-                                    } else if (entry.isFile() && entry.name === path.basename(url)) {
+                                    } else if (entry.isFile() && entryName === path.basename(url)) {
                                         return entryPath
                                     }
                                 }
@@ -158,53 +160,6 @@ export const ConvertResources: QuartzTransformerPlugin<Partial<Options>> = (user
                                 log(`Transformed URL: ${originalUrl} → ${newUrl}`, "info")
                             } else {
                                 log(`Could not resolve resource: ${originalUrl}`, "warn")
-                            }
-                        })
-                        
-                        // Process HTML element nodes with src attributes
-                        visit(tree, "element", (node) => {
-                            if (
-                                ["img", "video", "audio", "iframe"].includes(node.tagName) &&
-                                typeof node.url === "string"
-                            ) {
-                                
-                                const src = node.url
-                                
-                                // Check if we've already processed this URL
-                                if (processedResources.has(src)) {
-                                    node.url = processedResources.get(src)!
-                                    return
-                                }
-                                
-                                // Find the file on disk
-                                const resolvedFilePath = findFile(src)
-                                
-                                if (resolvedFilePath) {
-                                    const originalFileName = path.basename(resolvedFilePath)
-                                    const fileName = sanitizeFileName(originalFileName)
-                                    
-                                    // Copy file to output resources directory if needed
-                                    if (opts.copyResources) {
-                                        try {
-                                            fs.copyFileSync(
-                                                resolvedFilePath, 
-                                                path.join(outputResourcesDir, fileName)
-                                            )
-                                            log(`Copied resource: ${originalFileName} → ${fileName}`, "info")
-                                        } catch (err) {
-                                            log(`Failed to copy resource: ${fileName} - ${err}`, "error")
-                                        }
-                                    }
-                                    
-                                    // Update the src to point to the resource in the output directory
-                                    const newSrc = path.posix.join(opts.resourcesDir, fileName)
-                                    node.url = newSrc
-                                    processedResources.set(src, newSrc)
-                                    
-                                    log(`Transformed URL: ${src} → ${newSrc}`, "info")
-                                } else {
-                                    log(`Could not resolve resource: ${src}`, "warn")
-                                }
                             }
                         })
                         

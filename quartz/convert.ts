@@ -11,6 +11,8 @@ import chalk from "chalk"
 import { createRequire } from 'module'
 import { QuartzLogger } from "./util/log"
 import { ConvertResources } from "./plugins/transformers/convertResources"
+import math from "./plugins/custom-rebber/math"
+import mathEscape from "./plugins/custom-rebber/mathEscape"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -23,7 +25,7 @@ function mdastToLatex(ast: any, options: any = {}): string {
   try {
     // Get the Node.js module system
     const Module = require('module')
-    
+
     // Create our visit mock function
     function visitMock(tree: any, test: any, visitor: any) {
       // If only two arguments are provided, the second is the visitor
@@ -31,12 +33,12 @@ function mdastToLatex(ast: any, options: any = {}): string {
         visitor = test
         test = null
       }
-      
+
       // Helper to visit a node and its children
       function visitNode(node: any, index: number | null, parent: any) {
         // Skip non-objects
         if (!node || typeof node !== 'object') return true
-        
+
         // Check if this node matches the test
         let matches = !test
         if (typeof test === 'string') {
@@ -46,14 +48,14 @@ function mdastToLatex(ast: any, options: any = {}): string {
         } else if (typeof test === 'function') {
           matches = test(node, index, parent)
         }
-        
+
         // Call visitor if we have a match
         if (matches && visitor) {
           const result = visitor(node, index, parent)
           // If visitor returns false, stop traversal
           if (result === false) return false
         }
-        
+
         // Visit children
         if (Array.isArray(node.children)) {
           for (let i = 0; i < node.children.length; i++) {
@@ -61,16 +63,16 @@ function mdastToLatex(ast: any, options: any = {}): string {
             if (childResult === false) return false
           }
         }
-        
+
         return true
       }
-      
+
       visitNode(tree, null, null)
     }
-    
+
     // Find the path to unist-util-visit in the node_modules folder
     const visitModulePath = require.resolve('unist-util-visit')
-    
+
     // Inject our mock directly into the module cache
     // This makes `require('unist-util-visit')` return our mock function
     Module._cache[visitModulePath] = {
@@ -79,13 +81,13 @@ function mdastToLatex(ast: any, options: any = {}): string {
       loaded: true,
       children: []
     }
-    
+
     // Now require rebber with our mock in place
     const rebber = require('rebber')
-    
+
     // Clean up by removing our mock from the cache
     delete Module._cache[visitModulePath]
-    
+
     // Convert to LaTeX
     return rebber.toLaTeX(ast, options)
   } catch (err: any) {
@@ -103,7 +105,7 @@ function mdastToLatex(ast: any, options: any = {}): string {
 export async function convertMarkdown(argv: Argv) {
   const perf = new PerfTimer()
   const log = new QuartzLogger(argv.verbose)
-  
+
   // Get the file path
   if (!argv.file) {
     console.error(chalk.red(`File argument is missing`))
@@ -114,15 +116,15 @@ export async function convertMarkdown(argv: Argv) {
     console.error(chalk.red(`File not found: ${filePath}`))
     process.exit(1)
   }
-  
+
   console.log(`Processing file: ${filePath}`)
-  
+
   // Create output directory
   const outputDir = path.resolve(argv.output)
   if (!fs.existsSync(outputDir)) {
     await fs.promises.mkdir(outputDir, { recursive: true })
   }
-  
+
   // Set up build context
   const ctx: BuildCtx = {
     buildId: Math.random().toString(36).substring(2, 8),
@@ -130,7 +132,7 @@ export async function convertMarkdown(argv: Argv) {
     cfg: (await import("../quartz.config.js")).default,
     allSlugs: []
   }
-  
+
   // Add the ConvertResources plugin specifically for the convert command
   ctx.cfg.plugins.transformers.push(ConvertResources({
     outputDir: outputDir,
@@ -138,39 +140,45 @@ export async function convertMarkdown(argv: Argv) {
     resourcesDir: "resources",
     logLevel: argv.verbose ? "verbose" : "normal"
   }))
-  
+
   try {
     log.start("Parsing markdown file")
-    
+
     // Use the existing file parser to parse the markdown file - just like parseMarkdown does internally
     const mdProcessor = createMdProcessor(ctx)
     const fileParser = createFileParser(ctx, [filePath])
     const mdContent = await fileParser(mdProcessor)
-    
+
     if (!mdContent || mdContent.length === 0) {
       console.error(chalk.red(`Failed to parse file: ${filePath}`))
       process.exit(1)
     }
-    
+
     // Get the first parsed file content
     const [ast, vfile] = mdContent[0]
-    
+
     log.end(`Parsed markdown file in ${perf.timeSince()}`)
-    
+
     // Generate output file based on format
     const title = path.basename(filePath, path.extname(filePath))
     const authors = ["Ido Fang Bentov"]
 
     const fileName = title.replace(/[^a-zA-Z0-9]/g, '')
     let outputFile: string, outputContent: string
-    
+
     // Process according to format
     if (argv.format === "latex") {
       try {
         log.start("Converting to LaTeX")
-        const escapeImageUrl = (url: string) => url
+
+        const sanitizeUrl = (url: string) => url.replace(/[{}]/g, '')
 
         const rebberConfig = {
+          preprocessors: {
+            inlineMath: [mathEscape],
+            inlineMathDouble: [mathEscape],
+            math: [mathEscape],
+          },
           overrides: {
             yaml: () => '', // Ignore YAML frontmatter
 
@@ -183,27 +191,27 @@ export async function convertMarkdown(argv: Argv) {
             inlineMath: require('rebber-plugins/dist/type/math'),
             introduction: require('rebber-plugins/dist/type/introduction'),
             kbd: require('rebber-plugins/dist/type/kbd'),
-            math: require('rebber-plugins/dist/type/math'),
+            math: math,
             ping: require('rebber-plugins/dist/type/ping'),
             sub: require('rebber-plugins/dist/type/sub'),
             sup: require('rebber-plugins/dist/type/sup'),
             tableHeader: require('rebber-plugins/dist/type/tableHeader'),
-        
+
             footnote: require('rebber-plugins/dist/type/footnote'),
             footnoteDefinition: require('rebber-plugins/dist/type/footnoteDefinition'),
             footnoteReference: require('rebber-plugins/dist/type/footnoteReference'),
-        
+
             centerAligned: require('rebber-plugins/dist/type/align'),
             leftAligned: require('rebber-plugins/dist/type/align'),
             rightAligned: require('rebber-plugins/dist/type/align'),
-        
+
             errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             neutralCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             questionCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             secretCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             warningCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
-        
+
             iframe: (ctx: any, node: any) => {
               const alternative = node.data.hProperties.src.includes('jsfiddle') ? 'Code' : 'Video'
               const caption = node.caption || ''
@@ -222,13 +230,13 @@ export async function convertMarkdown(argv: Argv) {
             }
           },
           image: {
-            inlineImage: (node: any) => `\\inlineImage{${escapeImageUrl(node.url)}}`,
-            image: (node: any) => `\\image{${escapeImageUrl(node.url)}}`
+            inlineImage: (node: any) => `\\inlineImage{${sanitizeUrl(node.url)}}`,
+            image: (node: any) => `\\image{${sanitizeUrl(node.url)}}`
           },
           firstLineRowFont: '\\rowfont[l]{\\bfseries}',
           tableEnvName: 'zdstblr',
           figure: {
-            image: (_1: any, _2: any, caption: any, extra:any) => `\\image{${extra.url}}${caption ? `[${caption}]` : ''}\n`
+            image: (_1: any, _2: any, caption: any, extra: any) => `\\image{${sanitizeUrl(extra.url)}}${caption ? `[${caption}]` : ''}\n`
           },
           headings: [
             (val: any) => `\\levelOneTitle{${val}}\n`,
@@ -246,17 +254,16 @@ export async function convertMarkdown(argv: Argv) {
         const contentType = "small"
         const disableToc = false
         outputContent = `\\documentclass[${contentType}]{fangiadocument}
-          \\usepackage{blindtext}
-          \\title{${title}}
-          \\author{${authors.join(', ')}}
-          \\graphicspath{ {resources/} }
+\\usepackage{blindtext}
+\\title{${title}}
+\\author{${authors.join(', ')}}
+\\graphicspath{ {resources/} }
 
-          \\begin{document}
-          \\maketitle
+\\begin{document}
+\\maketitle
 
-          ${latexBody}
-          \\end{document}`
-
+${latexBody}
+\\end{document}`
         outputFile = path.join(outputDir, `${fileName}.tex`)
         log.end(`LaTeX conversion completed in ${perf.timeSince()}`)
       } catch (error: any) {
@@ -268,10 +275,10 @@ export async function convertMarkdown(argv: Argv) {
       outputFile = path.join(outputDir, `${fileName}.json`)
       outputContent = JSON.stringify(ast, null, 2)
     }
-    
+
     // Save the output file
     await fs.promises.writeFile(outputFile, outputContent)
-    
+
     console.log(chalk.green(`Output saved to: ${outputFile}`))
     return outputFile
   } catch (error: any) {
