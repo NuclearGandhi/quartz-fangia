@@ -13,6 +13,7 @@ import { QuartzLogger } from "./util/log"
 import { ConvertResources } from "./plugins/transformers/convertResources"
 import math from "./plugins/custom-rebber/math"
 import mathEscape from "./plugins/custom-rebber/mathEscape"
+import { ObsidianFlavoredMarkdown } from "./plugins"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -132,6 +133,11 @@ export async function convertMarkdown(argv: Argv) {
     cfg: (await import("../quartz.config.js")).default,
     allSlugs: []
   }
+
+  // Remove ofm from the plugins list
+  ctx.cfg.plugins.transformers = ctx.cfg.plugins.transformers.filter((plugin) => plugin.name !== "ObsidianFlavoredMarkdown")
+  // Add ofm back to the transformers plugins list, after SyntaxHighlighting
+  ctx.cfg.plugins.transformers.splice(3, 0, ObsidianFlavoredMarkdown({enableInHtmlEmbed: false, callouts: false}))
 
   // Add the ConvertResources plugin specifically for the convert command
   ctx.cfg.plugins.transformers.push(ConvertResources({
@@ -260,7 +266,6 @@ export async function convertMarkdown(argv: Argv) {
 \\graphicspath{ {resources/} }
 
 \\begin{document}
-\\maketitle
 
 ${latexBody}
 \\end{document}`

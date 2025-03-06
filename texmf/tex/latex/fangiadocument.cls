@@ -16,19 +16,25 @@
 
 
 %%% LANGUAGE
-\RequirePackage[hebrew, bidi=basic, provide=*]{babel}
+\RequirePackage[english, bidi=basic]{babel}
+\babelprovide[import,main]{hebrew}
 
 %%% FONTS
+\babelfont{rm}{CMU Serif}
+\babelfont{sf}{CMU Sans Serif}
+\babelfont{tt}{CMU Typewriter Text Variable Width}
 \babelfont[hebrew]{rm}{David}
 \babelfont[hebrew]{sf}{Arial}
 \babelfont[hebrew]{tt}{Courier New}
 
+\selectlanguage{hebrew}
+
 \RequirePackage{fontspec}
-\setmainfont{David}
-\setsansfont{Arial}
-\setmonofont{Courier New}
 
 \RequirePackage[final,nopatch=footnote,babel=true]{microtype}
+\DeclareMicrotypeAlias{CMU Serif}{TU-basic}
+\DeclareMicrotypeAlias{David}{TU-basic}
+
 
 %%% PACKAGES -------------------------------------------------------------------
 
@@ -213,13 +219,6 @@
       \path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
 }
 
-\def\spoilerIcon{%
-   \begin{tikzpicture}[scale=0.05]
-      \draw[semithick](-3,0) .. controls (-2,2.5) and (2,2.5) .. (3,0) .. controls (2,-2.5) and (-2,-2.5) .. (-3,0)--cycle;
-      \draw[thin](0,0.6) arc (90:180:0.6cm);
-      \draw (0,0) circle [radius=1.2];
-   \end{tikzpicture}}
-
 %%% CLASS OPTIONS --------------------------------------------------------------
 
 %%% SECTIONNING OPTIONS
@@ -331,7 +330,7 @@
 %%% CUSTOMS ENVIRONMENTS AND MACROS ------------------------------------------
 
 %%% LINKS
-\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~\linkIcon}}}}
+\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~~~~\linkIcon}}}}
 \newcommand{\@titlePageLink}[2]{\href{#2}{\color{alternativeTextColor}{#1}}}
 
 %%% ZDS BOX
@@ -475,15 +474,15 @@ coltitle=defaultColor
    \begin{center}
       % If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
       \IfEndWith{#1}{.svg}
-      {\includesvg[width=\linewidth, height=0.9\textheight]{#1}}
-      {\includegraphics[max width=\linewidth, max height=0.9\textheight]{#1}}
+      {\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
+      {\includegraphics[max width=0.6\linewidth, max height=0.9\textheight]{#1}}
       \IfValueT{#2}{\captionof{figure}{#2}}
    \end{center}
 }
 
 \DeclareRobustCommand*{\inlineImage}[1]{
    \IfEndWith{#1}{.svg}
-   {\includesvg[width=\linewidth, height=\textheight]{#1}}
+   {\includesvg[width=0.5\linewidth, height=\textheight]{#1}}
    {\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
 }
 
