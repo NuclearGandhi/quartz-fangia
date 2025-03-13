@@ -20,7 +20,7 @@ const config: QuartzConfig = {
     ignorePatterns: ["private", "templates", ".obsidian", "Excalidraw"],
     unlistedPatterns: ["*.excalidraw.md", "*.excalidraw.html", "*.excalidraw"],
     defaultDateType: "created",
-    generateSocialImages: false,
+    generateSocialImages: true,
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
