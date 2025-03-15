@@ -12,7 +12,7 @@
 \RequirePackage{accsupp}
 \RequirePackage{amsmath,amssymb, cancel}
 \RequirePackage{siunitx}
-\RequirePackage{svg}
+\RequirePackage[inkscapeformat=png]{svg}
 
 
 %%% LANGUAGE
