@@ -56,8 +56,10 @@ function startLoading() {
   }, 100)
 }
 
+let isNavigating = false
 let p: DOMParser
-async function navigate(url: URL, isBack: boolean = false) {
+async function _navigate(url: URL, isBack: boolean = false) {
+  isNavigating = true
   startLoading()
   p = p || new DOMParser()
   const contents = await fetchCanonical(url)
