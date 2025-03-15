@@ -1,14 +1,11 @@
-import { FilePath, FullSlug, joinSegments, resolveRelative, simplifySlug } from "../../util/path"
+import { FilePath, joinSegments, resolveRelative, simplifySlug } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
-import path from "path"
 import { write } from "./helpers"
 import DepGraph from "../../depgraph"
+import { getAliasSlugs } from "../transformers/frontmatter"
 
 export const AliasRedirects: QuartzEmitterPlugin = () => ({
   name: "AliasRedirects",
-  getQuartzComponents() {
-    return []
-  },
   async getDependencyGraph(ctx, content, _resources) {
     const graph = new DepGraph<FilePath>()
 
@@ -37,10 +34,7 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
 
     return graph
   },
-  async emit(ctx, content, _resources): Promise<FilePath[]> {
-    const { argv } = ctx
-    const fps: FilePath[] = []
-
+  async *emit(ctx, content, _resources) {
     for (const [_tree, file] of content) {
       const ogSlug = simplifySlug(file.data.slug!)
       const dir = path.posix.relative(argv.directory, path.dirname(file.data.filePath!))
@@ -60,8 +54,9 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
           slug = joinSegments(slug, "index") as FullSlug
         }
 
+      for (const slug of file.data.aliases ?? []) {
         const redirUrl = resolveRelative(slug, file.data.slug!)
-        const fp = await write({
+        yield write({
           ctx,
           content: `
             <!DOCTYPE html>
@@ -78,10 +73,7 @@ export const AliasRedirects: QuartzEmitterPlugin = () => ({
           slug,
           ext: ".html",
         })
-
-        fps.push(fp)
       }
     }
-    return fps
   },
 })

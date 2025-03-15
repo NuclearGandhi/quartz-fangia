@@ -16,9 +16,12 @@ import path from "path"
 import { splitAnchor } from "../../util/path"
 import { JSResource, CSSResource } from "../../util/resources"
 // @ts-ignore
-import calloutScript from "../../components/scripts/callout.inline.ts"
+import calloutScript from "../../components/scripts/callout.inline"
 // @ts-ignore
-import checkboxScript from "../../components/scripts/checkbox.inline.ts"
+import checkboxScript from "../../components/scripts/checkbox.inline"
+// @ts-ignore
+import mermaidScript from "../../components/scripts/mermaid.inline"
+import mermaidStyle from "../../components/styles/mermaid.inline.scss"
 import { FilePath, pathToRoot, slugTag, slugifyFilePath } from "../../util/path"
 import { toHast } from "mdast-util-to-hast"
 import { toHtml } from "hast-util-to-html"
@@ -177,10 +180,6 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
 
       // pre-transform wikilinks (fix anchors to things that may contain illegal syntax e.g. codeblocks, latex)
       if (opts.wikilinks) {
-        if (src instanceof Buffer) {
-          src = src.toString()
-        }
-
         // replace all wikilinks inside a table first
         src = (src as string).replace(tableRegex, (value) => {
           // escape all aliases and headers in wikilinks inside a table
