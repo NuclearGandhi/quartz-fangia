@@ -384,13 +384,13 @@
    }%
 }
 
-\newBox{Success}{ZdSBoxBackgroundSuccess}{ZdSBoxForegroundSuccess}{ZdSBoxBorderSuccess}{ZdSBoxLogoBackgroundSuccess}[\checkmark]
-\newBox{Information}{ZdSBoxBackgroundInformation}{ZdSBoxForegroundInformation}{ZdSBoxBorderInformation}{ZdSBoxLogoBackgroundInformation}[i]
-\newBox{Question}{ZdSBoxBackgroundQuestion}{ZdSBoxForegroundQuestion}{ZdSBoxBorderQuestion}{ZdSBoxLogoBackgroundQuestion}[?]
-\newBox{Warning}{ZdSBoxBackgroundWarning}{ZdSBoxForegroundWarning}{ZdSBoxBorderWarning}{ZdSBoxLogoBackgroundWarning}[!]
-\newBox{Error}{ZdSBoxBackgroundError}{ZdSBoxForegroundError}{ZdSBoxBorderError}{ZdSBoxLogoBackgroundError}[\times]
-\newBox{Neutral}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
-\newBox{Iframe}{ZdSBoxBackgroundIframe}{ZdSBoxForegroundIframe}{ZdSBoxBorderIframe}{ZdSBoxLogoBackgroundIframe}[\#]
+\newBox{SuccessBox}{ZdSBoxBackgroundSuccess}{ZdSBoxForegroundSuccess}{ZdSBoxBorderSuccess}{ZdSBoxLogoBackgroundSuccess}[\checkmark]
+\newBox{InfoBox}{ZdSBoxBackgroundInformation}{ZdSBoxForegroundInformation}{ZdSBoxBorderInformation}{ZdSBoxLogoBackgroundInformation}[i]
+\newBox{QuestionBox}{ZdSBoxBackgroundQuestion}{ZdSBoxForegroundQuestion}{ZdSBoxBorderQuestion}{ZdSBoxLogoBackgroundQuestion}[?]
+\newBox{WarningBox}{ZdSBoxBackgroundWarning}{ZdSBoxForegroundWarning}{ZdSBoxBorderWarning}{ZdSBoxLogoBackgroundWarning}[!]
+\newBox{ErrorBox}{ZdSBoxBackgroundError}{ZdSBoxForegroundError}{ZdSBoxBorderError}{ZdSBoxLogoBackgroundError}[\times]
+\newBox{NeutralBox}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
+\newBox{ExampleBox}{ZdSBoxBackgroundIframe}{ZdSBoxForegroundIframe}{ZdSBoxBorderIframe}{ZdSBoxLogoBackgroundIframe}[\#]
 
 %%% QUOTATION
 \DeclareTColorBox{Quotation}{ o }{%
@@ -401,6 +401,16 @@
    left=18pt,
    parbox=false,
    IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
+}
+
+\NewDocumentEnvironment{infobox}{ m m O{hebrew} +b }{
+	\selectlanguage{english}
+	\begin{mytheo}{\foreignlanguage{#3}{#1}}{#2}
+		\begin{hebrew}{#3}
+			#4
+		\end{hebrew}
+	\end{mytheo}
+	\selectlanguage{#3}
 }
 
 %%% CODE MANAGEMENT

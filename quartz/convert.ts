@@ -13,7 +13,7 @@ import { QuartzLogger } from "./util/log"
 import { ConvertResources } from "./plugins/transformers/convertResources"
 import math from "./plugins/custom-rebber/math"
 import mathEscape from "./plugins/custom-rebber/mathEscape"
-import { toHtml } from "hast-util-to-html"
+import html from "./plugins/custom-rebber/html"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -205,6 +205,8 @@ export async function convertMarkdown(argv: Argv) {
             centerAligned: require('rebber-plugins/dist/type/align'),
             leftAligned: require('rebber-plugins/dist/type/align'),
             rightAligned: require('rebber-plugins/dist/type/align'),
+
+            html: html,
 
             errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
