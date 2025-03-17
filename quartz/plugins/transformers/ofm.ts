@@ -401,43 +401,59 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
         plugins.push(() => {
           return (tree: Root, _file) => {
             visit(tree, "blockquote", (node) => {
-              if (node.children.length === 0) return
+              if (node.children.length === 0) {
+                return
+              }
 
-              // split first paragraph into title and possible extra lines
-              const [firstChild, ...restChildren] = node.children
+              // find first line and callout content
+              const [firstChild, ...calloutContent] = node.children
               if (firstChild.type !== "paragraph" || firstChild.children[0]?.type !== "text") {
                 return
               }
-              const text = (firstChild.children[0] as any).value as string
+
+              const text = firstChild.children[0].value
               const restOfTitle = firstChild.children.slice(1)
               const [firstLine, ...remainingLines] = text.split("\n")
               const remainingText = remainingLines.join("\n")
+
               const match = firstLine.match(calloutRegex)
               if (match && match.input) {
                 const [calloutDirective, typeString, calloutMetaData, collapseChar] = match
                 const calloutType = canonicalizeCallout(typeString.toLowerCase())
                 const collapse = collapseChar === "+" || collapseChar === "-"
                 const defaultState = collapseChar === "-" ? "collapsed" : "expanded"
-                // Remove the directive from the title text.
-                const titleText = (firstLine.slice(calloutDirective.length).trim() ||
-                  capitalize(typeString).replace(/-/g, " ")) +
-                  " " +
-                  restOfTitle.map(child => (child as any).value).join(" ")
-                // Create a pure markdown paragraph node marked as callout title.
+                const titleContent = match.input.slice(calloutDirective.length).trim()
+                const useDefaultTitle = titleContent === "" && restOfTitle.length === 0
                 const titleNode: Paragraph = {
                   type: "paragraph",
                   children: [
                     {
                       type: "text",
-                      value: titleText,
+                      value: useDefaultTitle
+                        ? capitalize(typeString).replace(/-/g, " ")
+                        : titleContent + " ",
                     },
+                    ...restOfTitle,
                   ],
-                  data: { calloutTitle: true },
                 }
-                // Assemble new children:
-                const newChildren: (BlockContent | DefinitionContent)[] = [titleNode]
+                const title = mdastToHtml(titleNode)
+
+                const toggleIcon = `<div class="fold-callout-icon"></div>`
+
+                const titleHtml: Html = {
+                  type: "html",
+                  value: `<div
+                  class="callout-title"
+                >
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner">${title}</div>
+                  ${collapse ? toggleIcon : ""}
+                </div>`,
+                }
+
+                const blockquoteContent: (BlockContent | DefinitionContent)[] = [titleHtml]
                 if (remainingText.length > 0) {
-                  newChildren.push({
+                  blockquoteContent.push({
                     type: "paragraph",
                     children: [
                       {
@@ -447,25 +463,42 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
                     ],
                   })
                 }
-                // Also keep any remaining child nodes after the first paragraph as callout body.
-                if (restChildren.length > 0) {
-                  newChildren.push({
-                    type: "blockquote",
-                    data: { calloutContent: true },
-                    children: restChildren,
-                  })
+
+                // replace first line of blockquote with title and rest of the paragraph text
+                node.children.splice(0, 1, ...blockquoteContent)
+
+                const classNames = ["callout", calloutType]
+                if (collapse) {
+                  classNames.push("is-collapsible")
                 }
-                // Replace first paragraph of blockquote with new children.
-                node.children = newChildren
-                // Save callout-specific metadata in node.data (to be used in htmlPlugins later)
+                if (defaultState === "collapsed") {
+                  classNames.push("is-collapsed")
+                }
+
+                // add properties to base blockquote
                 node.data = {
-                  callout: {
-                    type: calloutType,
-                    collapse,
-                    defaultState,
-                    metadata: calloutMetaData,
+                  hProperties: {
+                    ...(node.data?.hProperties ?? {}),
+                    className: classNames.join(" "),
+                    "data-callout": calloutType,
+                    "data-callout-fold": collapse,
+                    "data-callout-metadata": calloutMetaData,
                   },
-                  // ...you can merge with existing data if needed...
+                }
+
+                // Add callout-content class to callout body if it has one.
+                if (calloutContent.length > 0) {
+                  const contentData: BlockContent | DefinitionContent = {
+                    data: {
+                      hProperties: {
+                        className: "callout-content",
+                      },
+                      hName: "div",
+                    },
+                    type: "blockquote",
+                    children: [...calloutContent],
+                  }
+                  node.children = [node.children[0], contentData]
                 }
               }
             })
@@ -495,67 +528,7 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
     },
     htmlPlugins() {
       const plugins: PluggableList = [rehypeRaw]
-      
-      // Updated transformation for callouts to include type and collapse state.
-      plugins.push(() => {
-        return (tree: HtmlRoot) => {
-          visit(tree, "element", (node) => {
-            if (node.tagName === "blockquote" && (node.properties as any)["data-callout"]) {
-              const calloutData = (node.properties as any)["data-callout"]
-              // Update base callout element with CSS classes based on calloutData
-              const baseClasses = ["callout", calloutData.type]
-              if (calloutData.collapse) {
-                baseClasses.push("is-collapsible")
-              }
-              if (calloutData.defaultState === "collapsed") {
-                baseClasses.push("is-collapsed")
-              }
-              node.properties.className = baseClasses
-              
-              // Wrap the title element and add data attributes for the callout type and collapse state
-              const titleContent = node.children[0]
-              node.children[0] = ({
-                type: "element",
-                tagName: "div",
-                properties: { 
-                  className: "callout-title",
-                  "data-callout-type": calloutData.type,
-                  "data-callout-collapsible": calloutData.collapse,
-                  "data-callout-default-state": calloutData.defaultState,
-                },
-                children: [
-                  {
-                    type: "element",
-                    tagName: "div",
-                    properties: { className: "callout-icon" },
-                    children: [],
-                  },
-                  {
-                    type: "element",
-                    tagName: "div",
-                    properties: { className: "callout-title-inner" },
-                    children: titleContent && titleContent.type === "element" 
-                      ? [titleContent] 
-                      : titleContent 
-                        ? [{ type: "text", value: (titleContent as any).value }]
-                        : [],
-                  },
-                  // Preserve any existing fold icon if set (if data-callout-fold exists)
-                  ...(node.properties["data-callout-fold"]
-                    ? [{
-                        type: "element",
-                        tagName: "div",
-                        properties: { className: "fold-callout-icon" },
-                        children: [],
-                      }]
-                    : []),
-                ],
-              } as Element)
-            }
-          })
-        }
-      })
-      
+
       if (opts.parseBlockReferences) {
         plugins.push(() => {
           const inlineTagTypes = new Set(["p", "li"])
