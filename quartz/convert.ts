@@ -3,7 +3,7 @@ sourceMapSupport.install(options)
 import path from "path"
 import fs from "fs"
 import { PerfTimer } from "./util/perf"
-import { createMdProcessor, createFileParser } from "./processors/parse"
+import { createMdProcessor, createFileParser, createMarkdownParser, createHtmlProcessor } from "./processors/parse"
 import { FilePath } from "./util/path"
 import { Argv, BuildCtx } from "./util/ctx"
 import { options } from "./util/sourcemap"
@@ -13,6 +13,7 @@ import { QuartzLogger } from "./util/log"
 import { ConvertResources } from "./plugins/transformers/convertResources"
 import math from "./plugins/custom-rebber/math"
 import mathEscape from "./plugins/custom-rebber/mathEscape"
+import { toHtml } from "hast-util-to-html"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -269,9 +270,39 @@ ${latexBody}
         console.error(chalk.red(`Failed to convert to LaTeX: ${error.message}`))
         process.exit(1)
       }
+    } else if (argv.format === "hast") {
+      try {
+        log.start("Converting to HAST")
+        
+        // Use the HTML processor to convert MDAST to HAST
+        const markdownParser = createMarkdownParser(ctx, mdContent)
+        const htmlProcessor = createHtmlProcessor(ctx)
+        const processedContent = await markdownParser(htmlProcessor)
+        
+        if (!processedContent || processedContent.length === 0) {
+          console.error(chalk.red(`Failed to convert to HAST`))
+          process.exit(1)
+        }
+        
+        // Get the HAST from the processed content
+        const [hast, processedVFile] = processedContent[0]
+        
+        // Option 1: Output as JSON
+        outputContent = JSON.stringify(hast, null, 2)
+        outputFile = path.join(outputDir, `${fileName}.HAST.json`)
+        
+        // Option 2: If you want HTML output instead, uncomment this
+        // outputContent = toHtml(hast, { allowDangerousHtml: true })
+        // outputFile = path.join(outputDir, `${fileName}.html`)
+        
+        log.end(`HAST conversion completed in ${perf.timeSince()}`)
+      } catch (error: any) {
+        console.error(chalk.red(`Failed to convert to HAST: ${error.message}`))
+        process.exit(1)
+      }
     } else {
-      // Default to JSON output (just the MDAST)
-      outputFile = path.join(outputDir, `${fileName}.json`)
+      // Default to JSON output (MDAST)
+      outputFile = path.join(outputDir, `${fileName}.MDAST.json`)
       outputContent = JSON.stringify(ast, null, 2)
     }
 
