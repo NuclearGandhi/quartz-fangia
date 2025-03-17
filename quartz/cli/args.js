@@ -108,6 +108,7 @@ export const BuildArgv = {
 }
 
 export const ConvertArgv = {
+  ...CommonArgv,
   file: {
     string: true,
     alias: ["f"],
