@@ -333,22 +333,22 @@
 \newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~~~~\linkIcon}}}}
 \newcommand{\@titlePageLink}[2]{\href{#2}{\color{alternativeTextColor}{#1}}}
 
-%%% BOX
-\newcommand{\newBox}[3]{{%
-         \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
-         \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
-         \theoremindent=2em
-         \theoremheaderfont{\scshape\hspace{-2em}}
-         \theoremseparator{ ---}
-         \theoremstyle{break}
-         \theorembodyfont{\normalfont}
-         \newtheorem*{#1}{\textcolor{#3}{#2}}
-      }}
+% %%% BOX
+% \newcommand{\newBox}[3]{{%
+%          \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
+%          \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
+%          \theoremindent=2em
+%          \theoremheaderfont{\scshape\hspace{-2em}}
+%          \theoremseparator{ ---}
+%          \theoremstyle{break}
+%          \theorembodyfont{\normalfont}
+%          \newtheorem*{#1}{\textcolor{#3}{#2}}
+%       }}
 
-\newcommand{\newBoxEnvironment}[2]{%
-   \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
-   {\end{#2}\end{minipage}}
-}
+% \newcommand{\newBoxEnvironment}[2]{%
+%    \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
+%    {\end{#2}\end{minipage}}
+% }
 
 % Create box icon
 \newcommand{\createBoxIcon}[2]{

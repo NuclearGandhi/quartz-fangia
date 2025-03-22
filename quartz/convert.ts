@@ -211,7 +211,7 @@ export async function convertMarkdown(argv: Argv) {
             rightAligned: require('rebber-plugins/dist/type/align'),
 
             html: html,
-            blockquote: (ctx: Context, node: Node) => blockquote(all, ctx, node),
+            blockquote: (ctx: Context, node: Node) => blockquote(all, one, ctx, node),
 
             errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
