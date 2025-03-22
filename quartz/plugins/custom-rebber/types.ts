@@ -4,6 +4,7 @@ interface Node {
     data?: {
         hProperties?: {
             className?: string[] | string;
+            'data-callout'?: string;
         };
     };
     value?: string;

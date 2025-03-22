@@ -14,6 +14,7 @@ import { ConvertResources } from "./plugins/transformers/convertResources"
 import math from "./plugins/custom-rebber/math"
 import mathEscape from "./plugins/custom-rebber/mathEscape"
 import html from "./plugins/custom-rebber/html"
+import { blockquote } from "./plugins/custom-rebber/blockquote"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -174,6 +175,9 @@ export async function convertMarkdown(argv: Argv) {
 
         const sanitizeUrl = (url: string) => url.replace(/[{}]/g, '')
 
+        const all = require('rebber/dist/all')
+        const one = require('rebber/dist/one')
+
         const rebberConfig = {
           preprocessors: {
             inlineMath: [mathEscape],
@@ -207,6 +211,7 @@ export async function convertMarkdown(argv: Argv) {
             rightAligned: require('rebber-plugins/dist/type/align'),
 
             html: html,
+            blockquote: (ctx: Context, node: Node) => blockquote(all, ctx, node),
 
             errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),

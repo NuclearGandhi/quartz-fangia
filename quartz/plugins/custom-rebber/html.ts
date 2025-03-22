@@ -32,20 +32,22 @@ export default function html(ctx: any, node: any) {
     }
     
     // Generate appropriate LaTeX based on callout type
-    switch (calloutType) {
-      case 'example':
-        return `\\begin{ExampleBox}{${titleText}}\\end{ExampleBox}`;
-      case 'notes':
-        return `\\begin{NotesBox}{${titleText}}\\end{NotesBox}`;
-      case 'question':
-        return `\\begin{QuestionBox}{${titleText}}\\end{QuestionBox}`;;
-      case 'warning':
-        return `\\begin{WarningBox}{${titleText}}\\end{WarningBox}`;
-      case 'error':
-        return `\\begin{ErrorBox}{${titleText}}\\end{ErrorBox}`;
-      default:
-        return `\\begin{InfoBox}{${titleText}}\\end{InfoBox}`;
-    }
+    // switch (calloutType) {
+    //   case 'example':
+    //     return `\\begin{ExampleBox}{${titleText}}\\end{ExampleBox}`;
+    //   case 'notes':
+    //     return `\\begin{NotesBox}{${titleText}}\\end{NotesBox}`;
+    //   case 'question':
+    //     return `\\begin{QuestionBox}{${titleText}}\\end{QuestionBox}`;;
+    //   case 'warning':
+    //     return `\\begin{WarningBox}{${titleText}}\\end{WarningBox}`;
+    //   case 'error':
+    //     return `\\begin{ErrorBox}{${titleText}}\\end{ErrorBox}`;
+    //   default:
+    //     return `\\begin{InfoBox}{${titleText}}\\end{InfoBox}`;
+    // }
+
+    return titleText;
   }
   
   // Handle other HTML content

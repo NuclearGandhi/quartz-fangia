@@ -24,7 +24,7 @@
 \babelfont{sf}{CMU Sans Serif}
 \babelfont{tt}{CMU Typewriter Text Variable Width}
 \babelfont[hebrew]{rm}{David}
-\babelfont[hebrew]{sf}{Arial}
+\babelfont[hebrew]{sf}{David}
 \babelfont[hebrew]{tt}{Courier New}
 
 \selectlanguage{hebrew}
@@ -376,6 +376,7 @@
       colbacktitle=#5,
       titlerule=0mm,
       IfValueTF={##1}{title=##1}{},
+      halign title=flush right,
       overlay={
             \IfValueTF{#6}
             {\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
@@ -389,10 +390,9 @@
 \newBox{QuestionBox}{ZdSBoxBackgroundQuestion}{ZdSBoxForegroundQuestion}{ZdSBoxBorderQuestion}{ZdSBoxLogoBackgroundQuestion}[?]
 \newBox{WarningBox}{ZdSBoxBackgroundWarning}{ZdSBoxForegroundWarning}{ZdSBoxBorderWarning}{ZdSBoxLogoBackgroundWarning}[!]
 \newBox{ErrorBox}{ZdSBoxBackgroundError}{ZdSBoxForegroundError}{ZdSBoxBorderError}{ZdSBoxLogoBackgroundError}[\times]
-\newBox{NeutralBox}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
+\newBox{NotesBox}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
 \newBox{ExampleBox}{ZdSBoxBackgroundIframe}{ZdSBoxForegroundIframe}{ZdSBoxBorderIframe}{ZdSBoxLogoBackgroundIframe}[\#]
 
-%%% QUOTATION
 \DeclareTColorBox{Quotation}{ o }{%
    blanker,
    before skip=6pt,after skip=6pt,
@@ -403,15 +403,25 @@
    IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
 }
 
-\NewDocumentEnvironment{infobox}{ m m O{hebrew} +b }{
+
+% This defines a new document environment called "Callout" which takes four arguments:
+% 1. #1: The type of the callout.
+% 2. #2: A title.
+% 3. #3: A block of text in Hebrew to be displayed within the environment.
+%
+% The environment switches to English language for the outer environment and then
+% switches back to Hebrew for the inner content. The outer environment is specified
+% by the first argument (#1) and contains the Hebrew string (#2) and additional content (#3).
+% The inner content is wrapped in a Hebrew environment to ensure proper language handling.
+\NewDocumentEnvironment{Callout}{ m o +b }{
 	\selectlanguage{english}
-	\begin{mytheo}{\foreignlanguage{#3}{#1}}{#2}
-		\begin{hebrew}{#3}
-			#4
-		\end{hebrew}
-	\end{mytheo}
-	\selectlanguage{#3}
-}
+	\begin{#1}[{{\foreignlanguage{hebrew}{#2}}}]
+		\begin{otherlanguage}{hebrew}
+         #3
+      \end{otherlanguage}
+	\end{#1}
+	\selectlanguage{hebrew}
+}{}
 
 %%% CODE MANAGEMENT
 \tcbsetforeverylayer{} % Reset style
