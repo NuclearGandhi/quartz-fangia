@@ -137,55 +137,55 @@
 %%%  BOX
 
 % SUCCESS
-\definecolor{ZdSBoxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{3C763D}}
-\definecolor{ZdSBoxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{DFF0D8}}
-\definecolor{ZdSBoxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{C6D7BF}}
-\definecolor{ZdSBoxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{16C13B}}
+\definecolor{boxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{3C763D}}
+\definecolor{boxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{DFF0D8}}
+\definecolor{boxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{C6D7BF}}
+\definecolor{boxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{16C13B}}
 
 % INFORMATION
-\definecolor{ZdSBoxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{31708F}}
-\definecolor{ZdSBoxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{D9EDF7}}
-\definecolor{ZdSBoxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{C0D4DE}}
-\definecolor{ZdSBoxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{59ABE3}}
+\definecolor{boxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{31708F}}
+\definecolor{boxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{D9EDF7}}
+\definecolor{boxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{C0D4DE}}
+\definecolor{boxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{59ABE3}}
 
 % QUESTION
-\definecolor{ZdSBoxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{8D61CD}}
-\definecolor{ZdSBoxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0E9FC}}
-\definecolor{ZdSBoxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{D3BDF5}}
-\definecolor{ZdSBoxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{8C4FE8}}
+\definecolor{boxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{8D61CD}}
+\definecolor{boxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0E9FC}}
+\definecolor{boxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{D3BDF5}}
+\definecolor{boxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{8C4FE8}}
 
 % WARNING
-\definecolor{ZdSBoxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{8A6D3B}}
-\definecolor{ZdSBoxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FCF4E5}}
-\definecolor{ZdSBoxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{E3DBCC}}
-\definecolor{ZdSBoxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{F39539}}
+\definecolor{boxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{8A6D3B}}
+\definecolor{boxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FCF4E5}}
+\definecolor{boxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{E3DBCC}}
+\definecolor{boxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{F39539}}
 
 % ERROR
-\definecolor{ZdSBoxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{A94442}}
-\definecolor{ZdSBoxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{F2DEDE}}
-\definecolor{ZdSBoxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{D9C5C5}}
-\definecolor{ZdSBoxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{C21936}}
+\definecolor{boxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{A94442}}
+\definecolor{boxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{F2DEDE}}
+\definecolor{boxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{D9C5C5}}
+\definecolor{boxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{C21936}}
 
 % NEUTRAL
-\definecolor{ZdSBoxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{424242}}
-\definecolor{ZdSBoxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{FFFFFF}}
-\definecolor{ZdSBoxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{4D4D4D}}
-\definecolor{ZdSBoxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{808080}}
+\definecolor{boxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{424242}}
+\definecolor{boxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{FFFFFF}}
+\definecolor{boxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{4D4D4D}}
+\definecolor{boxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{808080}}
 
 % Iframe
-\definecolor{ZdSBoxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7BB027}}
-\definecolor{ZdSBoxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F3FDE2}}
-\definecolor{ZdSBoxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{7BB027}}
-\definecolor{ZdSBoxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7BB027}}
+\definecolor{boxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7BB027}}
+\definecolor{boxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F3FDE2}}
+\definecolor{boxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{7BB027}}
+\definecolor{boxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7BB027}}
 
 % SPOILER
-\definecolor{ZdSBoxForegroundSpoiler}{HTML}{555555}
-\definecolor{ZdSBoxBackgroundSpoiler}{HTML}{EEEEEE}
-\definecolor{ZdSBoxBorderSpoiler}{HTML}{DDDDDD}
+\definecolor{boxForegroundSpoiler}{HTML}{555555}
+\definecolor{boxBackgroundSpoiler}{HTML}{EEEEEE}
+\definecolor{boxBorderSpoiler}{HTML}{DDDDDD}
 
 % QUOTATION
-\definecolor{ZdSBoxBorderLeftQuotation}{HTML}{CCCCCC}
-\definecolor{ZdSBoxForegroundQuotation}{HTML}{555555}
+\definecolor{boxBorderLeftQuotation}{HTML}{CCCCCC}
+\definecolor{boxForegroundQuotation}{HTML}{555555}
 
 \hypersetup{linkcolor=internalLinkColor}
 
@@ -333,8 +333,8 @@
 \newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~~~~\linkIcon}}}}
 \newcommand{\@titlePageLink}[2]{\href{#2}{\color{alternativeTextColor}{#1}}}
 
-%%% ZDS BOX
-\newcommand{\newZdSBox}[3]{{%
+%%% BOX
+\newcommand{\newBox}[3]{{%
          \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
          \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
          \theoremindent=2em
@@ -345,7 +345,7 @@
          \newtheorem*{#1}{\textcolor{#3}{#2}}
       }}
 
-\newcommand{\newZdSBoxEnvironment}[2]{%
+\newcommand{\newBoxEnvironment}[2]{%
    \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
    {\end{#2}\end{minipage}}
 }
@@ -385,19 +385,19 @@
    }%
 }
 
-\newBox{SuccessBox}{ZdSBoxBackgroundSuccess}{ZdSBoxForegroundSuccess}{ZdSBoxBorderSuccess}{ZdSBoxLogoBackgroundSuccess}[\checkmark]
-\newBox{InfoBox}{ZdSBoxBackgroundInformation}{ZdSBoxForegroundInformation}{ZdSBoxBorderInformation}{ZdSBoxLogoBackgroundInformation}[i]
-\newBox{QuestionBox}{ZdSBoxBackgroundQuestion}{ZdSBoxForegroundQuestion}{ZdSBoxBorderQuestion}{ZdSBoxLogoBackgroundQuestion}[?]
-\newBox{WarningBox}{ZdSBoxBackgroundWarning}{ZdSBoxForegroundWarning}{ZdSBoxBorderWarning}{ZdSBoxLogoBackgroundWarning}[!]
-\newBox{ErrorBox}{ZdSBoxBackgroundError}{ZdSBoxForegroundError}{ZdSBoxBorderError}{ZdSBoxLogoBackgroundError}[\times]
-\newBox{NotesBox}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
-\newBox{ExampleBox}{ZdSBoxBackgroundIframe}{ZdSBoxForegroundIframe}{ZdSBoxBorderIframe}{ZdSBoxLogoBackgroundIframe}[\#]
+\newBox{SuccessBox}{boxBackgroundSuccess}{boxForegroundSuccess}{boxBorderSuccess}{boxLogoBackgroundSuccess}[\checkmark]
+\newBox{InfoBox}{boxBackgroundInformation}{boxForegroundInformation}{boxBorderInformation}{boxLogoBackgroundInformation}[i]
+\newBox{QuestionBox}{boxBackgroundQuestion}{boxForegroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[?]
+\newBox{WarningBox}{boxBackgroundWarning}{boxForegroundWarning}{boxBorderWarning}{boxLogoBackgroundWarning}[!]
+\newBox{ErrorBox}{boxBackgroundError}{boxForegroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
+\newBox{NotesBox}{boxBackgroundNeutral}{boxForegroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}
+\newBox{ExampleBox}{boxBackgroundIframe}{boxForegroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
 
 \DeclareTColorBox{Quotation}{ o }{%
    blanker,
    before skip=6pt,after skip=6pt,
-   borderline west={1mm}{0pt}{ZdSBoxBorderLeftQuotation},
-   coltext=ZdSBoxForegroundQuotation,
+   borderline west={1mm}{0pt}{boxBorderLeftQuotation},
+   coltext=boxForegroundQuotation,
    left=18pt,
    parbox=false,
    IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
@@ -449,7 +449,7 @@ boxrule=0.5pt,
 breakable,
 colback=codeBackgroundColor,
 coltext=defaultColor,
-colframe=ZdSBoxBorderSpoiler,
+colframe=boxBorderSpoiler,
 arc=0.0pt,
 listing engine=minted,
 listing only,
@@ -484,9 +484,9 @@ coltitle=defaultColor
 \DefTblrTemplate{conthead}{default}{}
 \DefTblrTemplate{capcont}{default}{}
 
-\NewTblrEnviron{zdstblr}
-\SetTblrInner[zdstblr]{hlines,vlines,hspan=minimal}
-\SetTblrOuter[zdstblr]{long}
+\NewTblrEnviron{tblr}
+\SetTblrInner[tblr]{hlines,vlines,hspan=minimal}
+\SetTblrOuter[tblr]{long}
 
 %%% TITLE PAGE
 %%% IMAGES
