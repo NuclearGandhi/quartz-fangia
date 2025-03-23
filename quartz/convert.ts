@@ -259,9 +259,8 @@ export async function convertMarkdown(argv: Argv) {
 
         const latexBody = mdastToLatex(ast, rebberConfig)
 
-        const contentType = "small"
         const disableToc = false
-        outputContent = `\\documentclass[${contentType}]{fangiadocument}
+        outputContent = `\\documentclass{fangiadocument}
 \\usepackage{blindtext}
 \\title{${title}}
 \\author{${authors.join(', ')}}

@@ -261,66 +261,66 @@
 }
 
 
-\DeclareOption{small}{
-	\let\levelOneTitle\section
-	\let\levelTwoTitle\subsection
-	\let\levelThreeTitle\subsubsection
-	\let\levelFourTitle\paragraph
-	\let\levelFiveTitle\subparagraph
-	\def\thesection{\arabic{section}}
-	\def\thefigure{\thesection.\arabic{figure}}
-	\def\thetable{\thesection.\arabic{table}}
-	\def\theequationFloat{\thesection.\arabic{equationFloat}}
-	\automark[subsection]{section}
-	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
-	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{small}{
+\let\levelOneTitle\section
+\let\levelTwoTitle\subsection
+\let\levelThreeTitle\subsubsection
+\let\levelFourTitle\paragraph
+\let\levelFiveTitle\subparagraph
+\def\thesection{\arabic{section}}
+\def\thefigure{\thesection.\arabic{figure}}
+\def\thetable{\thesection.\arabic{table}}
+\def\theequationFloat{\thesection.\arabic{equationFloat}}
+\automark[subsection]{section}
+\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
+\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
+% }
 
 
-\DeclareOption{middle}{
-	\newcommand{\levelOneTitle}[1]{\chapter{#1}}
-	\let\levelTwoTitle\section
-	\let\levelThreeTitle\subsection
-	\let\levelFourTitle\subsubsection
-	\let\levelFiveTitle\paragraph
-	\let\levelSixTitle\subparagaph
-	\automark[section]{chapter}
-	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
-	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
-	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
-	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{middle}{
+% 	\newcommand{\levelOneTitle}[1]{\chapter{#1}}
+% 	\let\levelTwoTitle\section
+% 	\let\levelThreeTitle\subsection
+% 	\let\levelFourTitle\subsubsection
+% 	\let\levelFiveTitle\paragraph
+% 	\let\levelSixTitle\subparagaph
+% 	\automark[section]{chapter}
+% 	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
+% 	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
+% 	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
+% 	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
+% }
 
-\DeclareOption{big}{
-	\newcommand\levelOneTitle[1]{\part{#1}}
-	\newcommand\levelTwoTitle[1]{\chapter{#1}}
-	\let\levelThreeTitle\section
-	\let\levelFourTitle\subsection
-	\let\levelFiveTitle\subsubsection
-	\let\levelSixTitle\paragraph
-	\let\levelSevenTitle\subparagraph
-	\counterwithin{chapter}{part}
-	\automark[chapter]{part}
-	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
-	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
-	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
-	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
-	\sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
-	\sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{big}{
+% 	\newcommand\levelOneTitle[1]{\part{#1}}
+% 	\newcommand\levelTwoTitle[1]{\chapter{#1}}
+% 	\let\levelThreeTitle\section
+% 	\let\levelFourTitle\subsection
+% 	\let\levelFiveTitle\subsubsection
+% 	\let\levelSixTitle\paragraph
+% 	\let\levelSevenTitle\subparagraph
+% 	\counterwithin{chapter}{part}
+% 	\automark[chapter]{part}
+% 	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
+% 	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
+% 	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
+% 	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
+% 	\sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
+% 	\sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
+% }
 
 \RedeclareSectionCommands[tocdynnumwidth]{part,chapter,section,subsection,subsubsection}
 
 %%% PROCESSING
 \ProcessOptions
 
-%%% POST-PROCESSING
-\addtokomafont{chapter}{\color{chapterColor}}
-\addtokomafont{section}{\color{sectionColor}}
-\addtokomafont{subsection}{\color{subsectionColor}}
-\addtokomafont{subsubsection}{\color{subsubsectionColor}}
-\addtokomafont{paragraph}{\color{paragraphColor}}
-\addtokomafont{subparagraph}{\color{subparagraphColor}}
+% %%% POST-PROCESSING
+% \addtokomafont{chapter}{\color{chapterColor}}
+% \addtokomafont{section}{\color{sectionColor}}
+% \addtokomafont{subsection}{\color{subsectionColor}}
+% \addtokomafont{subsubsection}{\color{subsubsectionColor}}
+% \addtokomafont{paragraph}{\color{paragraphColor}}
+% \addtokomafont{subparagraph}{\color{subparagraphColor}}
 
 \setcounter{secnumdepth}{4}
 
@@ -459,7 +459,7 @@ minted language=#4,
 minted options={highlightlines={#2}, firstnumber=#3,numbersep=3mm},
 enhanced,
 overlay={\begin{tcbclipinterior}\fill[lineNumberSeparatorCodeColor] ([xshift=8mm-0.5pt]frame.south west)
-         rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
+			rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
 left=8mm,
 title=#1,
 attach boxed title to bottom center,
