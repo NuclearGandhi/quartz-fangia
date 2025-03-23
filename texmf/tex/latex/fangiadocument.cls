@@ -496,20 +496,26 @@ coltitle=defaultColor
 
 %%% TITLE PAGE
 %%% IMAGES
-\NewDocumentCommand{\image}{mo}{%
+\DeclareRobustCommand*{\inlineImage}[1]{
 	\begin{center}
 		% If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
 		\IfEndWith{#1}{.svg}
 		{\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
-		{\includegraphics[max width=0.6\linewidth, max height=0.9\textheight]{#1}}
-		\IfValueT{#2}{\captionof{figure}{#2}}
+		{\includegraphics[max size={0.6\linewidth}{\textheight}, keepaspectratio]{#1}}
 	\end{center}
 }
 
-\DeclareRobustCommand*{\inlineImage}[1]{
-	\IfEndWith{#1}{.svg}
-	{\includesvg[width=0.5\linewidth, height=\textheight]{#1}}
-	{\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
+\NewDocumentCommand{\image}{m +o}{%
+	\IfBlankTF{#2}{
+		\inlineImage{#1}
+	}{
+		\begin{figure}[H]
+			\centering
+			\inlineImage{#1}
+			\caption{#2}
+		\end{figure}
+	}
+
 }
 
 %%% HORIZONTAL LINE

@@ -1,7 +1,9 @@
 // Define interfaces for types
 interface Node {
     type: string;
+    url?: string;
     data?: {
+        caption?: string;
         hProperties?: {
             className?: string[] | string;
             'data-callout'?: string;

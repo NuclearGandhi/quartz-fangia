@@ -239,7 +239,13 @@ export async function convertMarkdown(argv: Argv) {
           },
           image: {
             inlineImage: (node: any) => `\\inlineImage{${sanitizeUrl(node.url)}}`,
-            image: (node: any) => `\\image{${sanitizeUrl(node.url)}}`
+            image: (node: Node) => {
+              if (node.url) {
+                const caption = node.data?.caption ?? '';
+                return `\\image{${sanitizeUrl(node.url)}}[${caption}]`;
+              }
+              return '';
+            }
           },
           firstLineRowFont: '\\rowfont[l]{\\bfseries}',
           tableEnvName: 'zdstblr',
@@ -279,28 +285,28 @@ ${latexBody}
     } else if (argv.format === "hast") {
       try {
         log.start("Converting to HAST")
-        
+
         // Use the HTML processor to convert MDAST to HAST
         const markdownParser = createMarkdownParser(ctx, mdContent)
         const htmlProcessor = createHtmlProcessor(ctx)
         const processedContent = await markdownParser(htmlProcessor)
-        
+
         if (!processedContent || processedContent.length === 0) {
           console.error(chalk.red(`Failed to convert to HAST`))
           process.exit(1)
         }
-        
+
         // Get the HAST from the processed content
         const [hast, processedVFile] = processedContent[0]
-        
+
         // Option 1: Output as JSON
         outputContent = JSON.stringify(hast, null, 2)
         outputFile = path.join(outputDir, `${fileName}.HAST.json`)
-        
+
         // Option 2: If you want HTML output instead, uncomment this
         // outputContent = toHtml(hast, { allowDangerousHtml: true })
         // outputFile = path.join(outputDir, `${fileName}.html`)
-        
+
         log.end(`HAST conversion completed in ${perf.timeSince()}`)
       } catch (error: any) {
         console.error(chalk.red(`Failed to convert to HAST: ${error.message}`))
