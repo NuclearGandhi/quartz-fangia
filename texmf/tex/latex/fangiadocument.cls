@@ -94,10 +94,11 @@
 
 %%% BOX
 \iftoggle{cache}{
-   \PassOptionsToPackage{cache=true}{minted}
+	\PassOptionsToPackage{cache=true}{minted}
 }{
-   \PassOptionsToPackage{cache=false}{minted}
+	\PassOptionsToPackage{cache=false}{minted}
 }
+\RequirePackage{minted}
 \RequirePackage[skins, minted, breakable, xparse]{tcolorbox}
 
 
@@ -203,20 +204,20 @@
 \def\boxIcon{[draw=none] circle (0.4cm)}
 
 \DeclareRobustCommand{\linkIcon}{\tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{%
-      \begin{scope}[x=1ex, y=1ex]
-         \clip (-0.1,-0.1)
-         --++ (-0, 1.2)
-         --++ (0.6, 0)
-         --++ (0, -0.6)
-         --++ (0.6, 0)
-         --++ (0, -1);
-         \path[draw,
-            line width = 0.5,
-            rounded corners=0.5]
-         (0,0) rectangle (1,1);
-      \end{scope}
-      \path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
-      \path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
+		\begin{scope}[x=1ex, y=1ex]
+			\clip (-0.1,-0.1)
+			--++ (-0, 1.2)
+			--++ (0.6, 0)
+			--++ (0, -0.6)
+			--++ (0.6, 0)
+			--++ (0, -1);
+			\path[draw,
+				line width = 0.5,
+				rounded corners=0.5]
+			(0,0) rectangle (1,1);
+		\end{scope}
+		\path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
+		\path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
 }
 
 %%% CLASS OPTIONS --------------------------------------------------------------
@@ -227,21 +228,21 @@
 \pagestyle{scrheadings}
 
 \newcommand{\addsubsec}[1]{
-   \subsection*{#1}
-   %\addxcontentsline{toc}{subsection}{#1}
+	\subsection*{#1}
+	%\addxcontentsline{toc}{subsection}{#1}
 }
 
 \newcommand{\addsubsubsec}[1]{
-   \subsubsection*{#1}
-   %\addxcontentsline{toc}{subsubsection}{#1}
+	\subsubsection*{#1}
+	%\addxcontentsline{toc}{subsubsection}{#1}
 }
 
 \newcommand{\addpar}[1]{
-   \paragraph*{#1}
+	\paragraph*{#1}
 }
 
 \newcommand{\addsubpar}[1]{
-   \subparagraph*{#1}
+	\subparagraph*{#1}
 }
 
 \def\@introductionName{Introduction}
@@ -250,62 +251,62 @@
 \newcommand{\conclusionName}[1]{\def\@conclusionName{#1}}
 
 \newcommand{\sectionningGenerator}[3]{
-   \newenvironment{#1}{
-      \csname#3\endcsname{#2}
-      \let\levelTwoTitle\addsubsec
-      \let\levelThreeTitle\addsubsubsec
-      \let\levelFourTitle\addpar
-      \let\levelFiveTitle\addsubpar
-   }{}
+	\newenvironment{#1}{
+		\csname#3\endcsname{#2}
+		\let\levelTwoTitle\addsubsec
+		\let\levelThreeTitle\addsubsubsec
+		\let\levelFourTitle\addpar
+		\let\levelFiveTitle\addsubpar
+	}{}
 }
 
 
 \DeclareOption{small}{
-   \let\levelOneTitle\section
-   \let\levelTwoTitle\subsection
-   \let\levelThreeTitle\subsubsection
-   \let\levelFourTitle\paragraph
-   \let\levelFiveTitle\subparagraph
-   \def\thesection{\arabic{section}}
-   \def\thefigure{\thesection.\arabic{figure}}
-   \def\thetable{\thesection.\arabic{table}}
-   \def\theequationFloat{\thesection.\arabic{equationFloat}}
-   \automark[subsection]{section}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
+	\let\levelOneTitle\section
+	\let\levelTwoTitle\subsection
+	\let\levelThreeTitle\subsubsection
+	\let\levelFourTitle\paragraph
+	\let\levelFiveTitle\subparagraph
+	\def\thesection{\arabic{section}}
+	\def\thefigure{\thesection.\arabic{figure}}
+	\def\thetable{\thesection.\arabic{table}}
+	\def\theequationFloat{\thesection.\arabic{equationFloat}}
+	\automark[subsection]{section}
+	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
+	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
 }
 
 
 \DeclareOption{middle}{
-   \newcommand{\levelOneTitle}[1]{\chapter{#1}}
-   \let\levelTwoTitle\section
-   \let\levelThreeTitle\subsection
-   \let\levelFourTitle\subsubsection
-   \let\levelFiveTitle\paragraph
-   \let\levelSixTitle\subparagaph
-   \automark[section]{chapter}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
-   \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
+	\newcommand{\levelOneTitle}[1]{\chapter{#1}}
+	\let\levelTwoTitle\section
+	\let\levelThreeTitle\subsection
+	\let\levelFourTitle\subsubsection
+	\let\levelFiveTitle\paragraph
+	\let\levelSixTitle\subparagaph
+	\automark[section]{chapter}
+	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
+	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
+	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
+	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
 }
 
 \DeclareOption{big}{
-   \newcommand\levelOneTitle[1]{\part{#1}}
-   \newcommand\levelTwoTitle[1]{\chapter{#1}}
-   \let\levelThreeTitle\section
-   \let\levelFourTitle\subsection
-   \let\levelFiveTitle\subsubsection
-   \let\levelSixTitle\paragraph
-   \let\levelSevenTitle\subparagraph
-   \counterwithin{chapter}{part}
-   \automark[chapter]{part}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
-   \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
-   \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
-   \sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
+	\newcommand\levelOneTitle[1]{\part{#1}}
+	\newcommand\levelTwoTitle[1]{\chapter{#1}}
+	\let\levelThreeTitle\section
+	\let\levelFourTitle\subsection
+	\let\levelFiveTitle\subsubsection
+	\let\levelSixTitle\paragraph
+	\let\levelSevenTitle\subparagraph
+	\counterwithin{chapter}{part}
+	\automark[chapter]{part}
+	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
+	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
+	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
+	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
+	\sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
+	\sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
 }
 
 \RedeclareSectionCommands[tocdynnumwidth]{part,chapter,section,subsection,subsubsection}
@@ -352,37 +353,37 @@
 
 % Create box icon
 \newcommand{\createBoxIcon}[2]{
-   \begin{tikzpicture} %
-      \fill (0, 0.5) [color=#1] \boxIcon; %
-      \draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
-   \end{tikzpicture} %
+	\begin{tikzpicture} %
+		\fill (0, 0.5) [color=#1] \boxIcon; %
+		\draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
+	\end{tikzpicture} %
 }
 
 %%% DEFAULT BOX THEME
 
 \tcbsetforeverylayer{%
-   enhanced,
-   enlarge top initially by=5mm,
-   boxrule=0.5pt,
-   breakable,
-   arc=0.0pt,
+	enhanced,
+	enlarge top initially by=5mm,
+	boxrule=0.5pt,
+	breakable,
+	arc=0.0pt,
 }
 
 \NewDocumentCommand\newBox{m m m m m o}{%
-   \DeclareTColorBox{#1}{ o }{
-      colback=#2,
-      coltext=#3,
-      colframe=#4,
-      colbacktitle=#5,
-      titlerule=0mm,
-      IfValueTF={##1}{title=##1}{},
-      halign title=flush right,
-      overlay={
-            \IfValueTF{#6}
-            {\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
-            {}
-         }
-   }%
+	\DeclareTColorBox{#1}{ o }{
+		colback=#2,
+		coltext=#3,
+		colframe=#4,
+		colbacktitle=#5,
+		titlerule=0mm,
+		IfValueTF={##1}{title=##1}{},
+		halign title=flush right,
+		overlay={
+				\IfValueTF{#6}
+				{\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
+				{}
+			}
+	}%
 }
 
 \newBox{SuccessBox}{boxBackgroundSuccess}{boxForegroundSuccess}{boxBorderSuccess}{boxLogoBackgroundSuccess}[\checkmark]
@@ -394,13 +395,13 @@
 \newBox{ExampleBox}{boxBackgroundIframe}{boxForegroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
 
 \DeclareTColorBox{Quotation}{ o }{%
-   blanker,
-   before skip=6pt,after skip=6pt,
-   borderline west={1mm}{0pt}{boxBorderLeftQuotation},
-   coltext=boxForegroundQuotation,
-   left=18pt,
-   parbox=false,
-   IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
+	blanker,
+	before skip=6pt,after skip=6pt,
+	borderline west={1mm}{0pt}{boxBorderLeftQuotation},
+	coltext=boxForegroundQuotation,
+	left=18pt,
+	parbox=false,
+	IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
 }
 
 
@@ -416,9 +417,9 @@
 \NewDocumentEnvironment{Callout}{ m o +b }{
 	\selectlanguage{english}
 	\begin{#1}[{{\foreignlanguage{hebrew}{#2}}}]
-		\begin{otherlanguage}{hebrew}
-         #3
-      \end{otherlanguage}
+	\begin{otherlanguage}{hebrew}
+		#3
+	\end{otherlanguage}
 	\end{#1}
 	\selectlanguage{hebrew}
 }{}
@@ -427,17 +428,17 @@
 \tcbsetforeverylayer{} % Reset style
 
 \setminted{
-   breaklines,
-   breaksymbolleft=\hspace{2em},
-   highlightcolor=highlightCodeColor,
-   linenos,
-   fontsize=\small,
-   baselinestretch=1,
-   breakanywhere=true
+	breaklines,
+	breaksymbolleft=\hspace{2em},
+	highlightcolor=highlightCodeColor,
+	linenos,
+	fontsize=\small,
+	baselinestretch=1,
+	breakanywhere=true
 }
 
 \renewcommand\theFancyVerbLine{%
-   \BeginAccSupp{ActualText={}}%
+	\BeginAccSupp{ActualText={}}%
 \small\textcolor{lineNumberCodeColor}{\arabic{FancyVerbLine}}%
 \EndAccSupp{}%
 }
@@ -466,44 +467,49 @@ boxed title style={empty,boxrule=0.5mm},
 coltitle=defaultColor
 }
 
+\BeforeBeginEnvironment{CodeBlock}{\selectlanguage{english}}
+\AfterEndEnvironment{CodeBlock}{\selectlanguage{hebrew}}
+
+
+
 \sethlcolor{codeBackgroundColor}
 \newcommand{\CodeInline}[1]{\texorpdfstring{\hl{\texttt{\small  #1}}}{#1}}
 
 %%% IFRAMES
 \NewDocumentCommand\iframe{mO{vidéo}o}{%
-   \begin{Iframe}[#2]
-      Consultez cet élément à l'adresse \url{#1}.\IfValueT{#3}{\\ #3}
-   \end{Iframe}
+	\begin{Iframe}[#2]
+		Consultez cet élément à l'adresse \url{#1}.\IfValueT{#3}{\\ #3}
+	\end{Iframe}
 }
 
 %%% TABLES
-% Remove default caption
-\DefTblrTemplate{contfoot-text}{default}{}
-\DefTblrTemplate{conthead-text}{default}{}
-\DefTblrTemplate{caption}{default}{}
-\DefTblrTemplate{conthead}{default}{}
-\DefTblrTemplate{capcont}{default}{}
+% % Remove default caption
+% \DefTblrTemplate{contfoot-text}{default}{}
+% \DefTblrTemplate{conthead-text}{default}{}
+% \DefTblrTemplate{caption}{default}{}
+% \DefTblrTemplate{conthead}{default}{}
+% \DefTblrTemplate{capcont}{default}{}
 
-\NewTblrEnviron{tblr}
-\SetTblrInner[tblr]{hlines,vlines,hspan=minimal}
-\SetTblrOuter[tblr]{long}
+% \NewTblrEnviron{tblr}
+% \SetTblrInner[tblr]{hlines,vlines,hspan=minimal}
+% \SetTblrOuter[tblr]{long}
 
 %%% TITLE PAGE
 %%% IMAGES
 \NewDocumentCommand{\image}{mo}{%
-   \begin{center}
-      % If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
-      \IfEndWith{#1}{.svg}
-      {\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
-      {\includegraphics[max width=0.6\linewidth, max height=0.9\textheight]{#1}}
-      \IfValueT{#2}{\captionof{figure}{#2}}
-   \end{center}
+	\begin{center}
+		% If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
+		\IfEndWith{#1}{.svg}
+		{\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
+		{\includegraphics[max width=0.6\linewidth, max height=0.9\textheight]{#1}}
+		\IfValueT{#2}{\captionof{figure}{#2}}
+	\end{center}
 }
 
 \DeclareRobustCommand*{\inlineImage}[1]{
-   \IfEndWith{#1}{.svg}
-   {\includesvg[width=0.5\linewidth, height=\textheight]{#1}}
-   {\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
+	\IfEndWith{#1}{.svg}
+	{\includesvg[width=0.5\linewidth, height=\textheight]{#1}}
+	{\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
 }
 
 %%% HORIZONTAL LINE
@@ -517,9 +523,9 @@ coltitle=defaultColor
 % Here, you can neuter the effect of some commands.
 
 \pdfstringdefDisableCommands{
-   \def\sout#1{}%
-   \def\externalLink#1#2{#1}%
-   \def\inlineImage#1{}%
+	\def\sout#1{}%
+	\def\externalLink#1#2{#1}%
+	\def\inlineImage#1{}%
 }
 
 
