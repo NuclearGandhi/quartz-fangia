@@ -138,49 +138,41 @@
 %%%  BOX
 
 % SUCCESS
-\definecolor{boxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{09AD7A}}
 \definecolor{boxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{E9F6F2}}
 \definecolor{boxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{A0D6C5}}
 \definecolor{boxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{09AD7A}}
 
 % INFORMATION
-\definecolor{boxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{00B8D4}}
 \definecolor{boxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F7FA}}
 \definecolor{boxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E1EC}}
 \definecolor{boxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{00B8D4}}
 
 % QUESTION
-\definecolor{boxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{DBA642}}
 \definecolor{boxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{FBF6E9}}
 \definecolor{boxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDD29E}}
 \definecolor{boxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{DBA642}}
 
 % WARNING
-\definecolor{boxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{DB8942}}
 \definecolor{boxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAF1E9}}
 \definecolor{boxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDCB9E}}
 \definecolor{boxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{DB8942}}
 
 % ERROR
-\definecolor{boxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{DB4242}}
 \definecolor{boxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAE9E9}}
 \definecolor{boxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{ED9E9E}}
 \definecolor{boxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{DB4242}}
 
 % NEUTRAL (NOTES)
-\definecolor{boxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{448AFF}}
 \definecolor{boxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{EAF2FF}}
 \definecolor{boxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{A1C5FF}}
 \definecolor{boxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{448AFF}}
 
 % ABSTRACT
-\definecolor{boxForegroundAbstract}{HTML}{\iftoggle{nocolor}{424242}{00B0FF}}
 \definecolor{boxBackgroundAbstract}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F6FF}}
 \definecolor{boxBorderAbstract}{HTML}{\iftoggle{nocolor}{4D4D4D}{99DFFF}}
 \definecolor{boxLogoBackgroundAbstract}{HTML}{\iftoggle{nocolor}{808080}{00B0FF}}
 
 % TIP
-\definecolor{boxForegroundTip}{HTML}{\iftoggle{nocolor}{424242}{00BFA5}}
 \definecolor{boxBackgroundTip}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F8F5}}
 \definecolor{boxBorderTip}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E5D8}}
 \definecolor{boxLogoBackgroundTip}{HTML}{\iftoggle{nocolor}{808080}{00BFA5}}
@@ -198,7 +190,6 @@
 
 % QUOTATION
 \definecolor{boxBorderLeftQuotation}{HTML}{CCCCCC}
-\definecolor{boxForegroundQuotation}{HTML}{555555}
 \definecolor{boxBackgroundQuotation}{HTML}{EEEEEE}
 \definecolor{boxBorderQuotation}{HTML}{DDDDDD}
 \definecolor{boxLogoBackgroundQuotation}{HTML}{\iftoggle{nocolor}{808080}{555555}}
@@ -384,43 +375,40 @@
 	arc=0.0pt,
 }
 
-\NewDocumentCommand\newBox{m m m m m o}{%
+\NewDocumentCommand\newBox{m m m m o}{%
 	\DeclareTColorBox{#1}{ o }{
 		colback=#2,
-		coltext=#3,
-		colframe=#4,
-		colbacktitle=#5,
+		colframe=#3,
+		colbacktitle=#4,
 		titlerule=0mm,
-		IfBlankTF={##1}{}{title=##1},
+		IfValueTF={##1}{title=##1}{},
 		halign title=flush right,
 		overlay={
-				\IfValueTF{#6}
-				{\node at (frame.north east) {\createBoxIcon{#5}{#6}};}
+				\IfValueTF{#5}
+				{\node at (frame.north east) {\createBoxIcon{#4}{#5}};}
 				{}
 			}
 	}%
 }
 
-\newBox{SuccessBox}{boxBackgroundSuccess}{boxForegroundSuccess}{boxBorderSuccess}{boxLogoBackgroundSuccess}[\checkmark]
-\newBox{InfoBox}{boxBackgroundInformation}{boxForegroundInformation}{boxBorderInformation}{boxLogoBackgroundInformation}[i]
-\newBox{QuestionBox}{boxBackgroundQuestion}{boxForegroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[?]
-\newBox{WarningBox}{boxBackgroundWarning}{boxForegroundWarning}{boxBorderWarning}{boxLogoBackgroundWarning}[!]
-\newBox{ErrorBox}{boxBackgroundError}{boxForegroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
-\newBox{NotesBox}{boxBackgroundNeutral}{boxForegroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}[\Sigma]
-\newBox{ExampleBox}{boxBackgroundIframe}{boxForegroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
-\newBox{TipBox}{boxBackgroundTip}{boxForegroundTip}{boxBorderTip}{boxLogoBackgroundTip}[\lightning]
-\newBox{AbstractBox}{boxBackgroundAbstract}{boxForegroundAbstract}{boxBorderAbstract}{boxLogoBackgroundAbstract}[\square]
-\newBox{TheoremBox}{boxBackgroundQuestion}{boxForegroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[\exists]
-\newBox{QuotationBox}{boxBackgroundQuotation}{boxForegroundQuotation}{boxBorderQuotation}{boxLogoBackgroundQuotation}
+\newBox{SuccessBox}{boxBackgroundSuccess}{boxBorderSuccess}{boxLogoBackgroundSuccess}[\checkmark]
+\newBox{InfoBox}{boxBackgroundInformation}{boxBorderInformation}{boxLogoBackgroundInformation}[i]
+\newBox{QuestionBox}{boxBackgroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[?]
+\newBox{WarningBox}{boxBackgroundWarning}{boxBorderWarning}{boxLogoBackgroundWarning}[!]
+\newBox{ErrorBox}{boxBackgroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
+\newBox{NotesBox}{boxBackgroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}[\Sigma]
+\newBox{ExampleBox}{boxBackgroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
+\newBox{TipBox}{boxBackgroundTip}{boxBorderTip}{boxLogoBackgroundTip}[\lightning]
+\newBox{AbstractBox}{boxBackgroundAbstract}{boxBorderAbstract}{boxLogoBackgroundAbstract}[\square]
+\newBox{TheoremBox}{boxBackgroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[\exists]
+\newBox{QuotationBox}{boxBackgroundQuotation}{boxBorderQuotation}{boxLogoBackgroundQuotation}["]
 
-\DeclareTColorBox{SimpleBox}{ o }{%
+\DeclareTColorBox{SimpleBox}{}{%
 	blanker,
 	before skip=6pt,after skip=6pt,
 	borderline west={1mm}{0pt}{boxBorderLeftQuotation},
 	coltext=boxForegroundQuotation,
 	left=18pt,
-	parbox=false,
-	IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
 }
 
 
