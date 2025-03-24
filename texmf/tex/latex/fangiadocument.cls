@@ -398,7 +398,7 @@
 \newBox{ErrorBox}{boxBackgroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
 \newBox{NotesBox}{boxBackgroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}[\Sigma]
 \newBox{ExampleBox}{boxBackgroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
-\newBox{TipBox}{boxBackgroundTip}{boxBorderTip}{boxLogoBackgroundTip}[\lightning]
+\newBox{TipBox}{boxBackgroundTip}{boxBorderTip}{boxLogoBackgroundTip}[T]
 \newBox{AbstractBox}{boxBackgroundAbstract}{boxBorderAbstract}{boxLogoBackgroundAbstract}[\square]
 \newBox{TheoremBox}{boxBackgroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[\exists]
 \newBox{QuotationBox}{boxBackgroundQuotation}{boxBorderQuotation}{boxLogoBackgroundQuotation}["]
@@ -406,8 +406,9 @@
 \DeclareTColorBox{SimpleBox}{}{%
 	blanker,
 	before skip=6pt,after skip=6pt,
-	borderline west={1mm}{0pt}{boxBorderLeftQuotation},
-	left=18pt
+	borderline east={1mm}{0pt}{boxBorderLeftQuotation},
+	right=12pt,
+	parskip=6pt,
 }
 
 % This defines a new document environment called "Callout" which takes four arguments:
