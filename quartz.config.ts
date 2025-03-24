@@ -70,12 +70,12 @@ const config: QuartzConfig = {
       }),
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
-      Plugin.ImageCaptions(),
       Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
       Plugin.MathBlockFixer({ debug: false }),
       Plugin.Latex({ renderEngine: "mathjax" }),
+      Plugin.ImageCaptions(),
       Plugin.AutoRTL(),
       Plugin.ClassifiedReplacer()
     ],

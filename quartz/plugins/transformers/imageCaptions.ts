@@ -56,8 +56,11 @@ export const ImageCaptions: QuartzTransformerPlugin<Partial<Options>> = (userOpt
             for (const item of nodesToProcess.reverse()) {
               const { index, parent, imageNode, blockquoteNode } = item
 
-              // Extract caption text from blockquote
-              const captionText = toString(blockquoteNode)
+              // Create a paragraph node for the caption
+              const captionNode: Paragraph = {
+                type: "paragraph",
+                children: blockquoteNode.children.flatMap(child => child.type === "paragraph" ? child.children : []),
+              }
 
               // Add caption to the image node's data
               const imgChild = imageNode.children.find(child => child.type === "image") as Image
@@ -69,7 +72,7 @@ export const ImageCaptions: QuartzTransformerPlugin<Partial<Options>> = (userOpt
                 }
                 
                 // Add caption property
-                imgChild.data.caption = captionText
+                imgChild.data.caption = captionNode
               }
 
               // Remove the original blockquote if needed

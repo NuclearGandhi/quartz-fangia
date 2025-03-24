@@ -224,7 +224,15 @@ export async function convertMarkdown(argv: Argv) {
               const alternative = node.data.hProperties.src.includes('jsfiddle') ? 'Code' : 'Video'
               const caption = node.caption || ''
               return `\\iframe{${node.data.hProperties.src}}[${alternative}][${caption}]`
-            }
+            },
+
+            image: (context: Context, node: Node) => {
+              if (node.url) {
+                const caption = node.data?.caption ?? '';
+                return `\\image{${sanitizeUrl(node.url)}}[${all(context, caption)}]`;
+              }
+              return '';
+            },
           },
           codeAppendiceTitle: 'Annexes',
           customBlocks: {
@@ -235,16 +243,6 @@ export async function convertMarkdown(argv: Argv) {
               secret: 'Spoiler',
               warning: 'Warning',
               neutre: 'Neutral'
-            }
-          },
-          image: {
-            inlineImage: (node: any) => `\\inlineImage{${sanitizeUrl(node.url)}}`,
-            image: (node: Node) => {
-              if (node.url) {
-                const caption = node.data?.caption ?? '';
-                return `\\image{${sanitizeUrl(node.url)}}[${caption}]`;
-              }
-              return '';
             }
           },
           firstLineRowFont: '\\rowfont[l]{\\bfseries}',
