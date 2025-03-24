@@ -138,46 +138,58 @@
 %%%  BOX
 
 % SUCCESS
-\definecolor{boxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{3C763D}}
-\definecolor{boxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{DFF0D8}}
-\definecolor{boxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{C6D7BF}}
-\definecolor{boxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{16C13B}}
+\definecolor{boxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{09AD7A}}
+\definecolor{boxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{E9F6F2}}
+\definecolor{boxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{A0D6C5}}
+\definecolor{boxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{09AD7A}}
 
 % INFORMATION
-\definecolor{boxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{31708F}}
-\definecolor{boxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{D9EDF7}}
-\definecolor{boxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{C0D4DE}}
-\definecolor{boxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{59ABE3}}
+\definecolor{boxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{00B8D4}}
+\definecolor{boxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F7FA}}
+\definecolor{boxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E1EC}}
+\definecolor{boxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{00B8D4}}
 
 % QUESTION
-\definecolor{boxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{8D61CD}}
-\definecolor{boxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0E9FC}}
-\definecolor{boxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{D3BDF5}}
-\definecolor{boxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{8C4FE8}}
+\definecolor{boxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{DBA642}}
+\definecolor{boxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{FBF6E9}}
+\definecolor{boxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDD29E}}
+\definecolor{boxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{DBA642}}
 
 % WARNING
-\definecolor{boxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{8A6D3B}}
-\definecolor{boxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FCF4E5}}
-\definecolor{boxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{E3DBCC}}
-\definecolor{boxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{F39539}}
+\definecolor{boxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{DB8942}}
+\definecolor{boxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAF1E9}}
+\definecolor{boxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDCB9E}}
+\definecolor{boxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{DB8942}}
 
 % ERROR
-\definecolor{boxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{A94442}}
-\definecolor{boxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{F2DEDE}}
-\definecolor{boxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{D9C5C5}}
-\definecolor{boxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{C21936}}
+\definecolor{boxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{DB4242}}
+\definecolor{boxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAE9E9}}
+\definecolor{boxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{ED9E9E}}
+\definecolor{boxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{DB4242}}
 
-% NEUTRAL
-\definecolor{boxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{424242}}
-\definecolor{boxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{FFFFFF}}
-\definecolor{boxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{4D4D4D}}
-\definecolor{boxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{808080}}
+% NEUTRAL (NOTES)
+\definecolor{boxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{448AFF}}
+\definecolor{boxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{EAF2FF}}
+\definecolor{boxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{A1C5FF}}
+\definecolor{boxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{448AFF}}
 
-% Iframe
-\definecolor{boxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7BB027}}
-\definecolor{boxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F3FDE2}}
-\definecolor{boxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{7BB027}}
-\definecolor{boxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7BB027}}
+% ABSTRACT
+\definecolor{boxForegroundAbstract}{HTML}{\iftoggle{nocolor}{424242}{00B0FF}}
+\definecolor{boxBackgroundAbstract}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F6FF}}
+\definecolor{boxBorderAbstract}{HTML}{\iftoggle{nocolor}{4D4D4D}{99DFFF}}
+\definecolor{boxLogoBackgroundAbstract}{HTML}{\iftoggle{nocolor}{808080}{00B0FF}}
+
+% TIP
+\definecolor{boxForegroundTip}{HTML}{\iftoggle{nocolor}{424242}{00BFA5}}
+\definecolor{boxBackgroundTip}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F8F5}}
+\definecolor{boxBorderTip}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E5D8}}
+\definecolor{boxLogoBackgroundTip}{HTML}{\iftoggle{nocolor}{808080}{00BFA5}}
+
+% EXAMPLE
+\definecolor{boxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7A43B5}}
+\definecolor{boxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0EAF7}}
+\definecolor{boxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{C3A1DE}}
+\definecolor{boxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7A43B5}}
 
 % SPOILER
 \definecolor{boxForegroundSpoiler}{HTML}{555555}
@@ -187,6 +199,9 @@
 % QUOTATION
 \definecolor{boxBorderLeftQuotation}{HTML}{CCCCCC}
 \definecolor{boxForegroundQuotation}{HTML}{555555}
+\definecolor{boxBackgroundQuotation}{HTML}{EEEEEE}
+\definecolor{boxBorderQuotation}{HTML}{DDDDDD}
+\definecolor{boxLogoBackgroundQuotation}{HTML}{\iftoggle{nocolor}{808080}{555555}}
 
 \hypersetup{linkcolor=internalLinkColor}
 
@@ -376,11 +391,11 @@
 		colframe=#4,
 		colbacktitle=#5,
 		titlerule=0mm,
-		IfValueTF={##1}{title=##1}{},
+		IfBlankTF={##1}{}{title=##1},
 		halign title=flush right,
 		overlay={
 				\IfValueTF{#6}
-				{\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
+				{\node at (frame.north east) {\createBoxIcon{#5}{#6}};}
 				{}
 			}
 	}%
@@ -391,10 +406,14 @@
 \newBox{QuestionBox}{boxBackgroundQuestion}{boxForegroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[?]
 \newBox{WarningBox}{boxBackgroundWarning}{boxForegroundWarning}{boxBorderWarning}{boxLogoBackgroundWarning}[!]
 \newBox{ErrorBox}{boxBackgroundError}{boxForegroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
-\newBox{NotesBox}{boxBackgroundNeutral}{boxForegroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}
+\newBox{NotesBox}{boxBackgroundNeutral}{boxForegroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}[\Sigma]
 \newBox{ExampleBox}{boxBackgroundIframe}{boxForegroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
+\newBox{TipBox}{boxBackgroundTip}{boxForegroundTip}{boxBorderTip}{boxLogoBackgroundTip}[\lightning]
+\newBox{AbstractBox}{boxBackgroundAbstract}{boxForegroundAbstract}{boxBorderAbstract}{boxLogoBackgroundAbstract}[\square]
+\newBox{TheoremBox}{boxBackgroundQuestion}{boxForegroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[\exists]
+\newBox{QuotationBox}{boxBackgroundQuotation}{boxForegroundQuotation}{boxBorderQuotation}{boxLogoBackgroundQuotation}
 
-\DeclareTColorBox{Quotation}{ o }{%
+\DeclareTColorBox{SimpleBox}{ o }{%
 	blanker,
 	before skip=6pt,after skip=6pt,
 	borderline west={1mm}{0pt}{boxBorderLeftQuotation},
