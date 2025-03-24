@@ -229,9 +229,21 @@
 %%% CLASS OPTIONS --------------------------------------------------------------
 
 %%% SECTIONNING OPTIONS
-\lohead{\headmark}
-\chead{}
-\pagestyle{scrheadings}
+\clearpairofpagestyles  % Clear all header and footer elements
+
+% Set up alternating page numbers
+\ifodd\value{page}
+	\rofoot*{\pagemark}  % Right outer footer (right side on odd pages)
+	\lefoot*{\pagemark}  % Left outer footer (left side on even pages)
+\else
+	\rofoot*{\pagemark}  % Right outer footer
+	\lefoot*{\pagemark}  % Left outer footer
+\fi
+
+\pagestyle{scrheadings} % Use KOMA-Script page style
+
+% For plain pages (chapter starts)
+\renewcommand*{\chapterpagestyle}{plain}
 
 \newcommand{\addsubsec}[1]{
 	\subsection*{#1}
@@ -256,6 +268,7 @@
 \newcommand{\introductionName}[1]{\def\@introductionName{#1}}
 \newcommand{\conclusionName}[1]{\def\@conclusionName{#1}}
 
+
 \newcommand{\sectionningGenerator}[3]{
 	\newenvironment{#1}{
 		\csname#3\endcsname{#2}
@@ -268,33 +281,33 @@
 
 
 % \DeclareOption{small}{
-\let\levelOneTitle\section
-\let\levelTwoTitle\subsection
-\let\levelThreeTitle\subsubsection
-\let\levelFourTitle\paragraph
-\let\levelFiveTitle\subparagraph
-\def\thesection{\arabic{section}}
-\def\thefigure{\thesection.\arabic{figure}}
-\def\thetable{\thesection.\arabic{table}}
-\def\theequationFloat{\thesection.\arabic{equationFloat}}
-\automark[subsection]{section}
-\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
-\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
+% \let\levelOneTitle\section
+% \let\levelTwoTitle\subsection
+% \let\levelThreeTitle\subsubsection
+% \let\levelFourTitle\paragraph
+% \let\levelFiveTitle\subparagraph
+% \def\thesection{\arabic{section}}
+% \def\thefigure{\thesection.\arabic{figure}}
+% \def\thetable{\thesection.\arabic{table}}
+% \def\theequationFloat{\thesection.\arabic{equationFloat}}
+% \automark[subsection]{section}
+% \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
+% \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
 % }
 
 
 % \DeclareOption{middle}{
-% 	\newcommand{\levelOneTitle}[1]{\chapter{#1}}
-% 	\let\levelTwoTitle\section
-% 	\let\levelThreeTitle\subsection
-% 	\let\levelFourTitle\subsubsection
-% 	\let\levelFiveTitle\paragraph
-% 	\let\levelSixTitle\subparagaph
-% 	\automark[section]{chapter}
-% 	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
-% 	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
-% 	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
-% 	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
+\newcommand{\levelOneTitle}[1]{\chapter{#1}}
+\let\levelTwoTitle\section
+\let\levelThreeTitle\subsection
+\let\levelFourTitle\subsubsection
+\let\levelFiveTitle\paragraph
+\let\levelSixTitle\subparagaph
+\automark[section]{chapter}
+\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
+\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
+\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
+\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
 % }
 
 % \DeclareOption{big}{
@@ -433,9 +446,9 @@
 \NewDocumentEnvironment{SimpleBlockquote}{ +b }{
 	\selectlanguage{english}
 	\begin{SimpleBox}
-	\begin{otherlanguage}{hebrew}
-		#1
-	\end{otherlanguage}
+		\begin{otherlanguage}{hebrew}
+			#1
+		\end{otherlanguage}
 	\end{SimpleBox}
 	\selectlanguage{hebrew}
 }{}
