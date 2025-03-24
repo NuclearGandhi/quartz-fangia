@@ -1,6 +1,6 @@
 const defaultMacro = (innerText: string) => {
     if (innerText.trim() === '') return '';
-    return `\\begin{SimpleBox}\n${innerText}\n\\end{SimpleBox}\n\n`;
+    return `\\begin{SimpleBlockquote}\n${innerText}\n\\end{SimpleBlockquote}\n\n`;
 };
 
 /* Stringify a Blockquote `node`. */
