@@ -407,10 +407,8 @@
 	blanker,
 	before skip=6pt,after skip=6pt,
 	borderline west={1mm}{0pt}{boxBorderLeftQuotation},
-	coltext=boxForegroundQuotation,
-	left=18pt,
+	left=18pt
 }
-
 
 % This defines a new document environment called "Callout" which takes four arguments:
 % 1. #1: The type of the callout.
@@ -428,6 +426,16 @@
 		#3
 	\end{otherlanguage}
 	\end{#1}
+	\selectlanguage{hebrew}
+}{}
+
+\NewDocumentEnvironment{SimpleBlockquote}{ +b }{
+	\selectlanguage{english}
+	\begin{SimpleBox}
+	\begin{otherlanguage}{hebrew}
+		#1
+	\end{otherlanguage}
+	\end{SimpleBox}
 	\selectlanguage{hebrew}
 }{}
 
