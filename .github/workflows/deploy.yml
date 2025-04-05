@@ -30,6 +30,8 @@ jobs:
         run: npm install @napi-rs/simple-git
       - name: Ensure @myriaddreamin/typst-ts-node-compiler is installed
         run: npm install @myriaddreamin/typst-ts-node-compiler
+      - name: Rebuild Native Modules
+        run: npm rebuild
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
