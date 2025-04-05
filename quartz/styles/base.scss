@@ -70,6 +70,21 @@ li:not(:last-child) {
   }
 }
 
+article {
+  > mjx-container.MathJax,
+  blockquote > div > mjx-container.MathJax {
+    display: flex;
+    > svg {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  blockquote > div > mjx-container.MathJax > svg {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
 strong {
   font-weight: $semiBoldWeight;
 }
@@ -553,8 +568,8 @@ video {
 }
 
 div:has(> .overflow) {
-  display: flex;
   max-height: 100%;
+  overflow-y: hidden;
 }
 
 ul.overflow,

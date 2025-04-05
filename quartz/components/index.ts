@@ -22,6 +22,8 @@ import Breadcrumbs from "./Breadcrumbs"
 import Comments from "./Comments"
 import DiscussionLink from "./DiscussionLink"
 import AlertDialog from "./AlertDialog"
+import Flex from "./Flex"
+import ConditionalRender from "./ConditionalRender"
 
 export {
   ArticleTitle,
@@ -47,5 +49,7 @@ export {
   Breadcrumbs,
   Comments,
   DiscussionLink,
-  AlertDialog
+  AlertDialog,
+  Flex,
+  ConditionalRender
 }

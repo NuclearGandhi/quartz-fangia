@@ -52,6 +52,8 @@
     overflow: hidden;
     flex-shrink: 0;
     align-self: flex-start;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
   button.mobile-explorer {
@@ -196,6 +198,7 @@ button.desktop-explorer {
   cursor: pointer;
   transition: transform 0.3s ease;
   backface-visibility: visible;
+  flex-shrink: 0;
 }
 
 li:has(> .folder-outer:not(.open)) > .folder-container > svg {

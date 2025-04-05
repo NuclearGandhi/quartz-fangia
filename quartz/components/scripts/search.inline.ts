@@ -122,11 +122,11 @@ function highlightHTML(searchTerm: string, el: HTMLElement) {
       let lastIndex = 0
       for (const match of matches) {
         const matchIndex = nodeText.indexOf(match, lastIndex)
-        spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex, matchIndex)))
+        spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex, matchIndex)) as Node)
         spanContainer.appendChild(createHighlightSpan(match))
         lastIndex = matchIndex + match.length
       }
-      spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex)))
+      spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex)) as Node)
       node.parentNode?.replaceChild(spanContainer, node)
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       if ((node as HTMLElement).classList.contains("highlight")) return
@@ -145,8 +145,7 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
   const container = searchElement.querySelector(".search-container") as HTMLElement
   if (!container) return
 
-  const sidebar = container.closest(".sidebar") as HTMLElement
-  if (!sidebar) return
+  const sidebar = container.closest(".sidebar") as HTMLElement | null
 
   const searchButton = searchElement.querySelector(".search-button") as HTMLButtonElement
   if (!searchButton) return
@@ -196,7 +195,7 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
 
   function showSearch(searchTypeNew: SearchType) {
     searchType = searchTypeNew
-    sidebar.style.zIndex = "1"
+    if (sidebar) sidebar.style.zIndex = "1"
     container.classList.add("active")
     searchBar.focus()
   }
@@ -397,7 +396,10 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
     if (!searchLayout || !enablePreview || !el || !preview) return
     const slug = el.id as FullSlug
     const innerDiv = await fetchContent(slug).then((contents) =>
-      contents.flatMap((el) => [...highlightHTML(currentSearchTerm, el as HTMLElement).children]),
+      contents.flatMap((el) => {
+        const highlighted = highlightHTML(currentSearchTerm, el as HTMLElement);
+        return highlighted && highlighted.children ? Array.from(highlighted.children) : [];
+      }),
     )
     previewInner = document.createElement("div")
     previewInner.classList.add("preview-inner")
