@@ -281,33 +281,33 @@
 
 
 % \DeclareOption{small}{
-% \let\levelOneTitle\section
-% \let\levelTwoTitle\subsection
-% \let\levelThreeTitle\subsubsection
-% \let\levelFourTitle\paragraph
-% \let\levelFiveTitle\subparagraph
-% \def\thesection{\arabic{section}}
-% \def\thefigure{\thesection.\arabic{figure}}
-% \def\thetable{\thesection.\arabic{table}}
-% \def\theequationFloat{\thesection.\arabic{equationFloat}}
-% \automark[subsection]{section}
-% \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
-% \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
+\let\levelOneTitle\section
+\let\levelTwoTitle\subsection
+\let\levelThreeTitle\subsubsection
+\let\levelFourTitle\paragraph
+\let\levelFiveTitle\subparagraph
+\def\thesection{\arabic{section}}
+\def\thefigure{\thesection.\arabic{figure}}
+\def\thetable{\thesection.\arabic{table}}
+\def\theequationFloat{\thesection.\arabic{equationFloat}}
+\automark[subsection]{section}
+\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
+\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
 % }
 
 
 % \DeclareOption{middle}{
-\newcommand{\levelOneTitle}[1]{\chapter{#1}}
-\let\levelTwoTitle\section
-\let\levelThreeTitle\subsection
-\let\levelFourTitle\subsubsection
-\let\levelFiveTitle\paragraph
-\let\levelSixTitle\subparagaph
-\automark[section]{chapter}
-\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
-\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
-\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
-\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
+% \newcommand{\levelOneTitle}[1]{\chapter{#1}}
+% \let\levelTwoTitle\section
+% \let\levelThreeTitle\subsection
+% \let\levelFourTitle\subsubsection
+% \let\levelFiveTitle\paragraph
+% \let\levelSixTitle\subparagaph
+% \automark[section]{chapter}
+% \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
+% \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
+% \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
+% \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
 % }
 
 % \DeclareOption{big}{
@@ -350,7 +350,7 @@
 %%% CUSTOMS ENVIRONMENTS AND MACROS ------------------------------------------
 
 %%% LINKS
-\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~~~~\linkIcon}}}}
+\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1}}}}
 \newcommand{\@titlePageLink}[2]{\href{#2}{\color{alternativeTextColor}{#1}}}
 
 % %%% BOX
