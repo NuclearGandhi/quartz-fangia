@@ -38,6 +38,7 @@
     "@clack/prompts": "^0.9.1",
     "@floating-ui/dom": "^1.6.13",
     "@myriaddreamin/rehype-typst": "0.5.4",
+    "@myriaddreamin/typst-ts-node-compiler": "^0.5.5-rc4",
     "@napi-rs/simple-git": "^0.1.19",
     "@tweenjs/tween.js": "^25.0.0",
     "ansi-truncate": "^1.2.0",

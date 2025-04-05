@@ -25,7 +25,11 @@ jobs:
         with:
           node-version: 22
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+      - name: Ensure @napi-rs/simple-git is installed
+        run: npm install @napi-rs/simple-git
+      - name: Ensure @myriaddreamin/typst-ts-node-compiler is installed
+        run: npm install @myriaddreamin/typst-ts-node-compiler
       - name: Build Quartz
         run: npx quartz build
       - name: Upload artifact
