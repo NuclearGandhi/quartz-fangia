@@ -24,7 +24,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Delete node_modules and package-lock.json
+        run:
+          rm -rf node_modules package-lock.json
       - name: Install Dependencies
+        run: npm install
+      - name: Clean installation
         run: npm ci
       - name: Build Quartz
         run: npx quartz build
