@@ -8,6 +8,7 @@ interface Node {
             className?: string[] | string;
             'data-callout'?: string;
         };
+        latexIgnore?: boolean;
     };
     value?: string;
     children?: Node[];

@@ -21,6 +21,11 @@ export function blockquote(all: Function, one: Function, ctx: Context, node: Nod
 
     const innerText = all(ctx, node);
     
+    if (node.data && node.data.latexIgnore) {
+        // If the node is marked to be ignored, return empty string
+        return '';
+    }
+
     // Return a latex Callout according to the node.hProperties.data-callout
     if (node.data && node.data.hProperties && node.data.hProperties['data-callout']) {
         const calloutType = node.data.hProperties['data-callout'];
