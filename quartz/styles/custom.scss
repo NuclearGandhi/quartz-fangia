@@ -147,16 +147,13 @@ div.callout-content blockquote {
   color: var(--caption-color);
 }
 
-blockquote p {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--caption-color);
-}
-
-div.callout-content blockquote p {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--caption-color);
+// Custom styles for image captions
+.blockquote-caption {
+  p {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--caption-color);
+  }
 }
 
 /* Callouts */

@@ -3,7 +3,7 @@ sourceMapSupport.install(options)
 import path from "path"
 import fs from "fs"
 import { PerfTimer } from "./util/perf"
-import { createMdProcessor, createFileParser } from "./processors/parse"
+import { createMdProcessor, createFileParser, createMarkdownParser, createHtmlProcessor } from "./processors/parse"
 import { FilePath } from "./util/path"
 import { Argv, BuildCtx } from "./util/ctx"
 import { options } from "./util/sourcemap"
@@ -13,6 +13,8 @@ import { QuartzLogger } from "./util/log"
 import { ConvertResources } from "./plugins/transformers/convertResources"
 import math from "./plugins/custom-rebber/math"
 import mathEscape from "./plugins/custom-rebber/mathEscape"
+import html from "./plugins/custom-rebber/html"
+import { blockquote } from "./plugins/custom-rebber/blockquote"
 
 // Create a require function for loading CommonJS modules
 const require = createRequire(import.meta.url)
@@ -173,6 +175,9 @@ export async function convertMarkdown(argv: Argv) {
 
         const sanitizeUrl = (url: string) => url.replace(/[{}]/g, '')
 
+        const all = require('rebber/dist/all')
+        const one = require('rebber/dist/one')
+
         const rebberConfig = {
           preprocessors: {
             inlineMath: [mathEscape],
@@ -205,6 +210,9 @@ export async function convertMarkdown(argv: Argv) {
             leftAligned: require('rebber-plugins/dist/type/align'),
             rightAligned: require('rebber-plugins/dist/type/align'),
 
+            html: html,
+            blockquote: (ctx: Context, node: Node) => blockquote(all, one, ctx, node),
+
             errorCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             informationCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
             neutralCustomBlock: require('rebber-plugins/dist/type/customBlocks'),
@@ -216,7 +224,15 @@ export async function convertMarkdown(argv: Argv) {
               const alternative = node.data.hProperties.src.includes('jsfiddle') ? 'Code' : 'Video'
               const caption = node.caption || ''
               return `\\iframe{${node.data.hProperties.src}}[${alternative}][${caption}]`
-            }
+            },
+
+            image: (context: Context, node: Node) => {
+              if (node.url) {
+                const caption = node.data?.caption ?? '';
+                return `\\image{${sanitizeUrl(node.url)}}[${all(context, caption)}]`;
+              }
+              return '';
+            },
           },
           codeAppendiceTitle: 'Annexes',
           customBlocks: {
@@ -228,10 +244,6 @@ export async function convertMarkdown(argv: Argv) {
               warning: 'Warning',
               neutre: 'Neutral'
             }
-          },
-          image: {
-            inlineImage: (node: any) => `\\inlineImage{${sanitizeUrl(node.url)}}`,
-            image: (node: any) => `\\image{${sanitizeUrl(node.url)}}`
           },
           firstLineRowFont: '\\rowfont[l]{\\bfseries}',
           tableEnvName: 'zdstblr',
@@ -251,9 +263,8 @@ export async function convertMarkdown(argv: Argv) {
 
         const latexBody = mdastToLatex(ast, rebberConfig)
 
-        const contentType = "small"
         const disableToc = false
-        outputContent = `\\documentclass[${contentType}]{fangiadocument}
+        outputContent = `\\documentclass{fangiadocument}
 \\usepackage{blindtext}
 \\title{${title}}
 \\author{${authors.join(', ')}}
@@ -269,9 +280,39 @@ ${latexBody}
         console.error(chalk.red(`Failed to convert to LaTeX: ${error.message}`))
         process.exit(1)
       }
+    } else if (argv.format === "hast") {
+      try {
+        log.start("Converting to HAST")
+
+        // Use the HTML processor to convert MDAST to HAST
+        const markdownParser = createMarkdownParser(ctx, mdContent)
+        const htmlProcessor = createHtmlProcessor(ctx)
+        const processedContent = await markdownParser(htmlProcessor)
+
+        if (!processedContent || processedContent.length === 0) {
+          console.error(chalk.red(`Failed to convert to HAST`))
+          process.exit(1)
+        }
+
+        // Get the HAST from the processed content
+        const [hast, processedVFile] = processedContent[0]
+
+        // Option 1: Output as JSON
+        outputContent = JSON.stringify(hast, null, 2)
+        outputFile = path.join(outputDir, `${fileName}.HAST.json`)
+
+        // Option 2: If you want HTML output instead, uncomment this
+        // outputContent = toHtml(hast, { allowDangerousHtml: true })
+        // outputFile = path.join(outputDir, `${fileName}.html`)
+
+        log.end(`HAST conversion completed in ${perf.timeSince()}`)
+      } catch (error: any) {
+        console.error(chalk.red(`Failed to convert to HAST: ${error.message}`))
+        process.exit(1)
+      }
     } else {
-      // Default to JSON output (just the MDAST)
-      outputFile = path.join(outputDir, `${fileName}.json`)
+      // Default to JSON output (MDAST)
+      outputFile = path.join(outputDir, `${fileName}.MDAST.json`)
       outputContent = JSON.stringify(ast, null, 2)
     }
 

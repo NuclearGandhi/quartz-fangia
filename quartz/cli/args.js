@@ -112,20 +112,24 @@ export const ConvertArgv = {
   file: {
     string: true,
     alias: ["f"],
-    describe: "markdown file to process",
+    describe: "Markdown file to process",
     demandOption: true
   },
   output: {
     string: true,
-    alias: ["o"],
     default: "convert-output",
-    describe: "output folder for processed file",
+    describe: "Output folder for processed file",
   },
   format: {
     string: true,
-    alias: ["fmt"],
-    choices: ["json", "latex"],
     default: "latex",
-    describe: "output format (json for MDAST, latex for LaTeX)"
-  }
+    alias: "t",
+    choices: ["latex", "mdast", "hast"],
+    describe: "Output format (mdast for MDAST, latex for LaTeX, hast for HAST)",
+  },
+  verbose: {
+    boolean: true,
+    default: false,
+    describe: "Enable verbose logging",
+  },
 }

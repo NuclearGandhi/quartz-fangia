@@ -16,7 +16,7 @@ export interface Argv {
   concurrency?: number
   // Convert command arguments
   file?: string
-  format?: "json" | "latex"
+  format?:  "latex" | "mdast" | "hast"
 }
 
 export interface BuildCtx {

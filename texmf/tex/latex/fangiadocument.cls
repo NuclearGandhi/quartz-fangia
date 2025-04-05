@@ -24,7 +24,7 @@
 \babelfont{sf}{CMU Sans Serif}
 \babelfont{tt}{CMU Typewriter Text Variable Width}
 \babelfont[hebrew]{rm}{David}
-\babelfont[hebrew]{sf}{Arial}
+\babelfont[hebrew]{sf}{David}
 \babelfont[hebrew]{tt}{Courier New}
 
 \selectlanguage{hebrew}
@@ -94,10 +94,11 @@
 
 %%% BOX
 \iftoggle{cache}{
-   \PassOptionsToPackage{cache=true}{minted}
+	\PassOptionsToPackage{cache=true}{minted}
 }{
-   \PassOptionsToPackage{cache=false}{minted}
+	\PassOptionsToPackage{cache=false}{minted}
 }
+\RequirePackage{minted}
 \RequirePackage[skins, minted, breakable, xparse]{tcolorbox}
 
 
@@ -137,55 +138,61 @@
 %%%  BOX
 
 % SUCCESS
-\definecolor{ZdSBoxForegroundSuccess}{HTML}{\iftoggle{nocolor}{424242}{3C763D}}
-\definecolor{ZdSBoxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{DFF0D8}}
-\definecolor{ZdSBoxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{C6D7BF}}
-\definecolor{ZdSBoxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{16C13B}}
+\definecolor{boxBackgroundSuccess}{HTML}{\iftoggle{nocolor}{FFFFFF}{E9F6F2}}
+\definecolor{boxBorderSuccess}{HTML}{\iftoggle{nocolor}{4D4D4D}{A0D6C5}}
+\definecolor{boxLogoBackgroundSuccess}{HTML}{\iftoggle{nocolor}{808080}{09AD7A}}
 
 % INFORMATION
-\definecolor{ZdSBoxForegroundInformation}{HTML}{\iftoggle{nocolor}{424242}{31708F}}
-\definecolor{ZdSBoxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{D9EDF7}}
-\definecolor{ZdSBoxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{C0D4DE}}
-\definecolor{ZdSBoxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{59ABE3}}
+\definecolor{boxBackgroundInformation}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F7FA}}
+\definecolor{boxBorderInformation}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E1EC}}
+\definecolor{boxLogoBackgroundInformation}{HTML}{\iftoggle{nocolor}{808080}{00B8D4}}
 
 % QUESTION
-\definecolor{ZdSBoxForegroundQuestion}{HTML}{\iftoggle{nocolor}{424242}{8D61CD}}
-\definecolor{ZdSBoxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0E9FC}}
-\definecolor{ZdSBoxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{D3BDF5}}
-\definecolor{ZdSBoxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{8C4FE8}}
+\definecolor{boxBackgroundQuestion}{HTML}{\iftoggle{nocolor}{FFFFFF}{FBF6E9}}
+\definecolor{boxBorderQuestion}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDD29E}}
+\definecolor{boxLogoBackgroundQuestion}{HTML}{\iftoggle{nocolor}{808080}{DBA642}}
 
 % WARNING
-\definecolor{ZdSBoxForegroundWarning}{HTML}{\iftoggle{nocolor}{424242}{8A6D3B}}
-\definecolor{ZdSBoxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FCF4E5}}
-\definecolor{ZdSBoxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{E3DBCC}}
-\definecolor{ZdSBoxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{F39539}}
+\definecolor{boxBackgroundWarning}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAF1E9}}
+\definecolor{boxBorderWarning}{HTML}{\iftoggle{nocolor}{4D4D4D}{EDCB9E}}
+\definecolor{boxLogoBackgroundWarning}{HTML}{\iftoggle{nocolor}{808080}{DB8942}}
 
 % ERROR
-\definecolor{ZdSBoxForegroundError}{HTML}{\iftoggle{nocolor}{424242}{A94442}}
-\definecolor{ZdSBoxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{F2DEDE}}
-\definecolor{ZdSBoxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{D9C5C5}}
-\definecolor{ZdSBoxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{C21936}}
+\definecolor{boxBackgroundError}{HTML}{\iftoggle{nocolor}{FFFFFF}{FAE9E9}}
+\definecolor{boxBorderError}{HTML}{\iftoggle{nocolor}{4D4D4D}{ED9E9E}}
+\definecolor{boxLogoBackgroundError}{HTML}{\iftoggle{nocolor}{808080}{DB4242}}
 
-% NEUTRAL
-\definecolor{ZdSBoxForegroundNeutral}{HTML}{\iftoggle{nocolor}{424242}{424242}}
-\definecolor{ZdSBoxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{FFFFFF}}
-\definecolor{ZdSBoxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{4D4D4D}}
-\definecolor{ZdSBoxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{808080}}
+% NEUTRAL (NOTES)
+\definecolor{boxBackgroundNeutral}{HTML}{\iftoggle{nocolor}{FFFFFF}{EAF2FF}}
+\definecolor{boxBorderNeutral}{HTML}{\iftoggle{nocolor}{4D4D4D}{A1C5FF}}
+\definecolor{boxLogoBackgroundNeutral}{HTML}{\iftoggle{nocolor}{808080}{448AFF}}
 
-% Iframe
-\definecolor{ZdSBoxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7BB027}}
-\definecolor{ZdSBoxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F3FDE2}}
-\definecolor{ZdSBoxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{7BB027}}
-\definecolor{ZdSBoxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7BB027}}
+% ABSTRACT
+\definecolor{boxBackgroundAbstract}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F6FF}}
+\definecolor{boxBorderAbstract}{HTML}{\iftoggle{nocolor}{4D4D4D}{99DFFF}}
+\definecolor{boxLogoBackgroundAbstract}{HTML}{\iftoggle{nocolor}{808080}{00B0FF}}
+
+% TIP
+\definecolor{boxBackgroundTip}{HTML}{\iftoggle{nocolor}{FFFFFF}{E6F8F5}}
+\definecolor{boxBorderTip}{HTML}{\iftoggle{nocolor}{4D4D4D}{99E5D8}}
+\definecolor{boxLogoBackgroundTip}{HTML}{\iftoggle{nocolor}{808080}{00BFA5}}
+
+% EXAMPLE
+\definecolor{boxForegroundIframe}{HTML}{\iftoggle{nocolor}{424242}{7A43B5}}
+\definecolor{boxBackgroundIframe}{HTML}{\iftoggle{nocolor}{FFFFFF}{F0EAF7}}
+\definecolor{boxBorderIframe}{HTML}{\iftoggle{nocolor}{4D4D4D}{C3A1DE}}
+\definecolor{boxLogoBackgroundIframe}{HTML}{\iftoggle{nocolor}{808080}{7A43B5}}
 
 % SPOILER
-\definecolor{ZdSBoxForegroundSpoiler}{HTML}{555555}
-\definecolor{ZdSBoxBackgroundSpoiler}{HTML}{EEEEEE}
-\definecolor{ZdSBoxBorderSpoiler}{HTML}{DDDDDD}
+\definecolor{boxForegroundSpoiler}{HTML}{555555}
+\definecolor{boxBackgroundSpoiler}{HTML}{EEEEEE}
+\definecolor{boxBorderSpoiler}{HTML}{DDDDDD}
 
 % QUOTATION
-\definecolor{ZdSBoxBorderLeftQuotation}{HTML}{CCCCCC}
-\definecolor{ZdSBoxForegroundQuotation}{HTML}{555555}
+\definecolor{boxBorderLeftQuotation}{HTML}{CCCCCC}
+\definecolor{boxBackgroundQuotation}{HTML}{EEEEEE}
+\definecolor{boxBorderQuotation}{HTML}{DDDDDD}
+\definecolor{boxLogoBackgroundQuotation}{HTML}{\iftoggle{nocolor}{808080}{555555}}
 
 \hypersetup{linkcolor=internalLinkColor}
 
@@ -203,45 +210,57 @@
 \def\boxIcon{[draw=none] circle (0.4cm)}
 
 \DeclareRobustCommand{\linkIcon}{\tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{%
-      \begin{scope}[x=1ex, y=1ex]
-         \clip (-0.1,-0.1)
-         --++ (-0, 1.2)
-         --++ (0.6, 0)
-         --++ (0, -0.6)
-         --++ (0.6, 0)
-         --++ (0, -1);
-         \path[draw,
-            line width = 0.5,
-            rounded corners=0.5]
-         (0,0) rectangle (1,1);
-      \end{scope}
-      \path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
-      \path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
+		\begin{scope}[x=1ex, y=1ex]
+			\clip (-0.1,-0.1)
+			--++ (-0, 1.2)
+			--++ (0.6, 0)
+			--++ (0, -0.6)
+			--++ (0.6, 0)
+			--++ (0, -1);
+			\path[draw,
+				line width = 0.5,
+				rounded corners=0.5]
+			(0,0) rectangle (1,1);
+		\end{scope}
+		\path[draw, line width = 0.5] (0.5, 0.5) -- (1, 1);
+		\path[draw, line width = 0.5] (0.6, 1) -- (1, 1) -- (1, 0.6);}
 }
 
 %%% CLASS OPTIONS --------------------------------------------------------------
 
 %%% SECTIONNING OPTIONS
-\lohead{\headmark}
-\chead{}
-\pagestyle{scrheadings}
+\clearpairofpagestyles  % Clear all header and footer elements
+
+% Set up alternating page numbers
+\ifodd\value{page}
+	\rofoot*{\pagemark}  % Right outer footer (right side on odd pages)
+	\lefoot*{\pagemark}  % Left outer footer (left side on even pages)
+\else
+	\rofoot*{\pagemark}  % Right outer footer
+	\lefoot*{\pagemark}  % Left outer footer
+\fi
+
+\pagestyle{scrheadings} % Use KOMA-Script page style
+
+% For plain pages (chapter starts)
+\renewcommand*{\chapterpagestyle}{plain}
 
 \newcommand{\addsubsec}[1]{
-   \subsection*{#1}
-   %\addxcontentsline{toc}{subsection}{#1}
+	\subsection*{#1}
+	%\addxcontentsline{toc}{subsection}{#1}
 }
 
 \newcommand{\addsubsubsec}[1]{
-   \subsubsection*{#1}
-   %\addxcontentsline{toc}{subsubsection}{#1}
+	\subsubsection*{#1}
+	%\addxcontentsline{toc}{subsubsection}{#1}
 }
 
 \newcommand{\addpar}[1]{
-   \paragraph*{#1}
+	\paragraph*{#1}
 }
 
 \newcommand{\addsubpar}[1]{
-   \subparagraph*{#1}
+	\subparagraph*{#1}
 }
 
 \def\@introductionName{Introduction}
@@ -249,77 +268,78 @@
 \newcommand{\introductionName}[1]{\def\@introductionName{#1}}
 \newcommand{\conclusionName}[1]{\def\@conclusionName{#1}}
 
+
 \newcommand{\sectionningGenerator}[3]{
-   \newenvironment{#1}{
-      \csname#3\endcsname{#2}
-      \let\levelTwoTitle\addsubsec
-      \let\levelThreeTitle\addsubsubsec
-      \let\levelFourTitle\addpar
-      \let\levelFiveTitle\addsubpar
-   }{}
+	\newenvironment{#1}{
+		\csname#3\endcsname{#2}
+		\let\levelTwoTitle\addsubsec
+		\let\levelThreeTitle\addsubsubsec
+		\let\levelFourTitle\addpar
+		\let\levelFiveTitle\addsubpar
+	}{}
 }
 
 
-\DeclareOption{small}{
-   \let\levelOneTitle\section
-   \let\levelTwoTitle\subsection
-   \let\levelThreeTitle\subsubsection
-   \let\levelFourTitle\paragraph
-   \let\levelFiveTitle\subparagraph
-   \def\thesection{\arabic{section}}
-   \def\thefigure{\thesection.\arabic{figure}}
-   \def\thetable{\thesection.\arabic{table}}
-   \def\theequationFloat{\thesection.\arabic{equationFloat}}
-   \automark[subsection]{section}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{small}{
+\let\levelOneTitle\section
+\let\levelTwoTitle\subsection
+\let\levelThreeTitle\subsubsection
+\let\levelFourTitle\paragraph
+\let\levelFiveTitle\subparagraph
+\def\thesection{\arabic{section}}
+\def\thefigure{\thesection.\arabic{figure}}
+\def\thetable{\thesection.\arabic{table}}
+\def\theequationFloat{\thesection.\arabic{equationFloat}}
+\automark[subsection]{section}
+\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addsec}
+\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addsec}
+% }
 
 
-\DeclareOption{middle}{
-   \newcommand{\levelOneTitle}[1]{\chapter{#1}}
-   \let\levelTwoTitle\section
-   \let\levelThreeTitle\subsection
-   \let\levelFourTitle\subsubsection
-   \let\levelFiveTitle\paragraph
-   \let\levelSixTitle\subparagaph
-   \automark[section]{chapter}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
-   \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{middle}{
+% \newcommand{\levelOneTitle}[1]{\chapter{#1}}
+% \let\levelTwoTitle\section
+% \let\levelThreeTitle\subsection
+% \let\levelFourTitle\subsubsection
+% \let\levelFiveTitle\paragraph
+% \let\levelSixTitle\subparagaph
+% \automark[section]{chapter}
+% \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addchap}
+% \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addchap}
+% \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addsec}
+% \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addsec}
+% }
 
-\DeclareOption{big}{
-   \newcommand\levelOneTitle[1]{\part{#1}}
-   \newcommand\levelTwoTitle[1]{\chapter{#1}}
-   \let\levelThreeTitle\section
-   \let\levelFourTitle\subsection
-   \let\levelFiveTitle\subsubsection
-   \let\levelSixTitle\paragraph
-   \let\levelSevenTitle\subparagraph
-   \counterwithin{chapter}{part}
-   \automark[chapter]{part}
-   \sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
-   \sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
-   \sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
-   \sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
-   \sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
-   \sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
-}
+% \DeclareOption{big}{
+% 	\newcommand\levelOneTitle[1]{\part{#1}}
+% 	\newcommand\levelTwoTitle[1]{\chapter{#1}}
+% 	\let\levelThreeTitle\section
+% 	\let\levelFourTitle\subsection
+% 	\let\levelFiveTitle\subsubsection
+% 	\let\levelSixTitle\paragraph
+% 	\let\levelSevenTitle\subparagraph
+% 	\counterwithin{chapter}{part}
+% 	\automark[chapter]{part}
+% 	\sectionningGenerator{LevelOneIntroduction}{\@introductionName}{addpart}
+% 	\sectionningGenerator{LevelOneConclusion}{\@conclusionName}{addpart}
+% 	\sectionningGenerator{LevelTwoIntroduction}{\@introductionName}{addchap}
+% 	\sectionningGenerator{LevelTwoConclusion}{\@conclusionName}{addchap}
+% 	\sectionningGenerator{LevelThreeIntroduction}{\@introductionName}{addsec}
+% 	\sectionningGenerator{LevelThreeConclusion}{\@conclusionName}{addsec}
+% }
 
 \RedeclareSectionCommands[tocdynnumwidth]{part,chapter,section,subsection,subsubsection}
 
 %%% PROCESSING
 \ProcessOptions
 
-%%% POST-PROCESSING
-\addtokomafont{chapter}{\color{chapterColor}}
-\addtokomafont{section}{\color{sectionColor}}
-\addtokomafont{subsection}{\color{subsectionColor}}
-\addtokomafont{subsubsection}{\color{subsubsectionColor}}
-\addtokomafont{paragraph}{\color{paragraphColor}}
-\addtokomafont{subparagraph}{\color{subparagraphColor}}
+% %%% POST-PROCESSING
+% \addtokomafont{chapter}{\color{chapterColor}}
+% \addtokomafont{section}{\color{sectionColor}}
+% \addtokomafont{subsection}{\color{subsectionColor}}
+% \addtokomafont{subsubsection}{\color{subsubsectionColor}}
+% \addtokomafont{paragraph}{\color{paragraphColor}}
+% \addtokomafont{subparagraph}{\color{subparagraphColor}}
 
 \setcounter{secnumdepth}{4}
 
@@ -330,94 +350,124 @@
 %%% CUSTOMS ENVIRONMENTS AND MACROS ------------------------------------------
 
 %%% LINKS
-\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1~~~~\linkIcon}}}}
+\newcommand{\externalLink}[2]{\iftoggle{print}{\textbf{[#1](#2)}}{\href{#2}{\color{externalLinkColor}{#1}}}}
 \newcommand{\@titlePageLink}[2]{\href{#2}{\color{alternativeTextColor}{#1}}}
 
-%%% ZDS BOX
-\newcommand{\newZdSBox}[3]{{%
-         \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
-         \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
-         \theoremindent=2em
-         \theoremheaderfont{\scshape\hspace{-2em}}
-         \theoremseparator{ ---}
-         \theoremstyle{break}
-         \theorembodyfont{\normalfont}
-         \newtheorem*{#1}{\textcolor{#3}{#2}}
-      }}
+% %%% BOX
+% \newcommand{\newBox}[3]{{%
+%          \theoremprework{~\\ \textcolor{#3}{\rule{0.6\linewidth}{1pt}}}
+%          \theorempostwork{\hfill \textcolor{#3}{\rule{0.6\linewidth}{1pt}} \\}
+%          \theoremindent=2em
+%          \theoremheaderfont{\scshape\hspace{-2em}}
+%          \theoremseparator{ ---}
+%          \theoremstyle{break}
+%          \theorembodyfont{\normalfont}
+%          \newtheorem*{#1}{\textcolor{#3}{#2}}
+%       }}
 
-\newcommand{\newZdSBoxEnvironment}[2]{%
-   \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
-   {\end{#2}\end{minipage}}
-}
+% \newcommand{\newBoxEnvironment}[2]{%
+%    \newenvironment{#1}{~\\ \begin{minipage}{\linewidth}\begin{#2}}
+%    {\end{#2}\end{minipage}}
+% }
 
 % Create box icon
 \newcommand{\createBoxIcon}[2]{
-   \begin{tikzpicture} %
-      \fill (0, 0.5) [color=#1] \boxIcon; %
-      \draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
-   \end{tikzpicture} %
+	\begin{tikzpicture} %
+		\fill (0, 0.5) [color=#1] \boxIcon; %
+		\draw (0, 0.5) \boxIcon node[draw=none, text=white, text width=0.5cm, align=flush center] {\Large\sffamily$\boldsymbol{#2}$}; %
+	\end{tikzpicture} %
 }
 
 %%% DEFAULT BOX THEME
 
 \tcbsetforeverylayer{%
-   enhanced,
-   enlarge top initially by=5mm,
-   boxrule=0.5pt,
-   breakable,
-   arc=0.0pt,
+	enhanced,
+	enlarge top initially by=5mm,
+	boxrule=0.5pt,
+	breakable,
+	arc=0.0pt,
 }
 
-\NewDocumentCommand\newBox{m m m m m o}{%
-   \DeclareTColorBox{#1}{ o }{
-      colback=#2,
-      coltext=#3,
-      colframe=#4,
-      colbacktitle=#5,
-      titlerule=0mm,
-      IfValueTF={##1}{title=##1}{},
-      overlay={
-            \IfValueTF{#6}
-            {\node at (frame.north west) {\createBoxIcon{#5}{#6}};}
-            {}
-         }
-   }%
+\NewDocumentCommand\newBox{m m m m o}{%
+	\DeclareTColorBox{#1}{ o }{
+		colback=#2,
+		colframe=#3,
+		colbacktitle=#4,
+		titlerule=0mm,
+		IfValueTF={##1}{title=##1}{},
+		halign title=flush right,
+		overlay={
+				\IfValueTF{#5}
+				{\node at (frame.north east) {\createBoxIcon{#4}{#5}};}
+				{}
+			}
+	}%
 }
 
-\newBox{Success}{ZdSBoxBackgroundSuccess}{ZdSBoxForegroundSuccess}{ZdSBoxBorderSuccess}{ZdSBoxLogoBackgroundSuccess}[\checkmark]
-\newBox{Information}{ZdSBoxBackgroundInformation}{ZdSBoxForegroundInformation}{ZdSBoxBorderInformation}{ZdSBoxLogoBackgroundInformation}[i]
-\newBox{Question}{ZdSBoxBackgroundQuestion}{ZdSBoxForegroundQuestion}{ZdSBoxBorderQuestion}{ZdSBoxLogoBackgroundQuestion}[?]
-\newBox{Warning}{ZdSBoxBackgroundWarning}{ZdSBoxForegroundWarning}{ZdSBoxBorderWarning}{ZdSBoxLogoBackgroundWarning}[!]
-\newBox{Error}{ZdSBoxBackgroundError}{ZdSBoxForegroundError}{ZdSBoxBorderError}{ZdSBoxLogoBackgroundError}[\times]
-\newBox{Neutral}{ZdSBoxBackgroundNeutral}{ZdSBoxForegroundNeutral}{ZdSBoxBorderNeutral}{ZdSBoxLogoBackgroundNeutral}
-\newBox{Iframe}{ZdSBoxBackgroundIframe}{ZdSBoxForegroundIframe}{ZdSBoxBorderIframe}{ZdSBoxLogoBackgroundIframe}[\#]
+\newBox{SuccessBox}{boxBackgroundSuccess}{boxBorderSuccess}{boxLogoBackgroundSuccess}[\checkmark]
+\newBox{InfoBox}{boxBackgroundInformation}{boxBorderInformation}{boxLogoBackgroundInformation}[i]
+\newBox{QuestionBox}{boxBackgroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[?]
+\newBox{WarningBox}{boxBackgroundWarning}{boxBorderWarning}{boxLogoBackgroundWarning}[!]
+\newBox{ErrorBox}{boxBackgroundError}{boxBorderError}{boxLogoBackgroundError}[\times]
+\newBox{NotesBox}{boxBackgroundNeutral}{boxBorderNeutral}{boxLogoBackgroundNeutral}[\Sigma]
+\newBox{ExampleBox}{boxBackgroundIframe}{boxBorderIframe}{boxLogoBackgroundIframe}[\#]
+\newBox{TipBox}{boxBackgroundTip}{boxBorderTip}{boxLogoBackgroundTip}[T]
+\newBox{AbstractBox}{boxBackgroundAbstract}{boxBorderAbstract}{boxLogoBackgroundAbstract}[\square]
+\newBox{TheoremBox}{boxBackgroundQuestion}{boxBorderQuestion}{boxLogoBackgroundQuestion}[\exists]
+\newBox{QuotationBox}{boxBackgroundQuotation}{boxBorderQuotation}{boxLogoBackgroundQuotation}["]
 
-%%% QUOTATION
-\DeclareTColorBox{Quotation}{ o }{%
-   blanker,
-   before skip=6pt,after skip=6pt,
-   borderline west={1mm}{0pt}{ZdSBoxBorderLeftQuotation},
-   coltext=ZdSBoxForegroundQuotation,
-   left=18pt,
-   parbox=false,
-   IfValueTF={#1}{after upper={\par\center\textit{#1}}}{}
+\DeclareTColorBox{SimpleBox}{}{%
+	blanker,
+	before skip=6pt,after skip=6pt,
+	borderline east={1mm}{0pt}{boxBorderLeftQuotation},
+	right=12pt,
+	parskip=6pt,
 }
+
+% This defines a new document environment called "Callout" which takes four arguments:
+% 1. #1: The type of the callout.
+% 2. #2: A title.
+% 3. #3: A block of text in Hebrew to be displayed within the environment.
+%
+% The environment switches to English language for the outer environment and then
+% switches back to Hebrew for the inner content. The outer environment is specified
+% by the first argument (#1) and contains the Hebrew string (#2) and additional content (#3).
+% The inner content is wrapped in a Hebrew environment to ensure proper language handling.
+\NewDocumentEnvironment{Callout}{ m o +b }{
+	\selectlanguage{english}
+	\begin{#1}[{{\foreignlanguage{hebrew}{#2}}}]
+	\begin{otherlanguage}{hebrew}
+		#3
+	\end{otherlanguage}
+	\end{#1}
+	\selectlanguage{hebrew}
+}{}
+
+\NewDocumentEnvironment{SimpleBlockquote}{ +b }{
+	\selectlanguage{english}
+	\begin{SimpleBox}
+		\begin{otherlanguage}{hebrew}
+			#1
+		\end{otherlanguage}
+	\end{SimpleBox}
+	\selectlanguage{hebrew}
+}{}
 
 %%% CODE MANAGEMENT
 \tcbsetforeverylayer{} % Reset style
 
 \setminted{
-   breaklines,
-   breaksymbolleft=\hspace{2em},
-   highlightcolor=highlightCodeColor,
-   linenos,
-   fontsize=\small,
-   baselinestretch=1,
-   breakanywhere=true
+	breaklines,
+	breaksymbolleft=\hspace{2em},
+	highlightcolor=highlightCodeColor,
+	linenos,
+	fontsize=\small,
+	baselinestretch=1,
+	breakanywhere=true
 }
 
 \renewcommand\theFancyVerbLine{%
-   \BeginAccSupp{ActualText={}}%
+	\BeginAccSupp{ActualText={}}%
 \small\textcolor{lineNumberCodeColor}{\arabic{FancyVerbLine}}%
 \EndAccSupp{}%
 }
@@ -429,7 +479,7 @@ boxrule=0.5pt,
 breakable,
 colback=codeBackgroundColor,
 coltext=defaultColor,
-colframe=ZdSBoxBorderSpoiler,
+colframe=boxBorderSpoiler,
 arc=0.0pt,
 listing engine=minted,
 listing only,
@@ -438,7 +488,7 @@ minted language=#4,
 minted options={highlightlines={#2}, firstnumber=#3,numbersep=3mm},
 enhanced,
 overlay={\begin{tcbclipinterior}\fill[lineNumberSeparatorCodeColor] ([xshift=8mm-0.5pt]frame.south west)
-         rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
+			rectangle ([xshift=8mm]frame.north west);\end{tcbclipinterior}},
 left=8mm,
 title=#1,
 attach boxed title to bottom center,
@@ -446,44 +496,55 @@ boxed title style={empty,boxrule=0.5mm},
 coltitle=defaultColor
 }
 
+\BeforeBeginEnvironment{CodeBlock}{\selectlanguage{english}}
+\AfterEndEnvironment{CodeBlock}{\selectlanguage{hebrew}}
+
+
+
 \sethlcolor{codeBackgroundColor}
 \newcommand{\CodeInline}[1]{\texorpdfstring{\hl{\texttt{\small  #1}}}{#1}}
 
 %%% IFRAMES
 \NewDocumentCommand\iframe{mO{vidéo}o}{%
-   \begin{Iframe}[#2]
-      Consultez cet élément à l'adresse \url{#1}.\IfValueT{#3}{\\ #3}
-   \end{Iframe}
+	\begin{Iframe}[#2]
+		Consultez cet élément à l'adresse \url{#1}.\IfValueT{#3}{\\ #3}
+	\end{Iframe}
 }
 
 %%% TABLES
-% Remove default caption
-\DefTblrTemplate{contfoot-text}{default}{}
-\DefTblrTemplate{conthead-text}{default}{}
-\DefTblrTemplate{caption}{default}{}
-\DefTblrTemplate{conthead}{default}{}
-\DefTblrTemplate{capcont}{default}{}
+% % Remove default caption
+% \DefTblrTemplate{contfoot-text}{default}{}
+% \DefTblrTemplate{conthead-text}{default}{}
+% \DefTblrTemplate{caption}{default}{}
+% \DefTblrTemplate{conthead}{default}{}
+% \DefTblrTemplate{capcont}{default}{}
 
-\NewTblrEnviron{zdstblr}
-\SetTblrInner[zdstblr]{hlines,vlines,hspan=minimal}
-\SetTblrOuter[zdstblr]{long}
+% \NewTblrEnviron{tblr}
+% \SetTblrInner[tblr]{hlines,vlines,hspan=minimal}
+% \SetTblrOuter[tblr]{long}
 
 %%% TITLE PAGE
 %%% IMAGES
-\NewDocumentCommand{\image}{mo}{%
-   \begin{center}
-      % If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
-      \IfEndWith{#1}{.svg}
-      {\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
-      {\includegraphics[max width=0.6\linewidth, max height=0.9\textheight]{#1}}
-      \IfValueT{#2}{\captionof{figure}{#2}}
-   \end{center}
+\DeclareRobustCommand*{\inlineImage}[1]{
+	\begin{center}
+		% If #1 has a '.svg' extension, we use the 'includesvg' command instead of 'includegraphics'
+		\IfEndWith{#1}{.svg}
+		{\includesvg[width=0.5\linewidth, height=0.9\textheight]{#1}}
+		{\includegraphics[max size={0.6\linewidth}{\textheight}, keepaspectratio]{#1}}
+	\end{center}
 }
 
-\DeclareRobustCommand*{\inlineImage}[1]{
-   \IfEndWith{#1}{.svg}
-   {\includesvg[width=0.5\linewidth, height=\textheight]{#1}}
-   {\includegraphics[max size={\linewidth}{\textheight}, keepaspectratio]{#1}}
+\NewDocumentCommand{\image}{m +o}{%
+	\IfBlankTF{#2}{
+		\inlineImage{#1}
+	}{
+		\begin{figure}[H]
+			\centering
+			\inlineImage{#1}
+			\caption{#2}
+		\end{figure}
+	}
+
 }
 
 %%% HORIZONTAL LINE
@@ -497,9 +558,9 @@ coltitle=defaultColor
 % Here, you can neuter the effect of some commands.
 
 \pdfstringdefDisableCommands{
-   \def\sout#1{}%
-   \def\externalLink#1#2{#1}%
-   \def\inlineImage#1{}%
+	\def\sout#1{}%
+	\def\externalLink#1#2{#1}%
+	\def\inlineImage#1{}%
 }
 
 

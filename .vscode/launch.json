@@ -23,7 +23,16 @@
         "request": "launch",
         "name": "Convert to MDAST",
         "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
-        "args": ["convert", "-f", "${file}", "--format", "json"],
+        "args": ["convert", "-f", "${file}", "--format", "mdast"],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Convert to HAST",
+        "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
+        "args": ["convert", "-f", "${file}", "--format", "hast"],
         "cwd": "${workspaceFolder}",
         "console": "integratedTerminal",
       }

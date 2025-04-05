@@ -495,8 +495,8 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
                       },
                       hName: "div",
                     },
-                    type: "blockquote",
-                    children: [...calloutContent],
+                    type: "paragraph",
+                    children: calloutContent as PhrasingContent[],
                   }
                   node.children = [node.children[0], contentData]
                 }
