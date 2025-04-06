@@ -174,11 +174,11 @@ a {
   & > #quartz-body {
     display: grid;
     justify-content: center;
-    grid-template-columns: #{map-get($desktopGrid, templateColumns)};
-    grid-template-rows: #{map-get($desktopGrid, templateRows)};
-    column-gap: #{map-get($desktopGrid, columnGap)};
-    row-gap: #{map-get($desktopGrid, rowGap)};
-    grid-template-areas: #{map-get($desktopGrid, templateAreas)};
+    grid-template-columns: #{map.get($desktopGrid, templateColumns)};
+    grid-template-rows: #{map.get($desktopGrid, templateRows)};
+    column-gap: #{map.get($desktopGrid, columnGap)};
+    row-gap: #{map.get($desktopGrid, rowGap)};
+    grid-template-areas: #{map.get($desktopGrid, templateAreas)};
     @media all and ($tablet) {
       grid-template-columns: #{map.get($tabletGrid, templateColumns)};
       grid-template-rows: #{map.get($tabletGrid, templateRows)};
