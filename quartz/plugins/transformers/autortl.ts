@@ -17,7 +17,7 @@ export const AutoRTL: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => 
         () => {
           return (tree) => {
             tree.children.forEach((node: any) => {
-              const applicableTags = ["div", "p", "ul", "li", "a", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "span"]
+              const applicableTags = ["div", "p", "ul", "li", "ol", "a", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "table", "thead", "tbody", "tfoot", "tr", "td", "th", "span"]
               if (applicableTags.includes(node.tagName)) {
                 node.properties = { ...(node.properties ?? {}), dir: "auto" }
               }
