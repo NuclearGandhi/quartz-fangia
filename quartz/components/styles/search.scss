@@ -20,7 +20,6 @@
     text-align: inherit;
     cursor: pointer;
     white-space: nowrap;
-    min-width: 260px;
     width: 100%;
     justify-content: space-between;
 
@@ -151,7 +150,7 @@
           scroll-margin-top: 2rem;
         }
 
-        & > #preview-container {
+        & > .preview-container {
           flex-grow: 1;
           display: block;
           overflow: hidden;
