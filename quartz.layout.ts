@@ -25,7 +25,8 @@ export const defaultContentPageLayout: PageLayout = {
     // Component.AlertDialog(),
   ],
   left: [
-    Component.PageTitle(),
+    Component.DesktopOnly(Component.PageLogo()),
+    Component.MobileOnly(Component.PageTitle()),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
       components: [
