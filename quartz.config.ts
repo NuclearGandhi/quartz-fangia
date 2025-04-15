@@ -77,7 +77,8 @@ const config: QuartzConfig = {
       Plugin.Latex({ renderEngine: "mathjax" }),
       Plugin.ImageCaptions(),
       Plugin.AutoRTL(),
-      Plugin.ClassifiedReplacer()
+      Plugin.ClassifiedReplacer(),
+      Plugin.SvgInverter()
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [

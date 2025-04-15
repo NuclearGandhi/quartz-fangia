@@ -87,7 +87,7 @@ body {
 }
 
 /* Vector art also need to have a transparent background */
-[saved-theme="light"] img[alt*="svg"] {
+[saved-theme="light"] img.full-invert {
   filter: invert(1) hue-rotate(180deg);
 }
 
