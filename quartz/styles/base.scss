@@ -426,6 +426,10 @@ figure[data-rehype-pretty-code-figure] {
   }
 }
 
+[saved-theme="light"] img.logo {
+  filter: hue-rotate(180deg) invert(1);
+}
+
 pre {
   font-family: var(--codeFont);
   padding: 0 0.5rem;
