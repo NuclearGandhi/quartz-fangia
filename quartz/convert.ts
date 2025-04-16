@@ -132,7 +132,9 @@ export async function convertMarkdown(argv: Argv) {
     buildId: Math.random().toString(36).substring(2, 8),
     argv,
     cfg: (await import("../quartz.config.js")).default,
-    allSlugs: []
+    allSlugs: [],
+    allFiles: [], // Initialize with an empty array or appropriate value
+    incremental: false, // Set to false or appropriate value
   }
 
   // Add the ConvertResources plugin specifically for the convert command
