@@ -341,11 +341,14 @@
 % \addtokomafont{paragraph}{\color{paragraphColor}}
 % \addtokomafont{subparagraph}{\color{subparagraphColor}}
 
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{3}
 
 %%% GEOMETRY -----------------------------------------------------------------
 
 \newgeometry{top=2.5cm, bottom=2.5cm, right=2cm,left=2cm}
+
+%%% PREVENT BLANK LINES FROM SOURCE APPEARING IN PDF --------------------------------
+\raggedbottom
 
 %%% CUSTOMS ENVIRONMENTS AND MACROS ------------------------------------------
 
@@ -519,9 +522,9 @@ coltitle=defaultColor
 % \DefTblrTemplate{conthead}{default}{}
 % \DefTblrTemplate{capcont}{default}{}
 
-% \NewTblrEnviron{tblr}
-% \SetTblrInner[tblr]{hlines,vlines,hspan=minimal}
-% \SetTblrOuter[tblr]{long}
+% \NewTblrEnviron{zdstblr}
+% \SetTblrInner[zdstblr]{hlines,vlines,hspan=minimal}
+% \SetTblrOuter[zdstblr]{long}
 
 %%% TITLE PAGE
 %%% IMAGES
@@ -534,7 +537,7 @@ coltitle=defaultColor
 	\end{center}
 }
 
-\NewDocumentCommand{\image}{m +o}{%
+\NewDocumentCommand{\image}{m +o +o}{%
 	\IfBlankTF{#2}{
 		\inlineImage{#1}
 	}{
@@ -542,6 +545,7 @@ coltitle=defaultColor
 			\centering
 			\inlineImage{#1}
 			\caption{#2}
+			\label{#3}
 		\end{figure}
 	}
 
