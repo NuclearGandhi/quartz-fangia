@@ -509,21 +509,6 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
                     "data-callout-metadata": calloutMetaData,
                   },
                 }
-
-                // Add callout-content class to callout body if it has one.
-                if (calloutContent.length > 0) {
-                  const contentData: BlockContent | DefinitionContent = {
-                    data: {
-                      hProperties: {
-                        className: "callout-content",
-                      },
-                      hName: "div",
-                    },
-                    type: "paragraph",
-                    children: calloutContent as PhrasingContent[],
-                  }
-                  node.children = [node.children[0], contentData]
-                }
               }
             })
           }
