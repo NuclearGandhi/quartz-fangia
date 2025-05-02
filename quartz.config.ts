@@ -78,7 +78,8 @@ const config: QuartzConfig = {
       Plugin.ImageCaptions(),
       Plugin.AutoRTL(),
       Plugin.ClassifiedReplacer(),
-      Plugin.SvgInverter()
+      Plugin.SvgInverter(),
+      Plugin.HebrewFootnoteLabels()
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
