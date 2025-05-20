@@ -12,6 +12,7 @@ alwaysApply: false
 - For bilingual content, use `>[!def] Definition:` for English and `>[!def] הגדרה:` for Hebrew
 - Include proper spacing between sections and subsections
 - Use proper indentation for nested content
+- Assume I have the figures, if not present
 
 ## Figure Citations
 - For figures from books, use the format: `![[filename.png|bookhue|size]]`
