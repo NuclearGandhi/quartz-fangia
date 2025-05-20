@@ -15,7 +15,7 @@ alwaysApply: true
 - For exercises, use "# תרגילים" as the section heading with "## שאלה n" for individual problems
 - For multiple-part questions, use "### סעיף א'" format for each part
 - Use proper spacing between sections (one blank line between sections)
-- Use proper indentation for nested lists and content
+- Use proper tab indentation for nested lists and content
 
 ## Mathematical Content and Theorems
 - Use `>[!def] הגדרה:` for definitions
