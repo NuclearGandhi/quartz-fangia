@@ -16,6 +16,7 @@ alwaysApply: true
 - For multiple-part questions, use "### סעיף א'" format for each part
 - Use proper spacing between sections (one blank line between sections)
 - Use proper tab indentation for nested lists and content
+- If after a bold text there is `:`, place it outside of the bold marks.
 
 ## Mathematical Content and Theorems
 - Use `>[!def] הגדרה:` for definitions
