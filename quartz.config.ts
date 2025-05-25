@@ -17,7 +17,7 @@ const config: QuartzConfig = {
     },
     locale: "he-IL",
     baseUrl: "nucleargandhi.github.io/quartz-fangia",
-    ignorePatterns: ["private", "templates", ".obsidian", "Excalidraw"],
+    ignorePatterns: ["private", "templates", ".obsidian", "Excalidraw", ".cursor"],
     unlistedPatterns: ["*.excalidraw.md", "*.excalidraw.html", "*.excalidraw"],
     defaultDateType: "created",
     generateSocialImages: false,
