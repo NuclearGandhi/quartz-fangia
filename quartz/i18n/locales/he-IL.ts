@@ -29,6 +29,9 @@ export default {
       lightMode: "Light mode",
       darkMode: "Dark mode",
     },
+    readerMode: {
+      title: "מצב קריאה",
+    },
     explorer: {
       title: "מגלה תכנים",
     },
