@@ -17,7 +17,20 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
     const mathBlockPattern = /\$\$.*?\$\$/gs
     const endDollarPattern = /^\>?\s*\>?\s*\$\$$/;
 
-    content = content.replace(/(\d+\.)\s?\$\$/g, '$1\n$$$$')
+    // Helper function to check if a position is inside a code block
+    const isInsideCodeBlock = (content: string, position: number): boolean => {
+      const beforeContent = content.substring(0, position)
+      const codeBlockMatches = beforeContent.match(/```/g)
+      return codeBlockMatches ? codeBlockMatches.length % 2 === 1 : false
+    }
+
+    // Fix numbered lists before math blocks, but only outside code blocks
+    content = content.replace(/(\d+\.)\s?\$\$/g, (match, p1, offset) => {
+      if (isInsideCodeBlock(content, offset)) {
+        return match // Don't modify if inside code block
+      }
+      return p1 + '\n$$$$'
+    })
 
     function fixBlock(block: string): string {
       // Ensure $$ are on separate lines if not already
@@ -31,7 +44,13 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
       return lines.join('\n');
     }
 
-    content = content.replace(mathBlockPattern, (match) => fixBlock(match))
+    // Fix math blocks, but only outside code blocks
+    content = content.replace(mathBlockPattern, (match, offset) => {
+      if (isInsideCodeBlock(content, offset)) {
+        return match // Don't modify if inside code block
+      }
+      return fixBlock(match)
+    })
 
     content = content.replace(/    /g, '\t')
     content = content.replace(/ \t/g, '\t')
