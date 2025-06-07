@@ -28,6 +28,7 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
 
     if (text) {
       const segments: (string | JSX.Element)[] = []
+      const isRTL = cfg.locale === "he-IL" || cfg.locale === "ar-SA" || cfg.locale === "fa-IR"
 
       if (fileData.dates) {
         segments.push(<Date date={getDate(cfg, fileData)!} locale={cfg.locale} />)
@@ -43,8 +44,22 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
       }
 
       return (
-        <p show-comma={options.showComma} class={classNames(displayClass, "content-meta")}>
-          {segments}
+        <p 
+          show-comma={options.showComma && !isRTL} 
+          class={classNames(displayClass, "content-meta")}
+          dir={isRTL ? "rtl" : "ltr"}
+          data-rtl={isRTL}
+        >
+          {isRTL ? (
+            segments.map((segment, index) => (
+              <span key={index}>
+                {segment}
+                {index < segments.length - 1 && " • "}
+              </span>
+            ))
+          ) : (
+            segments
+          )}
         </p>
       )
     } else {

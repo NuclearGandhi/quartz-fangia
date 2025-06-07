@@ -57,7 +57,7 @@ export default {
       title: "תוכן עניינים",
     },
     contentMeta: {
-      readingTime: ({ minutes }) => `${minutes} min read`,
+      readingTime: ({ minutes }) => `זמן קריאה: ${minutes} דק'`,
     },
   },
   pages: {

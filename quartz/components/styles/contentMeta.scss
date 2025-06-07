@@ -11,4 +11,15 @@
       }
     }
   }
+
+  // RTL language support
+  &[data-rtl="true"] {
+    text-align: right;
+    
+    // Better spacing for RTL text
+    > span {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
 }
