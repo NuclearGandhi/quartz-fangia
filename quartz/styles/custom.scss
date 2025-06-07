@@ -133,26 +133,17 @@ body {
   font-family: "Times New Roman", Times, serif;
 }
 
-/* block quotes (for image captioning) */
-blockquote {
-  border-left: 0;
-  border-right: 0;
-  font-size: 0.9rem;
-}
-
-div.callout-content blockquote {
-  border-left: 0;
-  border-right: 0;
-  font-size: 0.9rem;
-  color: var(--caption-color);
-}
-
 // Custom styles for image captions
 .blockquote-caption {
+  border-left: 0;
+  border-right: 0;
   p {
-    text-align: center;
     font-size: 0.9rem;
     color: var(--caption-color);
+    text-align: start;
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 
