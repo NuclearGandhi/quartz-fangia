@@ -33,14 +33,14 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   // Check if text matches equation reference patterns
   const isEquationReference = (text: string): string | null => {
     const patterns = [
-      /^\((\d+(?:[.\-]\d+)*[a-z]?)\)$/,                           // (4.13) or (4-13) or (8.45a)
-      /^\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)$/,               // (HW3.8) or (HW3-8) or (L2.5a) or (P1-3b)
-      /^Eq\.?\s*(\d+(?:[.\-]\d+)*[a-z]?)$/i,                      // Eq. 4.13 or Eq 4-13 or Eq. 8.45a
-      /^Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)$/i,          // Eq. HW3.8 or Eq HW3-8 or Eq. L2.5a
-      /^Equation\s*(\d+(?:[.\-]\d+)*[a-z]?)$/i,                   // Equation 4.13 or Equation 4-13 or Equation 8.45a
-      /^Equation\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)$/i,       // Equation HW3.8 or Equation HW3-8 or Equation L2.5a
-      /^\(Eq\.?\s*(\d+(?:[.\-]\d+)*[a-z]?)\)$/i,                  // (Eq. 4.13) or (Eq. 4-13) or (Eq. 8.45a)
-      /^\(Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)$/i,      // (Eq. HW3.8) or (Eq. HW3-8) or (Eq. L2.5a)
+      /^\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/,                           // (4.13) or (4-13) or (8.45a) or (*6.9)
+      /^\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/,               // (HW3.8) or (HW3-8) or (L2.5a) or (P1-3b) or (HW*3.8)
+      /^Eq\.?\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,                      // Eq. 4.13 or Eq 4-13 or Eq. 8.45a or Eq. *6.9
+      /^Eq\.?\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,          // Eq. HW3.8 or Eq HW3-8 or Eq. L2.5a or Eq. HW*3.8
+      /^Equation\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,                   // Equation 4.13 or Equation 4-13 or Equation 8.45a or Equation *6.9
+      /^Equation\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,       // Equation HW3.8 or Equation HW3-8 or Equation L2.5a or Equation HW*3.8
+      /^\(Eq\.?\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/i,                  // (Eq. 4.13) or (Eq. 4-13) or (Eq. 8.45a) or (Eq. *6.9)
+      /^\(Eq\.?\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/i,      // (Eq. HW3.8) or (Eq. HW3-8) or (Eq. L2.5a) or (Eq. HW*3.8)
     ];
 
     for (const pattern of patterns) {
@@ -56,8 +56,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   const extractEquationReferenceFromMath = (mathContent: string): string | null => {
     // Check for \text{(equation_ref)} patterns
     const textPatterns = [
-      /\\text\s*\{\s*\((\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)}
-      /\\text\s*\{\s*\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)}
+      /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
+      /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
     ]
 
     for (const pattern of textPatterns) {
@@ -256,27 +256,26 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               const equationRef = isEquationReference(mathContent.trim())
               
               if (equationRef) {
-                // Find matching equation
+                // Find matching equation in current document
                 const equation = equations.find(eq => eq.number === equationRef)
                 
-                                 if (equation) {
-                   // Replace inline math with a link
-                   const linkNode = {
-                     type: 'link',
-                     url: `#${equation.id}`,
-                     children: [{
-                       type: 'text',
-                       value: `(${equationRef})`
-                     }],
-                     data: {
-                       hProperties: {
-                         className: ['equation-reference']
-                       }
-                     }
-                   }
-                   
-                   parent.children.splice(index, 1, linkNode as any)
-                 }
+                // Create equation link (either to local equation or generic anchor)
+                const equationId = equation ? equation.id : createEquationId(equationRef)
+                const linkNode = {
+                  type: 'link',
+                  url: `#${equationId}`,
+                  children: [{
+                    type: 'text',
+                    value: `(${equationRef})`
+                  }],
+                  data: {
+                    hProperties: {
+                      className: ['equation-reference']
+                    }
+                  }
+                }
+                
+                parent.children.splice(index, 1, linkNode as any)
               }
             })
 
@@ -288,37 +287,38 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               
               // Check for \text{(equation_ref)} patterns
               const textPatterns = [
-                /\\text\s*\{\s*\((\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)}
-                /\\text\s*\{\s*\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)}
+                /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
+                /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
               ]
 
-                             for (const pattern of textPatterns) {
-                 const match = mathContent.match(pattern)
-                 if (match) {
-                   const equationRef = match[1]
-                   const equation = equations.find(eq => eq.number === equationRef)
-                   
-                   if (equation) {
-                     // Replace the inlineMath node with a link
-                     const linkNode = {
-                       type: 'link',
-                       url: `#${equation.id}`,
-                       children: [{
-                         type: 'text',
-                         value: `(${equationRef})`
-                       }],
-                       data: {
-                         hProperties: {
-                           className: ['equation-reference']
-                         }
-                       }
-                     }
-                     
-                     parent.children.splice(index, 1, linkNode as any)
-                     return // Exit early since we found a match
-                   }
-                 }
-               }
+              for (const pattern of textPatterns) {
+                const match = mathContent.match(pattern)
+                if (match) {
+                  const equationRef = match[1]
+                  
+                  // Find matching equation in current document
+                  const equation = equations.find(eq => eq.number === equationRef)
+                  
+                  // Create equation link (either to local equation or generic anchor)
+                  const equationId = equation ? equation.id : createEquationId(equationRef)
+                  const linkNode = {
+                    type: 'link',
+                    url: `#${equationId}`,
+                    children: [{
+                      type: 'text',
+                      value: `(${equationRef})`
+                    }],
+                    data: {
+                      hProperties: {
+                        className: ['equation-reference']
+                      }
+                    }
+                  }
+                  
+                  parent.children.splice(index, 1, linkNode as any)
+                  return // Exit early since we found a match
+                }
+              }
             })
           }
         }
