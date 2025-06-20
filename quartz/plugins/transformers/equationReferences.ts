@@ -33,14 +33,14 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   // Check if text matches equation reference patterns
   const isEquationReference = (text: string): string | null => {
     const patterns = [
-      /^\((\d+(?:[.\-]\d+)*)\)$/,                           // (4.13) or (4-13)
-      /^\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*)\)$/,               // (HW3.8) or (HW3-8) or (L2.5) or (P1-3)
-      /^Eq\.?\s*(\d+(?:[.\-]\d+)*)$/i,                      // Eq. 4.13 or Eq 4-13
-      /^Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*)$/i,          // Eq. HW3.8 or Eq HW3-8
-      /^Equation\s*(\d+(?:[.\-]\d+)*)$/i,                   // Equation 4.13 or Equation 4-13
-      /^Equation\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*)$/i,       // Equation HW3.8 or Equation HW3-8
-      /^\(Eq\.?\s*(\d+(?:[.\-]\d+)*)\)$/i,                  // (Eq. 4.13) or (Eq. 4-13)
-      /^\(Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*)\)$/i,      // (Eq. HW3.8) or (Eq. HW3-8)
+      /^\((\d+(?:[.\-]\d+)*[a-z]?)\)$/,                           // (4.13) or (4-13) or (8.45a)
+      /^\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)$/,               // (HW3.8) or (HW3-8) or (L2.5a) or (P1-3b)
+      /^Eq\.?\s*(\d+(?:[.\-]\d+)*[a-z]?)$/i,                      // Eq. 4.13 or Eq 4-13 or Eq. 8.45a
+      /^Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)$/i,          // Eq. HW3.8 or Eq HW3-8 or Eq. L2.5a
+      /^Equation\s*(\d+(?:[.\-]\d+)*[a-z]?)$/i,                   // Equation 4.13 or Equation 4-13 or Equation 8.45a
+      /^Equation\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)$/i,       // Equation HW3.8 or Equation HW3-8 or Equation L2.5a
+      /^\(Eq\.?\s*(\d+(?:[.\-]\d+)*[a-z]?)\)$/i,                  // (Eq. 4.13) or (Eq. 4-13) or (Eq. 8.45a)
+      /^\(Eq\.?\s*([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)$/i,      // (Eq. HW3.8) or (Eq. HW3-8) or (Eq. L2.5a)
     ];
 
     for (const pattern of patterns) {
@@ -50,6 +50,25 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
       }
     }
     return null;
+  }
+
+  // Extract equation reference from inline math content
+  const extractEquationReferenceFromMath = (mathContent: string): string | null => {
+    // Check for \text{(equation_ref)} patterns
+    const textPatterns = [
+      /\\text\s*\{\s*\((\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)}
+      /\\text\s*\{\s*\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)}
+    ]
+
+    for (const pattern of textPatterns) {
+      const match = mathContent.match(pattern)
+      if (match) {
+        return match[1]
+      }
+    }
+
+    // Also check direct equation reference patterns
+    return isEquationReference(mathContent.trim())
   }
 
   // Create a simple, CSS-safe equation ID
@@ -111,7 +130,87 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               equations.push(equation)
             }
 
+            // New pass: Handle cross-document equation references
+            // Look for patterns like: [[link|משוואה]] $\text{(7.54)}$ or [[link|equation]] $\text{(7.54)}$
+            visit(tree, 'paragraph', (paragraphNode, paragraphIndex, paragraphParent) => {
+              if (!paragraphNode.children || paragraphNode.children.length < 2) return
 
+              for (let i = 0; i < paragraphNode.children.length; i++) {
+                const currentNode = paragraphNode.children[i] as any
+
+                // Check if current node is a link with משוואה/equation as display text
+                if (currentNode.type === 'link') {
+                  // Get the display text from the link's children
+                  const displayText = currentNode.children && currentNode.children[0] && currentNode.children[0].type === 'text' 
+                    ? currentNode.children[0].value 
+                    : null
+                  
+                  if (displayText === 'משוואה' || displayText === 'equation') {
+                    // Look for the next inline math node (may have whitespace in between)
+                    let mathNodeIndex = -1
+                    let equationRef = null
+                    
+                    // Check the next few nodes for inline math
+                    for (let j = i + 1; j < Math.min(i + 4, paragraphNode.children.length); j++) {
+                      const candidateNode = paragraphNode.children[j] as any
+                      
+                      if (candidateNode.type === 'inlineMath') {
+                        equationRef = extractEquationReferenceFromMath(candidateNode.value)
+                        if (equationRef) {
+                          mathNodeIndex = j
+                          break
+                        }
+                      } else if (candidateNode.type === 'text' && candidateNode.value.trim() === '') {
+                        // Skip whitespace nodes
+                        continue
+                      } else {
+                        // Stop if we hit a non-whitespace, non-math node
+                        break
+                      }
+                    }
+                    
+                    if (equationRef && mathNodeIndex !== -1) {
+                      const equationId = createEquationId(equationRef)
+                      const targetUrl = currentNode.url
+                      
+                      // Remove any existing anchor from the target URL and append equation ID
+                      const baseUrl = targetUrl.split('#')[0]
+                      const finalUrl = `${baseUrl}#${equationId}`
+                      
+                      // Create the cross-document equation link
+                      const crossDocEquationLink = {
+                        type: 'link',
+                        url: finalUrl,
+                        children: [{
+                          type: 'text',
+                          value: `(${equationRef})`
+                        }],
+                        data: {
+                          hProperties: {
+                            className: ['equation-reference', 'cross-document']
+                          }
+                        }
+                      }
+
+                      // Create text node for the display text
+                      const textNode = {
+                        type: 'text',
+                        value: displayText
+                      }
+
+                      // Calculate how many nodes to remove (from link to math, inclusive)
+                      const nodesToRemove = mathNodeIndex - i + 1
+                      
+                      // Replace the link, any whitespace, and inlineMath with text + space + link
+                      paragraphNode.children.splice(i, nodesToRemove, textNode as any, { type: 'text', value: ' ' } as any, crossDocEquationLink as any)
+                      
+                      // Adjust loop counter since we modified the array
+                      i += 2 // Skip the text and link we just added
+                    }
+                  }
+                }
+              }
+            })
 
             if (equations.length === 0) {
               return
@@ -189,8 +288,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               
               // Check for \text{(equation_ref)} patterns
               const textPatterns = [
-                /\\text\s*\{\s*\((\d+(?:[.\-]\d+)*)\)\s*\}/,           // \text{(8.37)}
-                /\\text\s*\{\s*\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*)\)\s*\}/, // \text{(HW3.8)}
+                /\\text\s*\{\s*\((\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)}
+                /\\text\s*\{\s*\(([HWLPhlwlp]+\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)}
               ]
 
                              for (const pattern of textPatterns) {
