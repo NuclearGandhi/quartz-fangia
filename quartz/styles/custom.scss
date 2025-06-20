@@ -34,6 +34,11 @@ body {
   --caption-color: var(--color-base-70);
 }
 
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 [saved-theme="dark"] {
   --color-base-00: #1e1e1e;
   --color-base-05: #212121;
