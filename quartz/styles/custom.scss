@@ -138,6 +138,13 @@ table {
   font-family: "Times New Roman", Times, serif;
 }
 
+/* block quotes (for image captioning) */
+div.callout-content blockquote.blockquote-caption {
+  text-align: start;
+  font-size: 0.9rem;
+  color: var(--caption-color);
+}
+
 // Custom styles for image captions
 .blockquote-caption {
   border-left: 0;
