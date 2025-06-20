@@ -75,8 +75,11 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
 
   // Create a simple, CSS-safe equation ID
   const createEquationId = (equationNumber: string): string => {
-    // Use a simple format: eq-8-37 instead of mjx-eqn:8.37
-    const cleanNumber = equationNumber.replace(/[.\-:]/g, '-');
+    // Normalize dots and dashes to single dashes, handle multiple consecutive dashes
+    const cleanNumber = equationNumber
+      .replace(/[.\-:]+/g, '-')  // Replace one or more dots, dashes, or colons with single dash
+      .replace(/^-+|-+$/g, '')   // Remove leading and trailing dashes
+      .replace(/-+/g, '-');      // Replace multiple consecutive dashes with single dash
     return `eq-${cleanNumber}`;
   }
 
@@ -93,7 +96,7 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
             const equations: EquationInfo[] = []
 
             // First pass: Find math blocks with \tag{} and collect modifications
-            const modificationsToApply: { parent: any, index: number, blockRefParagraph: any, equation: EquationInfo }[] = []
+            const modificationsToApply: { parent: any, index: number, equation: EquationInfo }[] = []
             
             visit(tree, 'math', (node, index, parent) => {
               const mathContent = node.value
@@ -102,20 +105,10 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               if (equationNumber && parent && parent.children && typeof index === 'number') {
                 const equationId = createEquationId(equationNumber)
                 
-                // Create a paragraph with block reference that will get the ID
-                const blockRefParagraph = {
-                  type: 'paragraph',
-                  children: [{
-                    type: 'text',
-                    value: `^${equationId}` // Block reference - OFM will assign ID to this paragraph
-                  }]
-                }
-                
-                // Collect the modification instead of applying it immediately
+                // Collect the equation info and modification details
                 modificationsToApply.push({
                   parent,
                   index,
-                  blockRefParagraph,
                   equation: {
                     number: equationNumber,
                     id: equationId
@@ -124,11 +117,47 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               }
             })
             
-            // Apply modifications in reverse order to maintain correct indices
+            // Helper function to check if we're in a list context and determine indentation
+            const getListIndentation = (parent: any): string => {
+              // Check if the immediate parent is a list item
+              if (parent && parent.type === 'listItem') {
+                return '\t'
+              }
+              
+              // For now, we'll just handle direct list items
+              // More complex nesting could be added later if needed
+              return ''
+            }
+            
+            // Apply modifications in reverse order to preserve indices
             for (let i = modificationsToApply.length - 1; i >= 0; i--) {
-              const { parent, index, blockRefParagraph, equation } = modificationsToApply[i]
-              // Insert the block reference paragraph BEFORE the math node
-              parent.children.splice(index, 0, blockRefParagraph)
+              const modification = modificationsToApply[i]
+              const { parent, index, equation } = modification
+              
+              // Determine if we need indentation for list context
+              const indentation = getListIndentation(parent)
+              
+              // Create block reference paragraph
+              const blockRefParagraph = {
+                type: 'paragraph',
+                children: [{
+                  type: 'text',
+                  value: `${indentation}^${equation.id}`
+                }]
+              }
+              
+              // If there is indentation, insert the block reference inside the list, before the math block. Otherwise, insert it before the math block.
+              if (indentation === '\t') {
+                // Find the list item parent
+                if (parent && parent.type === 'listItem') {
+                  // Insert the block reference at the end of the list item
+                  parent.children.push(blockRefParagraph)
+                }
+              } else {
+                parent.children.splice(index, 0, blockRefParagraph)
+              }
+              
+              // Collect equation for reference
               equations.push(equation)
             }
 
