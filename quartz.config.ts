@@ -76,6 +76,7 @@ const config: QuartzConfig = {
       Plugin.MathBlockFixer({ debug: false }),
       Plugin.Latex({ renderEngine: "mathjax" }),
       Plugin.ImageCaptions(),
+      Plugin.FigureNumbering(),
       Plugin.AutoRTL(),
       Plugin.ClassifiedReplacer(),
       Plugin.SvgInverter(),
