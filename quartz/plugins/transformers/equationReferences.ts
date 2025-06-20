@@ -33,14 +33,10 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   // Check if text matches equation reference patterns
   const isEquationReference = (text: string): string | null => {
     const patterns = [
-      /^\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/,                           // (4.13) or (4-13) or (8.45a) or (*6.9)
-      /^\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/,               // (HW3.8) or (HW3-8) or (L2.5a) or (P1-3b) or (HW*3.8)
-      /^Eq\.?\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,                      // Eq. 4.13 or Eq 4-13 or Eq. 8.45a or Eq. *6.9
-      /^Eq\.?\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,          // Eq. HW3.8 or Eq HW3-8 or Eq. L2.5a or Eq. HW*3.8
-      /^Equation\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,                   // Equation 4.13 or Equation 4-13 or Equation 8.45a or Equation *6.9
-      /^Equation\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)$/i,       // Equation HW3.8 or Equation HW3-8 or Equation L2.5a or Equation HW*3.8
-      /^\(Eq\.?\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/i,                  // (Eq. 4.13) or (Eq. 4-13) or (Eq. 8.45a) or (Eq. *6.9)
-      /^\(Eq\.?\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)$/i,      // (Eq. HW3.8) or (Eq. HW3-8) or (Eq. L2.5a) or (Eq. HW*3.8)
+      /^\((\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\)$/,                 // (4.13) or (BE3.5) or (B3.5) or (*3.5) or (LA3.6a)
+      /^Eq\.?\s*(\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)$/i,            // Eq. 4.13 or Eq B3.5 or Eq. BE3.5a or Eq. *3.5
+      /^Equation\s*(\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)$/i,         // Equation 4.13 or Equation B3.5 or Equation BE3.5a or Equation *3.5
+      /^\(Eq\.?\s*(\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\)$/i,        // (Eq. 4.13) or (Eq. B3.5) or (Eq. BE3.5a) or (Eq. *3.5)
     ];
 
     for (const pattern of patterns) {
@@ -56,10 +52,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   const extractEquationReferenceFromMath = (mathContent: string): string | null => {
     // Check for \text{(equation_ref)} patterns
     const textPatterns = [
-      /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
-      /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
-      /\(\s*\\text\s*\{\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{8.45a}) or (\text{*6.9})
-      /\(\s*\\text\s*\{\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/, // (\text{HW3.8}) or (\text{HW3.8a}) or (\text{HW*3.8})
+      /\\text\s*\{\s*\((\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(BE3.5)} or \text{(*3.5)}
+      /\(\s*\\text\s*\{\s*(\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{BE3.5}) or (\text{*3.5})
     ]
 
     for (const pattern of textPatterns) {
@@ -318,10 +312,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               
               // Check for \text{(equation_ref)} patterns
               const textPatterns = [
-                /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
-                /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
-                /\(\s*\\text\s*\{\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{8.45a}) or (\text{*6.9})
-                /\(\s*\\text\s*\{\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/, // (\text{HW3.8}) or (\text{HW3.8a}) or (\text{HW*3.8})
+                /\\text\s*\{\s*\((\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(BE3.5)} or \text{(*3.5)}
+                /\(\s*\\text\s*\{\s*(\*?[A-Z]{0,2}\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{BE3.5}) or (\text{*3.5})
               ]
 
               for (const pattern of textPatterns) {
