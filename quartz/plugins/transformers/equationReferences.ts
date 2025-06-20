@@ -58,6 +58,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
     const textPatterns = [
       /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
       /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
+      /\(\s*\\text\s*\{\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{8.45a}) or (\text{*6.9})
+      /\(\s*\\text\s*\{\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/, // (\text{HW3.8}) or (\text{HW3.8a}) or (\text{HW*3.8})
     ]
 
     for (const pattern of textPatterns) {
@@ -289,6 +291,8 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
               const textPatterns = [
                 /\\text\s*\{\s*\((\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/,           // \text{(8.37)} or \text{(8.45a)} or \text{(*6.9)}
                 /\\text\s*\{\s*\(([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\)\s*\}/, // \text{(HW3.8)} or \text{(HW3.8a)} or \text{(HW*3.8)}
+                /\(\s*\\text\s*\{\s*(\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/,     // (\text{8.37}) or (\text{8.45a}) or (\text{*6.9})
+                /\(\s*\\text\s*\{\s*([HWLPhlwlp]+\*?\d+(?:[.\-]\d+)*[a-z]?)\s*\}\s*\)/, // (\text{HW3.8}) or (\text{HW3.8a}) or (\text{HW*3.8})
               ]
 
               for (const pattern of textPatterns) {
