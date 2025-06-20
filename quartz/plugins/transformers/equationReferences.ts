@@ -52,9 +52,11 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
     return null;
   }
 
-  // Create a MathJax-compatible equation ID from equation number
+  // Create a simple, CSS-safe equation ID
   const createEquationId = (equationNumber: string): string => {
-    return `mjx-eqn:${equationNumber}`;
+    // Use a simple format: eq-8-37 instead of mjx-eqn:8.37
+    const cleanNumber = equationNumber.replace(/[.\-:]/g, '-');
+    return `eq-${cleanNumber}`;
   }
 
   return {
@@ -69,38 +71,47 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
           return (tree: Root, file) => {
             const equations: EquationInfo[] = []
 
-            // First pass: Find math blocks with \tag{} and add block references
-            visit(tree, 'math', (node) => {
+            // First pass: Find math blocks with \tag{} and collect modifications
+            const modificationsToApply: { parent: any, index: number, blockRefParagraph: any, equation: EquationInfo }[] = []
+            
+            visit(tree, 'math', (node, index, parent) => {
               const mathContent = node.value
               const equationNumber = extractEquationNumber(mathContent)
               
-              if (equationNumber) {
+              if (equationNumber && parent && parent.children && typeof index === 'number') {
                 const equationId = createEquationId(equationNumber)
                 
-                // Don't add block reference since MathJax will create its own ID
-                // Just track the equation for reference matching
-                equations.push({
-                  number: equationNumber,
-                  id: equationId
+                // Create a paragraph with block reference that will get the ID
+                const blockRefParagraph = {
+                  type: 'paragraph',
+                  children: [{
+                    type: 'text',
+                    value: `^${equationId}` // Block reference - OFM will assign ID to this paragraph
+                  }]
+                }
+                
+                // Collect the modification instead of applying it immediately
+                modificationsToApply.push({
+                  parent,
+                  index,
+                  blockRefParagraph,
+                  equation: {
+                    number: equationNumber,
+                    id: equationId
+                  }
                 })
               }
             })
+            
+            // Apply modifications in reverse order to maintain correct indices
+            for (let i = modificationsToApply.length - 1; i >= 0; i--) {
+              const { parent, index, blockRefParagraph, equation } = modificationsToApply[i]
+              // Insert the block reference paragraph BEFORE the math node
+              parent.children.splice(index, 0, blockRefParagraph)
+              equations.push(equation)
+            }
 
-            // Also check inline math for tags (though less common)
-            visit(tree, 'inlineMath', (node) => {
-              const mathContent = node.value
-              const equationNumber = extractEquationNumber(mathContent)
-              
-              if (equationNumber) {
-                const equationId = createEquationId(equationNumber)
-                
-                // Don't add block reference since MathJax will create its own ID
-                equations.push({
-                  number: equationNumber,
-                  id: equationId
-                })
-              }
-            })
+
 
             if (equations.length === 0) {
               return
