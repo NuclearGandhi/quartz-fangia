@@ -71,6 +71,7 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
   const createEquationId = (equationNumber: string): string => {
     // Normalize dots and dashes to single dashes, handle multiple consecutive dashes
     const cleanNumber = equationNumber
+      .toLowerCase()             // Convert to lowercase for consistency
       .replace(/[.\-:]+/g, '-')  // Replace one or more dots, dashes, or colons with single dash
       .replace(/^-+|-+$/g, '')   // Remove leading and trailing dashes
       .replace(/-+/g, '-');      // Replace multiple consecutive dashes with single dash
