@@ -148,6 +148,8 @@ export const FigureNumbering: QuartzTransformerPlugin<Partial<Options>> = (userO
               if (figure && node.children.length > 0 && node.children[0].type === 'text') {
                 // Update link text to show figure number
                 node.children[0].value = figure.number
+                // Fix the URL to remove the ^ character so it matches the actual element ID
+                node.url = url.replace('#^figure', '#figure')
               }
             })
 
