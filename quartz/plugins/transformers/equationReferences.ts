@@ -157,81 +157,113 @@ export const EquationReferences: QuartzTransformerPlugin<Partial<Options>> = (us
             }
 
             // New pass: Handle cross-document equation references
-            // Look for patterns like: [[link|משוואה]] $\text{(7.54)}$ or [[link|equation]] $\text{(7.54)}$
+            // Look for patterns like: [[link|משוואה]] $\text{(7.54)}$ or [[link|משוואות]] $\text{(SH8-27)}$ ו-$\text{(SH8-31)}$
             visit(tree, 'paragraph', (paragraphNode, paragraphIndex, paragraphParent) => {
               if (!paragraphNode.children || paragraphNode.children.length < 2) return
 
               for (let i = 0; i < paragraphNode.children.length; i++) {
                 const currentNode = paragraphNode.children[i] as any
 
-                // Check if current node is a link with משוואה/equation as display text
+                // Check if current node is a link with משוואה/equation or משוואות/equations as display text
                 if (currentNode.type === 'link') {
                   // Get the display text from the link's children
                   const displayText = currentNode.children && currentNode.children[0] && currentNode.children[0].type === 'text' 
                     ? currentNode.children[0].value 
                     : null
                   
-                  if (displayText === 'משוואה' || displayText === 'equation') {
-                    // Look for the next inline math node (may have whitespace in between)
-                    let mathNodeIndex = -1
-                    let equationRef = null
+                  if (displayText === 'משוואה' || displayText === 'equation' || displayText === 'משוואות' || displayText === 'equations') {
+                    // Collect all equation references that follow
+                    const equationRefs: { ref: string, nodeIndex: number }[] = []
+                    const targetUrl = currentNode.url
+                    const baseUrl = targetUrl.split('#')[0]
                     
-                    // Check the next few nodes for inline math
-                    for (let j = i + 1; j < Math.min(i + 4, paragraphNode.children.length); j++) {
+                    // Look for inline math nodes and connective text
+                    let j = i + 1
+                    let lastProcessedIndex = i
+                    
+                    while (j < paragraphNode.children.length) {
                       const candidateNode = paragraphNode.children[j] as any
                       
                       if (candidateNode.type === 'inlineMath') {
-                        equationRef = extractEquationReferenceFromMath(candidateNode.value)
+                        const equationRef = extractEquationReferenceFromMath(candidateNode.value)
                         if (equationRef) {
-                          mathNodeIndex = j
+                          equationRefs.push({ ref: equationRef, nodeIndex: j })
+                          lastProcessedIndex = j
+                          j++
+                        } else {
                           break
                         }
-                      } else if (candidateNode.type === 'text' && candidateNode.value.trim() === '') {
-                        // Skip whitespace nodes
-                        continue
+                      } else if (candidateNode.type === 'text') {
+                        const textContent = candidateNode.value.trim()
+                        // Allow whitespace, Hebrew connectives (ו-, ו), and common connectives
+                        if (textContent === '' || textContent === 'ו-' || textContent === 'ו' || textContent === 'and' || textContent === ',' || textContent === ':') {
+                          j++
+                        } else {
+                          break
+                        }
                       } else {
-                        // Stop if we hit a non-whitespace, non-math node
                         break
                       }
                     }
                     
-                    if (equationRef && mathNodeIndex !== -1) {
-                      const equationId = createEquationId(equationRef)
-                      const targetUrl = currentNode.url
+                    if (equationRefs.length > 0) {
+                      // Create replacement nodes
+                      const replacementNodes: any[] = []
                       
-                      // Remove any existing anchor from the target URL and append equation ID
-                      const baseUrl = targetUrl.split('#')[0]
-                      const finalUrl = `${baseUrl}#${equationId}`
-                      
-                      // Create the cross-document equation link
-                      const crossDocEquationLink = {
-                        type: 'link',
-                        url: finalUrl,
-                        children: [{
-                          type: 'text',
-                          value: `(${equationRef})`
-                        }],
-                        data: {
-                          hProperties: {
-                            className: ['equation-reference', 'cross-document']
-                          }
-                        }
-                      }
-
-                      // Create text node for the display text
-                      const textNode = {
+                      // Start with the display text (no longer a link)
+                      replacementNodes.push({
                         type: 'text',
                         value: displayText
+                      })
+                      
+                      // Add space after display text
+                      replacementNodes.push({
+                        type: 'text',
+                        value: ' '
+                      })
+                      
+                      // Process nodes between link and equations, converting equation references to links
+                      for (let k = i + 1; k <= lastProcessedIndex; k++) {
+                        const node = paragraphNode.children[k] as any
+                        
+                        if (node.type === 'inlineMath') {
+                          const equationRef = extractEquationReferenceFromMath(node.value)
+                          if (equationRef) {
+                            const equationId = createEquationId(equationRef)
+                            const finalUrl = `${baseUrl}#${equationId}`
+                            
+                            // Create the cross-document equation link
+                            replacementNodes.push({
+                              type: 'link',
+                              url: finalUrl,
+                              children: [{
+                                type: 'text',
+                                value: `(${equationRef})`
+                              }],
+                              data: {
+                                hProperties: {
+                                  className: ['equation-reference', 'cross-document']
+                                }
+                              }
+                            })
+                          }
+                        } else if (node.type === 'text') {
+                          // Preserve connective text
+                          replacementNodes.push({
+                            type: 'text',
+                            value: node.value
+                          })
+                        }
                       }
-
-                      // Calculate how many nodes to remove (from link to math, inclusive)
-                      const nodesToRemove = mathNodeIndex - i + 1
                       
-                      // Replace the link, any whitespace, and inlineMath with text + space + link
-                      paragraphNode.children.splice(i, nodesToRemove, textNode as any, { type: 'text', value: ' ' } as any, crossDocEquationLink as any)
+                      // Calculate how many nodes to remove (from link to last processed node, inclusive)
+                      const nodesToRemove = lastProcessedIndex - i + 1
                       
-                      // Adjust loop counter since we modified the array
-                      i += 2 // Skip the text and link we just added
+                      // Replace all the nodes
+                      paragraphNode.children.splice(i, nodesToRemove, ...replacementNodes)
+                      
+                      // Adjust loop counter to skip the nodes we just added
+                      i += replacementNodes.length - 1
                     }
                   }
                 }
