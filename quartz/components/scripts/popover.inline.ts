@@ -97,8 +97,14 @@ async function mouseEnterHandler(
       normalizeRelativeURLs(html, targetUrl)
       // prepend all IDs inside popovers to prevent duplicates
       html.querySelectorAll("[id]").forEach((el) => {
-        const targetID = `popover-internal-${el.id}`
+        const originalId = el.id
+        const targetID = `popover-internal-${originalId}`
         el.id = targetID
+        
+        // Update all xlink:href references to this ID
+        html.querySelectorAll(`[*|href="#${originalId}"]`).forEach((refEl) => {
+          refEl.setAttributeNS("http://www.w3.org/1999/xlink", "href", `#${targetID}`)
+        })
       })
       const elts = [...html.getElementsByClassName("popover-hint")]
       if (elts.length === 0) return
