@@ -83,6 +83,7 @@ const config: QuartzConfig = {
       Plugin.SvgInverter(),
       Plugin.HebrewFootnoteLabels(),
       Plugin.CourseCards(),
+      Plugin.CourseLinkDirection(),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
