@@ -81,7 +81,8 @@ const config: QuartzConfig = {
       Plugin.AutoRTL(),
       Plugin.ClassifiedReplacer(),
       Plugin.SvgInverter(),
-      Plugin.HebrewFootnoteLabels()
+      Plugin.HebrewFootnoteLabels(),
+      Plugin.CourseCards(),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
