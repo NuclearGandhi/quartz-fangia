@@ -141,6 +141,7 @@ const tagRegex = new RegExp(
   /(?<=^| )#((?:[-_\p{L}\p{Emoji}\p{M}\d])+(?:\/[-_\p{L}\p{Emoji}\p{M}\d]+)*)/gu,
 )
 const blockReferenceRegex = new RegExp(/\^([-_A-Za-z0-9]+)$/g)
+const inlineFootnoteRegex = new RegExp(/\^\[([^\]]+)\]/g)
 const ytLinkRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
 const ytPlaylistLinkRegex = /[?&]list=([^#?&]*)/
 const videoExtensionRegex = new RegExp(/\.(mp4|webm|ogg|avi|mov|flv|wmv|mkv|mpg|mpeg|3gp|m4v)$/)
@@ -366,6 +367,34 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
               },
             ])
           }
+
+          // Handle Obsidian inline footnotes ^[text]
+          replacements.push([
+            inlineFootnoteRegex,
+            (_value: string, footnoteText: string) => {
+              // Generate a unique ID for this footnote
+              if (!file.data.inlineFootnoteCounter) {
+                file.data.inlineFootnoteCounter = 0
+              }
+              file.data.inlineFootnoteCounter++
+              const footnoteId = `inline-footnote-${file.data.inlineFootnoteCounter}`
+              
+              // Store the footnote content for later processing
+              if (!file.data.inlineFootnotes) {
+                file.data.inlineFootnotes = []
+              }
+              file.data.inlineFootnotes.push({
+                id: footnoteId,
+                text: footnoteText,
+                index: file.data.inlineFootnoteCounter
+              })
+
+              return {
+                type: "html",
+                value: `<sup id="fnref-${footnoteId}"><a href="#fn-${footnoteId}" class="footnote-link" aria-describedby="footnote-label" title="${footnoteText.replace(/"/g, '&quot;')}">${file.data.inlineFootnoteCounter}</a></sup>`,
+              }
+            },
+          ])
 
           if (opts.enableInHtmlEmbed) {
             visit(tree, "html", (node: Html) => {
@@ -752,6 +781,82 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
         })
       }
 
+      // Process inline footnotes and add footnote section
+      plugins.push(() => {
+        return (tree: HtmlRoot, file) => {
+          if (file.data.inlineFootnotes && file.data.inlineFootnotes.length > 0) {
+            // Create footnotes section at the end
+            const footnoteSection: Element = {
+              type: "element",
+              tagName: "section",
+              properties: {
+                className: ["footnotes"],
+                "data-footnotes": true,
+              },
+              children: [
+                {
+                  type: "element",
+                  tagName: "h2",
+                  properties: {
+                    className: ["sr-only"],
+                    id: "footnote-label",
+                  },
+                  children: [
+                    {
+                      type: "text",
+                      value: "Footnotes",
+                    },
+                  ],
+                },
+                {
+                  type: "element",
+                  tagName: "ol",
+                  properties: {},
+                  children: file.data.inlineFootnotes.map((footnote): Element => ({
+                    type: "element",
+                    tagName: "li",
+                    properties: {
+                      id: `fn-${footnote.id}`,
+                    },
+                    children: [
+                      {
+                        type: "element",
+                        tagName: "p",
+                        properties: {},
+                        children: [
+                          {
+                            type: "text",
+                            value: footnote.text + " ",
+                          },
+                          {
+                            type: "element",
+                            tagName: "a",
+                            properties: {
+                              href: `#fnref-${footnote.id}`,
+                              className: ["footnote-backref"],
+                              "aria-label": "Back to content",
+                            },
+                            children: [
+                              {
+                                type: "text",
+                                value: "↩",
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  })),
+                },
+              ],
+            }
+
+            // Add footnote section to the end of the document
+            tree.children.push(footnoteSection)
+          }
+        }
+      })
+
       return plugins
     },
     externalResources() {
@@ -798,5 +903,11 @@ declare module "vfile" {
     blocks: Record<string, Element>
     htmlAst: HtmlRoot
     hasMermaidDiagram: boolean | undefined
+    inlineFootnoteCounter: number
+    inlineFootnotes: Array<{
+      id: string
+      text: string
+      index: number
+    }>
   }
 }
