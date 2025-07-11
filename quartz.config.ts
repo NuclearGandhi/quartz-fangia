@@ -84,6 +84,7 @@ const config: QuartzConfig = {
       Plugin.HebrewFootnoteLabels(),
       Plugin.CourseCards(),
       Plugin.CourseLinkDirection(),
+      Plugin.SubjectNavigation(),
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
