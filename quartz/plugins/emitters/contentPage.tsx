@@ -38,8 +38,27 @@ async function processContent(
 
   const content = renderPage(cfg, slug, componentData, opts, externalResources)
   
-  // Fix escaped quotes in CSS that break styling
-  const fixedContent = content.replace(/&quot;/g, '"')
+  // Fix escaped HTML entities in CSS within <style> tags
+  const fixedContent = content.includes('<style') 
+    ? content.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, (match, cssContent) => {
+        // Check if there are HTML entities in the CSS content
+        if (/&[a-zA-Z][a-zA-Z0-9]*;|&#[0-9]+;|&#x[0-9a-fA-F]+;/.test(cssContent)) {
+          // Decode common HTML entities that might appear in CSS
+          const decodedCSS = cssContent
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&apos;/g, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&')
+            .replace(/&#(\d+);/g, (_match: string, dec: string) => String.fromCharCode(parseInt(dec, 10)))
+            .replace(/&#x([0-9a-fA-F]+);/g, (_match: string, hex: string) => String.fromCharCode(parseInt(hex, 16)))
+          
+          return match.replace(cssContent, decodedCSS)
+        }
+        return match
+      })
+    : content
   
   return write({
     ctx,
