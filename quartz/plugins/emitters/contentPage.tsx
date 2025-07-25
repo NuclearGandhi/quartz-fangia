@@ -37,9 +37,13 @@ async function processContent(
   }
 
   const content = renderPage(cfg, slug, componentData, opts, externalResources)
+  
+  // Fix escaped quotes in CSS that break styling
+  const fixedContent = content.replace(/&quot;/g, '"')
+  
   return write({
     ctx,
-    content,
+    content: fixedContent,
     slug,
     ext: ".html",
   })

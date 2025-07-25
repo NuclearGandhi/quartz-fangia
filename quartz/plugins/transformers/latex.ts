@@ -1,19 +1,20 @@
 import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
-import rehypeMathjax from "rehype-mathjax/svg"
+import rehypeMathjax from "rehype-mathjax/chtml"
 //@ts-ignore
 import rehypeTypst from "@myriaddreamin/rehype-typst"
 import { QuartzTransformerPlugin } from "../types"
 import { KatexOptions } from "katex"
-import { Options as MathjaxOptions } from "rehype-mathjax/svg"
+import { Options as MathjaxOptions } from "rehype-mathjax/chtml"
 //@ts-ignore
 import { Options as TypstOptions } from "@myriaddreamin/rehype-typst"
+import { min } from "d3"
 
 interface Options {
   renderEngine: "katex" | "mathjax" | "typst"
   customMacros: MacroType
   katexOptions: Omit<KatexOptions, "macros" | "output">
-  mathJaxOptions: Omit<MathjaxOptions, "macros">
+  mathJaxOptions: Omit<MathjaxOptions, "macros" | "fontURL"> & { fontURL?: string }
   typstOptions: TypstOptions
 }
 
@@ -27,7 +28,14 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
   return {
     name: "Latex",
     markdownPlugins() {
-      return [[remarkMath, { singleDollarTextMath: true }]]
+      return [
+        [
+          remarkMath, 
+          { 
+            singleDollarTextMath: true 
+          }
+        ]
+      ]
     },
     htmlPlugins() {
       switch (engine) {
@@ -38,10 +46,26 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
           return [[rehypeTypst, opts?.typstOptions ?? {}]]
         }
         case "mathjax": {
-          return [[rehypeMathjax, { macros, ...(opts?.mathJaxOptions ?? {}) }]]
+          const mathjaxOptions = {
+            chtml: {
+              fontURL: "/static/MathJax",
+              scale: 1.1,
+              minScale: 0.7
+            },
+            macros: macros,
+            ...(opts?.mathJaxOptions ?? {})
+          }
+          return [[rehypeMathjax, mathjaxOptions]]
         }
         default: {
-          return [[rehypeMathjax, { macros, ...(opts?.mathJaxOptions ?? {}) }]]
+          const mathjaxOptions = {
+            chtml: {
+              fontURL: "/static/MathJax"
+            },
+            macros: macros,
+            ...(opts?.mathJaxOptions ?? {})
+          }
+          return [[rehypeMathjax, mathjaxOptions]]
         }
       }
     },
@@ -59,8 +83,16 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
               },
             ],
           }
+        case "mathjax":
+          return {
+            css: [],
+            js: [],
+          }
         default:
-          return { css: [], js: [] }
+          return { 
+            css: [],
+            js: []
+          }
       }
     },
   }
