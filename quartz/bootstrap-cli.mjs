@@ -1,4 +1,14 @@
 #!/usr/bin/env -S node --no-deprecation
+
+// Suppress deprecation warnings programmatically
+process.removeAllListeners('warning')
+process.on('warning', (warning) => {
+  if (warning.name === 'DeprecationWarning' && warning.message.includes('punycode')) {
+    return // Ignore punycode deprecation warnings
+  }
+  console.warn(warning.message)
+})
+
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import {

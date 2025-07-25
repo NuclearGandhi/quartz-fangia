@@ -5,7 +5,7 @@
         "request": "launch",
         "name": "Launch Quartz",
         "program": "${workspaceFolder}/quartz/bootstrap-cli.mjs",
-        "args": ["build", "--serve", "--watch", "false", "--concurrency", "12"],
+        "args": ["build", "--serve", "--concurrency", "12"],
         "cwd": "${workspaceFolder}",
         "console": "integratedTerminal",
       },
