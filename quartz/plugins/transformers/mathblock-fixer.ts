@@ -139,7 +139,7 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
         continue
       }
 
-      if (insideTabInCallout && !/^\> ?\t/.test(line.trim()) && !/^\> ?\t/.test(line) && !/^\> ?\d+\./.test(line.trim()) && !/^\- /.test(line.trim())) {
+      if (insideTabInCallout && !/^\> ?\t/.test(line.trim()) && !/^\> ?\t/.test(line) && !/^\> ?\d+\./.test(line.trim()) && !/^\> ?- /.test(line.trim())) {
         if (/^\d+\.(?!\d)/.test(line.trim())) {
           lines[i] = '>' + line
         } else if (line.trim().startsWith('>')) {
@@ -157,7 +157,12 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
         insideCallout = false
       }
       if (insideCallout && !line.trim().startsWith('>')) {
-        lines[i] = '> ' + line
+        // Don't modify bullet points - they should remain as bullet points within callouts
+        if (line.trim().startsWith('- ')) {
+          lines[i] = '> ' + line.trim()
+        } else {
+          lines[i] = '> ' + line
+        }
         continue
       }
 
