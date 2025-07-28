@@ -13,9 +13,9 @@ const defaultOptions: Options = {
 export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
   const opts = { ...defaultOptions, ...userOpts }
 
-  const fixMathBlocks = (content: string, filePath: string): string => {
+  const fixMathBlocks = (content: string, _fileName: string, _ctx: any): string => {
     const mathBlockPattern = /\$\$.*?\$\$/gs
-    const endDollarPattern = /^\>?\s*\>?\s*\$\$$/;
+    const endDollarPattern = /^\>?\s*\>?\s*\$\$$/
 
     // Helper function to check if a position is inside a code block
     const isInsideCodeBlock = (content: string, position: number): boolean => {
@@ -178,10 +178,6 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
         lines[i] = '\t' + line
         continue
       }
-
-      if (!insideTabBlock && /^ ?\t/.test(line)) {
-        console.log('Found an annoying tab in ' + filePath + ":" + i + " - ", line)
-      }
     }
 
     return lines.join('\n')
@@ -198,18 +194,29 @@ export const MathBlockFixer: QuartzTransformerPlugin<Partial<Options>> = (userOp
 
   return {
     name: "MathBlockFixer",
-    textTransform(_ctx, src) {
-      // TODO: Find a way to get the file path, currently generating random file names
-      const random = Math.random().toString(36).substring(7)
-      const filePath = random + '.md'
+    textTransform(ctx, src) {
+      // Get the actual file path from context, fallback to content-based naming
+      let fileIdentifier: string
+      if (ctx.currentFilePath) {
+        fileIdentifier = path.basename(ctx.currentFilePath)
+      } else {
+        // Fallback to content-based naming if currentFilePath is not available
+        fileIdentifier = 'unknown'
+        const titleMatch = src.match(/^#\s+(.+)$/m)
+        if (titleMatch) {
+          fileIdentifier = titleMatch[1].replace(/[^\w\s-]/g, '').trim().substring(0, 50) + '.md'
+        } else {
+          fileIdentifier = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19) + '.md'
+        }
+      }
 
       if (src.includes('אפשר להתייחס לזה כמו מחברת אחת ענקית שמכילה תתי מחב')) {
         return src
       }
 
-      const content = fixMathBlocks(src.toString(), filePath)
+      const content = fixMathBlocks(src.toString(), fileIdentifier, ctx)
       if (opts.debug) {
-        writeDebugFile(content, filePath)
+        writeDebugFile(content, fileIdentifier)
       }
       return content
     },

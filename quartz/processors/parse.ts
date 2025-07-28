@@ -96,7 +96,9 @@ export function createFileParser(ctx: BuildCtx, fps: FilePath[]) {
 
         // Text -> Text transforms
         for (const plugin of cfg.plugins.transformers.filter((p) => p.textTransform)) {
-          file.value = plugin.textTransform!(ctx, file.value.toString())
+          // Create a context with current file path information
+          const ctxWithFile = { ...ctx, currentFilePath: fp }
+          file.value = plugin.textTransform!(ctxWithFile, file.value.toString())
         }
 
         // base data properties that plugins may use
