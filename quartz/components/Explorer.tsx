@@ -56,6 +56,7 @@ export type FolderState = {
   collapsed: boolean
 }
 
+let numExplorers = 0
 export default ((userOpts?: Partial<Options>) => {
   const opts: Options = { ...defaultOptions, ...userOpts }
   const { OverflowList, overflowListAfterDOMLoaded } = OverflowListFactory()
@@ -116,6 +117,8 @@ export default ((userOpts?: Partial<Options>) => {
 
   function Explorer({ allFiles, displayClass, fileData, cfg }: QuartzComponentProps) {
     constructFileTree(cfg, allFiles)
+    const id = `explorer-${numExplorers++}`
+
     return (
       <div
         class={classNames(displayClass, "explorer")}
@@ -133,7 +136,7 @@ export default ((userOpts?: Partial<Options>) => {
           type="button"
           class="explorer-toggle mobile-explorer hide-until-loaded"
           data-mobile={true}
-          aria-controls="explorer-content"
+          aria-controls={id}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +175,7 @@ export default ((userOpts?: Partial<Options>) => {
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </button>
-        <div class="explorer-content" aria-expanded={false}>
+        <div id={id} class="explorer-content" aria-expanded={false} role="group">
           <OverflowList class="explorer-ul" />
         </div>
         <template id="template-file">
