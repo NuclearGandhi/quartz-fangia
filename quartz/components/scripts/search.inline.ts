@@ -16,12 +16,6 @@ interface Item {
 type SearchType = "basic" | "tags"
 let searchType: SearchType = "basic"
 let currentSearchTerm: string = ""
-const encoder = (str: string) => {
-  return str
-    .toLowerCase()
-    .split(/\s+/)
-    .filter((token) => token.length > 0)
-}
 
 let index = new FlexSearch.Document<Item>({
   document: {
@@ -31,14 +25,17 @@ let index = new FlexSearch.Document<Item>({
       {
         field: "title",
         tokenize: "full",
+        rtl: true,
       },
       {
         field: "content",
         tokenize: "full",
+        rtl: true,
       },
       {
         field: "tags",
         tokenize: "full",
+        rtl: true,
       },
     ],
   },
