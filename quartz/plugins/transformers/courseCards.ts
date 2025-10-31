@@ -23,6 +23,7 @@ const courseIcons: Record<string, string> = {
 	NUM1: "Σ", // Numerical Methods
 	PHY1: "🔧", // Physics 1 (Mechanics)
 	PHY2: "⚡", // Physics 2 (Electricity)
+	PHY3: "🌌", // Physics 3 (Modern Physics)
 	LPH1: "📏", // Physics Lab
 	PSM1: "📊", // Probability and Statistics
 
@@ -57,6 +58,8 @@ const courseIcons: Record<string, string> = {
 	// Robotics & Mechatronics
 	IRB1: "🤖", // Robotics
 	IME1: "⚙️", // Mechatronics
+	MCS1: "🧩", // Micro-Systems Mechanics
+	MCP1: "💻", // Microprocessor-Based Product Design
 
 	// Lab & Practical
 	LMA1: "🔬", // Advanced Lab
@@ -68,6 +71,7 @@ const courseIcons: Record<string, string> = {
 	LGR1: "🇩🇪", // German Linear
 	DFA1: "🌾", // Discrete Agriculture
 	FCH1: "💹", // Financial Chinese Molecular
+	MFB1: "🏓", // Microfabrication of Ping Pong Balls
 }
 
 // Helper function to detect Hebrew text
