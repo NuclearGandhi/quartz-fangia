@@ -96,12 +96,24 @@ export const FigureNumbering: QuartzTransformerPlugin<Partial<Options>> = (userO
               return
             }
 
+            // Helper to check if a node contains a figure image
+            const containsFigureImage = (node: any): boolean => {
+              if (!node) return false
+              const nodeText = toString(node)
+              return /!\[\[[^\]]*\]\]\^figure/.test(nodeText) || nodeText.includes('^figure')
+            }
+
             let figureIndex = 0
             const assignedFigures = new Set<string>()
 
             // Process blockquotes for figure captions
-            visit(tree, 'blockquote', (node) => {
+            visit(tree, 'blockquote', (node, index, parent) => {
               if (node.children.length === 0) return
+
+              // Skip blockquotes that ARE callouts
+              if (node.data?.hProperties?.['data-callout']) {
+                return
+              }
 
               const firstChild = node.children[0]
               if (firstChild.type !== 'paragraph') return
@@ -110,6 +122,17 @@ export const FigureNumbering: QuartzTransformerPlugin<Partial<Options>> = (userO
               
               // Skip if caption already has a figure number
               if (/^(Figure|איור)\s+[\w\d.-]+:/.test(text)) {
+                return
+              }
+
+              // Check if this blockquote follows a figure image
+              let hasPrecedingFigure = false
+              if (parent && index !== undefined && index > 0) {
+                const previousSibling = parent.children[index - 1]
+                hasPrecedingFigure = containsFigureImage(previousSibling)
+              }
+
+              if (!hasPrecedingFigure) {
                 return
               }
 
