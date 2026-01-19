@@ -42,7 +42,7 @@ description: Copying texts from books into files
 - Reference format: `כפי שמוצג ב[[#^figure-general-beam|איור]]`
 
 ## Figure Citations
-- For figures from books, use the format: `![[{GUID}.png|bookhue|size]]^anchor-name`
+- For figures from books, use the format: `![[{GUID}.png|bookhue|size]]^figure-insert-name-here`
 - Add a caption below each figure starting with ">" and including the source
 - **Remove redundant figure numbers from captions** - let the anchor handle identification
 - Example: `>קינמטיקה של דפורמציה של קורה לפי השערת אויילר-ברנולי. [[Course_000#ביבליוגרפיה|(Author, Year)]].`
@@ -209,4 +209,3 @@ Before finalizing any mathematical content, verify:
 - [ ] Cross-references are valid and necessary
 - [ ] Variable subscripts are explained when first introduced
 - [ ] Impedance calculations show both rectangular and polar forms when relevant
-

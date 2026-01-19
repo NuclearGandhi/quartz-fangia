@@ -15,3 +15,4 @@ trigger: always_on
 - Use consistent documentation conventions
 - Use consistent code organization conventions
 - Don't include thinking comments in the code (internal conversations with yourself)
+- Don't run MATLAB code. Instead, let the user run it, and ask for the output of it.
