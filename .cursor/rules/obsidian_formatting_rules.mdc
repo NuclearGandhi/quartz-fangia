@@ -1,7 +1,8 @@
 ---
-trigger: always_on
+description: 
+globs: 
+alwaysApply: true
 ---
-
 # Markdown formatting
 
 ## General - Obsidian Markdown
@@ -17,6 +18,7 @@ trigger: always_on
 - Use proper spacing between sections (one blank line between sections)
 - Use proper tab indentation for nested lists and content
 - If after a bold text there is `:`, place it outside of the bold marks.
+- Don't use '—' (em dash) in text, use '-' (en dash) instead.
 
 ## Mathematical Content and Theorems
 - Use `>[!def] הגדרה:` for definitions
