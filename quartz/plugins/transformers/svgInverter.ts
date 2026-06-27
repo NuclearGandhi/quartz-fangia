@@ -5,15 +5,10 @@ export interface Options {
   // If we need options in the future, they would go here
 }
 
-const defaultOptions: Options = {
-  // Default options would go here
-}
-
 /**
  * Plugin that adds the 'full-invert' class to SVG images
  */
-export const SvgInverter: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
-  const opts = { ...defaultOptions, ...userOpts }
+export const SvgInverter: QuartzTransformerPlugin<Partial<Options>> = (_userOpts) => {
   return {
     name: "SvgInverter",
     htmlPlugins() {
@@ -21,11 +16,13 @@ export const SvgInverter: QuartzTransformerPlugin<Partial<Options>> = (userOpts)
         () => {
           return (tree) => {
             visit(tree, "element", (node) => {
+              const alt = node.properties?.alt
               if (
-                node.tagName === "img" && 
-                node.properties && 
+                node.tagName === "img" &&
+                node.properties &&
                 typeof node.properties.src === "string" &&
-                node.properties.src.toLowerCase().endsWith(".svg")
+                node.properties.src.toLowerCase().endsWith(".svg") &&
+                alt !== "bookhue"
               ) {
                 // Add the 'full-invert' class to SVG images
                 node.properties.className = node.properties.className || []
